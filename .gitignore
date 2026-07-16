@@ -1,1 +1,9 @@
 CLAUDE.md
+
+# Android / Gradle
+.gradle/
+build/
+local.properties
+*.keystore
+.kotlin/
+captures/
