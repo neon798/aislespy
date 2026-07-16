@@ -24,14 +24,18 @@ class KnowledgePackTest {
         }
 
         /** Read the shipped asset from disk (JVM unit test, no Android Context). */
-        fun readFoodPackJson(): String {
+        fun readFoodPackJson(): String = readAsset("food_additives_v1.json")
+
+        fun readBeautyPackJson(): String = readAsset("beauty_ingredients_v1.json")
+
+        private fun readAsset(fileName: String): String {
             val candidates = listOf(
-                File("src/main/assets/knowledge/food_additives_v1.json"),
-                File("app/src/main/assets/knowledge/food_additives_v1.json"),
+                File("src/main/assets/knowledge/$fileName"),
+                File("app/src/main/assets/knowledge/$fileName"),
             )
             val file = candidates.firstOrNull { it.isFile }
                 ?: error(
-                    "food_additives_v1.json not found. Tried: " +
+                    "$fileName not found. Tried: " +
                         candidates.joinToString { it.absolutePath },
                 )
             return file.readText()
@@ -45,6 +49,22 @@ class KnowledgePackTest {
         assertEquals("1.0.0", pack.version)
         assertEquals("food", pack.domain)
         assertTrue("expected >= 50 entries, got ${pack.entries.size}", pack.entries.size >= 50)
+    }
+
+    @Test
+    fun beautyPack_parsesFromRealAssetFile() {
+        val beauty = KnowledgePackLoader.parse(readBeautyPackJson())
+        assertEquals("1.0.0", beauty.version)
+        assertEquals("beauty", beauty.domain)
+        assertTrue(
+            "expected >= 30 beauty entries, got ${beauty.entries.size}",
+            beauty.entries.size >= 30,
+        )
+        assertTrue(beauty.entries.all { it.domain == "beauty" })
+        assertTrue(beauty.entries.any { it.id == "fragrance" })
+        assertTrue(beauty.entries.any { it.id == "methylisothiazolinone" })
+        assertTrue(beauty.entries.any { it.categories.contains("restricted") })
+        assertTrue(beauty.entries.any { it.categories.contains("allergen") })
     }
 
     @Test
@@ -207,10 +227,18 @@ class KnowledgePackTest {
     }
 
     @Test
-    fun matcher_parseIngredientList_splitsCommasAndParentheses() {
+    fun matcher_parseIngredientList_topLevelCommas_stripsParentheticals() {
         val parts = KnowledgeMatcher.parseIngredientList(
             "Water, sugar (sucrose), sodium nitrite",
         )
-        assertEquals(listOf("Water", "sugar", "sucrose", "sodium nitrite"), parts)
+        assertEquals(listOf("Water", "sugar", "sodium nitrite"), parts)
+    }
+
+    @Test
+    fun matcher_parseIngredientList_ignoresCommasInsideParentheses() {
+        val parts = KnowledgeMatcher.parseIngredientList(
+            "Aqua (water, purified), Glycerin, Parfum (Fragrance)",
+        )
+        assertEquals(listOf("Aqua", "Glycerin", "Parfum"), parts)
     }
 }

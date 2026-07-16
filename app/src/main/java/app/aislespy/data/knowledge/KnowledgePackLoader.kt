@@ -13,6 +13,7 @@ import kotlinx.serialization.json.Json
 object KnowledgePackLoader {
 
     const val FOOD_PACK_ASSET: String = "knowledge/food_additives_v1.json"
+    const val BEAUTY_PACK_ASSET: String = "knowledge/beauty_ingredients_v1.json"
 
     private val defaultJson: Json = Json {
         ignoreUnknownKeys = true

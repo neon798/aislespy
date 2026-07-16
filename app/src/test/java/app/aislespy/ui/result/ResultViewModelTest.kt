@@ -13,6 +13,7 @@ import app.aislespy.domain.model.ScoreBand
 import app.aislespy.domain.model.ScoreComponent
 import app.aislespy.domain.model.ScoreResult
 import app.aislespy.domain.model.SourceDb
+import app.aislespy.domain.scoring.BeautyScoreEngine
 import app.aislespy.domain.scoring.FoodScoreEngine
 import app.aislespy.domain.scoring.ScoreEngine
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +81,7 @@ class ResultViewModelTest {
         val vm = ResultViewModel(
             repository = FakeProductLookup(LookupOutcome.Found(food)),
             barcode = barcode,
-            knowledgePack = pack,
+            foodKnowledgePack = pack,
             foodScoreEngine = FoodScoreEngine(),
             concernStore = store,
             defaultDispatcher = testDispatcher,
@@ -123,26 +124,91 @@ class ResultViewModelTest {
     }
 
     @Test
-    fun successBeauty_showsComingSoonWithoutScore() = runTest {
+    fun successBeauty_withIngredients_carriesScoreUi() = runTest {
         val beauty = sampleProduct(
             name = "Shampoo",
             category = ProductCategory.Beauty,
             sourceDb = SourceDb.OpenBeautyFacts,
-            ingredientsText = "Aqua, Sodium Laureth Sulfate",
+            ingredientsText = "Aqua, Glycerin, Parfum, Limonene",
+        )
+        val beautyPack = KnowledgePack(
+            version = "1.0.0",
+            domain = "beauty",
+            entries = listOf(
+                KnowledgePackEntry(
+                    id = "fragrance",
+                    names = listOf("fragrance", "parfum"),
+                    aliases = listOf("en:parfum"),
+                    domain = "beauty",
+                    severity = 3,
+                    categories = listOf("fragrance"),
+                    title = "Fragrance",
+                    why = "Umbrella scent term that may hide allergens for sensitive users.",
+                    sources = listOf("EU Cosmetic Regulation fragrance labelling"),
+                ),
+                KnowledgePackEntry(
+                    id = "limonene",
+                    names = listOf("limonene"),
+                    aliases = listOf("en:limonene"),
+                    domain = "beauty",
+                    severity = 1,
+                    categories = listOf("allergen"),
+                    title = "Limonene",
+                    why = "EU-listed fragrance allergen with mild contact-allergy relevance.",
+                    sources = listOf("EU Cosmetic Regulation Annex III"),
+                ),
+            ),
+        )
+        val store = ConcernDetailStore()
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(beauty)),
+            barcode = barcode,
+            beautyKnowledgePack = beautyPack,
+            beautyScoreEngine = BeautyScoreEngine(),
+            concernStore = store,
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value as ResultUiState.Success
+        assertFalse(state.beautyScoringPending)
+        assertNull(state.partialMessage)
+        assertNotNull(state.score)
+        val score = state.score!!
+        assertTrue(score.value in 1..100)
+        assertEquals(score.band, ScoreBand.fromTotal(score.value))
+        assertTrue(state.breakdown.isNotEmpty())
+        assertTrue(state.breakdown.any { it.id == BeautyScoreEngine.ID_HAZARDS })
+        assertTrue(state.concerns.any { it.id == "fragrance" || it.id == "limonene" })
+        assertNotNull(vm.concernDetail(state.concerns.first().id))
+    }
+
+    @Test
+    fun successBeauty_noIngredients_producesPartialState() = runTest {
+        val beauty = sampleProduct(
+            name = "Mystery cream",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = null,
         )
         val vm = ResultViewModel(
             repository = FakeProductLookup(LookupOutcome.Found(beauty)),
             barcode = barcode,
-            knowledgePack = null,
-            foodScoreEngine = FoodScoreEngine(),
+            beautyKnowledgePack = KnowledgePack(
+                version = "1.0.0",
+                domain = "beauty",
+                entries = emptyList(),
+            ),
+            beautyScoreEngine = BeautyScoreEngine(),
             concernStore = ConcernDetailStore(),
             defaultDispatcher = testDispatcher,
         )
         advanceUntilIdle()
 
         val state = vm.uiState.value as ResultUiState.Success
-        assertTrue(state.beautyScoringPending)
         assertNull(state.score)
+        assertEquals(ResultViewModel.PARTIAL_NO_INGREDIENTS, state.partialMessage)
+        assertFalse(state.beautyScoringPending)
         assertTrue(state.concerns.isEmpty())
         assertTrue(state.breakdown.isEmpty())
     }
@@ -185,7 +251,7 @@ class ResultViewModelTest {
         val vm = ResultViewModel(
             repository = FakeProductLookup(LookupOutcome.Found(food)),
             barcode = barcode,
-            knowledgePack = null,
+            foodKnowledgePack = null,
             foodScoreEngine = fakeEngine,
             concernStore = store,
             defaultDispatcher = testDispatcher,

@@ -126,6 +126,7 @@ object KnowledgeMatcher {
                 sources = c.entry.sources,
                 matchedOn = c.matchedOn,
                 listIndex = c.listIndex,
+                categories = c.entry.categories,
             )
         }
     }
@@ -149,12 +150,49 @@ object KnowledgeMatcher {
     fun tagNormalize(t: String): String = t.lowercase().trim()
 
     /**
-     * Split ingredients text into ordered fragments on commas and parentheses.
+     * Parse an ordered INCI-style ingredient list from free text.
+     *
+     * Splits on **top-level** commas only (commas inside parentheses are ignored),
+     * then strips parenthetical notes from each fragment.
+     *
+     * Example: `"Aqua (water), Glycerin, Parfum (Fragrance)"` →
+     * `["Aqua", "Glycerin", "Parfum"]`.
      */
-    fun parseIngredientList(text: String): List<String> =
-        text.split(Regex("[,()]"))
-            .map { it.trim() }
-            .filter { it.isNotEmpty() }
+    fun parseIngredientList(text: String): List<String> {
+        if (text.isBlank()) return emptyList()
+        val parts = ArrayList<String>()
+        val current = StringBuilder()
+        var depth = 0
+        for (ch in text) {
+            when {
+                ch == '(' || ch == '[' -> {
+                    depth++
+                    current.append(ch)
+                }
+                ch == ')' || ch == ']' -> {
+                    if (depth > 0) depth--
+                    current.append(ch)
+                }
+                ch == ',' && depth == 0 -> {
+                    val fragment = stripParentheticals(current.toString())
+                    if (fragment.isNotEmpty()) parts += fragment
+                    current.clear()
+                }
+                else -> current.append(ch)
+            }
+        }
+        val last = stripParentheticals(current.toString())
+        if (last.isNotEmpty()) parts += last
+        return parts
+    }
+
+    /** Remove `(…)` / `[…]` segments and collapse whitespace. */
+    fun stripParentheticals(raw: String): String {
+        val without = raw
+            .replace(Regex("\\([^)]*\\)"), " ")
+            .replace(Regex("\\[[^]]*\\]"), " ")
+        return without.replace(Regex("\\s+"), " ").trim()
+    }
 
     // --- internals ---
 

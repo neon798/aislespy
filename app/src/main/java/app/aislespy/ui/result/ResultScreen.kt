@@ -205,31 +205,40 @@ private fun SuccessContent(
         )
 
         // Score hero
-        if (state.beautyScoringPending || state.score == null) {
-            BeautyScoringPlaceholder()
-        } else {
-            val score = state.score
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                ScoreRing(
-                    value = score.value,
-                    band = score.band,
-                    label = score.label,
+        when {
+            state.partialMessage != null || (state.score == null && !state.beautyScoringPending) -> {
+                PartialScorePlaceholder(
+                    message = state.partialMessage
+                        ?: ResultViewModel.PARTIAL_NO_INGREDIENTS,
                 )
-                Spacer(Modifier.height(8.dp))
-                Text(
-                    text = score.summarySentence,
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(Modifier.height(4.dp))
-                SuggestionChip(
-                    onClick = {},
-                    label = { Text(score.confidenceLabel) },
-                    enabled = false,
-                )
+            }
+            state.beautyScoringPending || state.score == null -> {
+                BeautyScoringPlaceholder()
+            }
+            else -> {
+                val score = checkNotNull(state.score)
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    ScoreRing(
+                        value = score.value,
+                        band = score.band,
+                        label = score.label,
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = score.summarySentence,
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(Modifier.height(4.dp))
+                    SuggestionChip(
+                        onClick = {},
+                        label = { Text(score.confidenceLabel) },
+                        enabled = false,
+                    )
+                }
             }
         }
 
@@ -279,6 +288,12 @@ private fun SuccessContent(
         if (state.beautyScoringPending) {
             Text(
                 text = "Beauty ingredient flags will appear here once scoring lands.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else if (state.partialMessage != null) {
+            Text(
+                text = "No ingredients listed to flag.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -341,6 +356,38 @@ private fun BeautyScoringPlaceholder() {
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(16.dp),
         )
+    }
+}
+
+@Composable
+private fun PartialScorePlaceholder(message: String) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text = "—",
+                style = MaterialTheme.typography.displayMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics {
+                    contentDescription = "Score not available"
+                },
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = message,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 

@@ -1,0 +1,507 @@
+{
+  "version": "1.0.0",
+  "domain": "beauty",
+  "entries": [
+    {
+      "id": "fragrance",
+      "names": ["fragrance", "parfum", "aroma", "perfume"],
+      "aliases": ["en:parfum", "en:perfume", "en:fragrance", "en:aroma"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["fragrance", "allergen-risk"],
+      "title": "Fragrance (Parfum)",
+      "why": "Umbrella term for scent mixtures used to give products a smell. Formulas can include undeclared allergens and are often not fully disclosed as individual chemicals. A common trigger for contact dermatitis in sensitive people; EU rules require labelling of certain fragrance allergens above thresholds.",
+      "sources": [
+        "EU Cosmetic Regulation (EC) No 1223/2009 — fragrance allergen labelling",
+        "SCCS opinions on fragrance allergens (public summaries)"
+      ]
+    },
+    {
+      "id": "methylisothiazolinone",
+      "names": ["methylisothiazolinone", "mit", "2-methyl-4-isothiazolin-3-one"],
+      "aliases": ["en:methylisothiazolinone"],
+      "domain": "beauty",
+      "severity": 5,
+      "categories": ["preservative", "restricted", "allergen"],
+      "title": "Methylisothiazolinone (MIT)",
+      "why": "Preservative linked to a sharp rise in contact allergy. Leave-on cosmetics face EU restrictions; rinse-off products have concentration limits. Worth noticing on older or imported products that may predate stricter rules.",
+      "sources": [
+        "EU CosIng / Regulation (EC) No 1223/2009 — isothiazolinone restrictions",
+        "SCCS opinions on methylisothiazolinone (public summaries)"
+      ]
+    },
+    {
+      "id": "methylchloroisothiazolinone",
+      "names": ["methylchloroisothiazolinone", "mcit", "5-chloro-2-methyl-4-isothiazolin-3-one"],
+      "aliases": ["en:methylchloroisothiazolinone"],
+      "domain": "beauty",
+      "severity": 5,
+      "categories": ["preservative", "restricted", "allergen"],
+      "title": "Methylchloroisothiazolinone (MCI)",
+      "why": "Preservative often used with MIT (MCI/MIT mix). Strong contact allergen; EU rules restrict leave-on use and limit rinse-off concentrations. Flag if you have reactive skin or a history of isothiazolinone allergy.",
+      "sources": [
+        "EU CosIng / Regulation (EC) No 1223/2009 — isothiazolinone restrictions",
+        "SCCS opinions on MCI/MIT (public summaries)"
+      ]
+    },
+    {
+      "id": "butylparaben",
+      "names": ["butylparaben", "butyl paraben", "butyl 4-hydroxybenzoate"],
+      "aliases": ["en:butylparaben"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "endocrine-concern", "restricted"],
+      "title": "Butylparaben",
+      "why": "Preservative in the paraben family. Longer-chain parabens face more EU scrutiny for endocrine activity; SCCS has set maximum concentration limits for certain uses. Prefer products that avoid higher-concern parabens if that matters to you.",
+      "sources": [
+        "SCCS opinions on parabens (public summaries)",
+        "EU CosIng entries and concentration restrictions (public)"
+      ]
+    },
+    {
+      "id": "propylparaben",
+      "names": ["propylparaben", "propyl paraben", "propyl 4-hydroxybenzoate"],
+      "aliases": ["en:propylparaben"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "endocrine-concern", "restricted"],
+      "title": "Propylparaben",
+      "why": "Common preservative; longer-chain parabens have faced greater regulatory scrutiny than methyl/ethyl parabens. EU SCCS opinions address concentration limits for certain applications—check labels if you prefer to minimise these.",
+      "sources": [
+        "SCCS opinions on parabens (public summaries)",
+        "EU CosIng entries and concentration restrictions (public)"
+      ]
+    },
+    {
+      "id": "bha-cosmetics",
+      "names": ["bha", "butylated hydroxyanisole", "butylhydroxyanisole"],
+      "aliases": ["en:bha", "en:butylated-hydroxyanisole", "en:butylhydroxyanisole"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["antioxidant", "endocrine-concern"],
+      "title": "BHA (Butylated hydroxyanisole)",
+      "why": "Antioxidant used to slow rancidity in oils and cosmetics. Classified as a possible human carcinogen by some agencies in other contexts; cosmetic use is permitted within limits. Included as a moderate concern for people who prefer to avoid it.",
+      "sources": [
+        "EU CosIng entry for BHA (public)",
+        "IARC classification summaries (public) — context for other exposures"
+      ]
+    },
+    {
+      "id": "bht-cosmetics",
+      "names": ["bht", "butylated hydroxytoluene", "butylhydroxytoluene"],
+      "aliases": ["en:bht", "en:butylated-hydroxytoluene", "en:butylhydroxytoluene"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["antioxidant"],
+      "title": "BHT (Butylated hydroxytoluene)",
+      "why": "Antioxidant preservative for oils and fragrances. Generally considered lower concern than BHA at cosmetic use levels, but still debated by some consumers. Function is product stability, not skin treatment.",
+      "sources": [
+        "EU CosIng entry for BHT (public)",
+        "EFSA/SCCS public evaluations of BHT where available"
+      ]
+    },
+    {
+      "id": "dmdm-hydantoin",
+      "names": ["dmdm hydantoin", "dmdm-hydantoin", "1,3-dimethylol-5,5-dimethylhydantoin"],
+      "aliases": ["en:dmdm-hydantoin"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "formaldehyde-releaser"],
+      "title": "DMDM hydantoin",
+      "why": "Preservative that slowly releases small amounts of formaldehyde to control microbes. Helpful for product safety against contamination, but a concern for people sensitive to formaldehyde or formaldehyde releasers.",
+      "sources": [
+        "EU CosIng entry for DMDM hydantoin (public)",
+        "SCCS opinions on formaldehyde and releasers (public summaries)"
+      ]
+    },
+    {
+      "id": "quaternium-15",
+      "names": ["quaternium-15", "quaternium 15"],
+      "aliases": ["en:quaternium-15"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "formaldehyde-releaser", "restricted"],
+      "title": "Quaternium-15",
+      "why": "Formaldehyde-releasing preservative formerly common in leave-on and rinse-off products. Associated with contact allergy; regulatory status has tightened in several markets. Worth avoiding if you react to formaldehyde releasers.",
+      "sources": [
+        "EU CosIng / Cosmetic Regulation entries (public)",
+        "SCCS formaldehyde-releaser opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "imidazolidinyl-urea",
+      "names": ["imidazolidinyl urea", "imidazolidinylurea"],
+      "aliases": ["en:imidazolidinyl-urea"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "formaldehyde-releaser"],
+      "title": "Imidazolidinyl urea",
+      "why": "Antimicrobial preservative that can release formaldehyde. Used to keep water-based formulas safe from spoilage; may bother people with formaldehyde sensitivity or reactive skin.",
+      "sources": [
+        "EU CosIng entry for imidazolidinyl urea (public)",
+        "SCCS opinions on formaldehyde releasers (public summaries)"
+      ]
+    },
+    {
+      "id": "diazolidinyl-urea",
+      "names": ["diazolidinyl urea", "diazolidinylurea"],
+      "aliases": ["en:diazolidinyl-urea"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "formaldehyde-releaser"],
+      "title": "Diazolidinyl urea",
+      "why": "Formaldehyde-releasing preservative related to imidazolidinyl urea. Effective against bacteria in creams and lotions; a contact-allergy concern for formaldehyde-sensitive users.",
+      "sources": [
+        "EU CosIng entry for diazolidinyl urea (public)",
+        "SCCS opinions on formaldehyde releasers (public summaries)"
+      ]
+    },
+    {
+      "id": "homosalate",
+      "names": ["homosalate", "homomenthyl salicylate"],
+      "aliases": ["en:homosalate"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["uv-filter", "endocrine-review"],
+      "title": "Homosalate",
+      "why": "UV filter used in sunscreens and day products. Under EU endocrine-disruption review with SCCS concentration opinions; still widely used within authorised limits. Flagged so you can notice high placement on the label if that concerns you.",
+      "sources": [
+        "SCCS opinion on homosalate (public summary)",
+        "EU CosIng / Cosmetic Regulation UV-filter annexes (public)"
+      ]
+    },
+    {
+      "id": "octocrylene",
+      "names": ["octocrylene"],
+      "aliases": ["en:octocrylene"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["uv-filter", "endocrine-review"],
+      "title": "Octocrylene",
+      "why": "Common UV filter and photostabiliser for other filters. Subject to EU safety reassessments and public debate about degradation products; authorised within concentration limits. Function is sun protection, not a fragrance.",
+      "sources": [
+        "SCCS opinion on octocrylene (public summary)",
+        "EU CosIng / Cosmetic Regulation UV-filter annexes (public)"
+      ]
+    },
+    {
+      "id": "benzophenone-3",
+      "names": ["benzophenone-3", "oxybenzone", "bp-3", "bp3"],
+      "aliases": ["en:benzophenone-3", "en:oxybenzone"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["uv-filter", "endocrine-review", "restricted"],
+      "title": "Benzophenone-3 (Oxybenzone)",
+      "why": "UV filter with greater public and regulatory scrutiny than many others, including EU concentration limits and endocrine-related assessments. Effective sun protection ingredient; some people prefer mineral filters instead.",
+      "sources": [
+        "SCCS opinions on benzophenone-3 / oxybenzone (public summaries)",
+        "EU CosIng concentration restrictions (public)"
+      ]
+    },
+    {
+      "id": "triclosan",
+      "names": ["triclosan"],
+      "aliases": ["en:triclosan"],
+      "domain": "beauty",
+      "severity": 5,
+      "categories": ["preservative", "restricted", "antimicrobial"],
+      "title": "Triclosan",
+      "why": "Antimicrobial agent restricted in many cosmetic product types in the EU after safety reviews. Not needed for most everyday personal care; flagged when present as a higher-priority label item.",
+      "sources": [
+        "EU CosIng / Regulation (EC) No 1223/2009 — triclosan restrictions",
+        "SCCS opinions on triclosan (public summaries)"
+      ]
+    },
+    {
+      "id": "ci-20285",
+      "names": ["ci 20285", "ci20285", "acid red 73"],
+      "aliases": ["en:ci-20285", "en:ci20285"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["colour", "restricted", "coal-tar-related"],
+      "title": "CI 20285 (coal-tar related dye)",
+      "why": "Colourant in the azo / coal-tar dye family subject to EU cosmetic use restrictions or purity requirements depending on product type. Colour is cosmetic only; some related dyes have tighter rules than everyday pigments.",
+      "sources": [
+        "EU Cosmetic Regulation colourant annexes (public)",
+        "EU CosIng colourant entries (public)"
+      ]
+    },
+    {
+      "id": "ci-26100",
+      "names": ["ci 26100", "ci26100", "solvent red 23"],
+      "aliases": ["en:ci-26100", "en:ci26100"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["colour", "restricted", "coal-tar-related"],
+      "title": "CI 26100 (Solvent Red 23)",
+      "why": "Red colourant with EU restrictions for certain cosmetic uses (e.g. limits around mucous membranes). Included so restricted coal-tar–related dyes surface in scoring when listed.",
+      "sources": [
+        "EU Cosmetic Regulation colourant annexes (public)",
+        "EU CosIng entry for CI 26100 (public)"
+      ]
+    },
+    {
+      "id": "phenoxyethanol",
+      "names": ["phenoxyethanol", "2-phenoxyethanol"],
+      "aliases": ["en:phenoxyethanol"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["preservative"],
+      "title": "Phenoxyethanol",
+      "why": "Widely used preservative that replaced some parabens and formaldehyde releasers. Generally considered low concern at typical cosmetic levels; rare irritation or allergy is possible. Function is keeping products microbially safe.",
+      "sources": [
+        "SCCS opinion on phenoxyethanol (public summary)",
+        "EU CosIng entry for phenoxyethanol (public)"
+      ]
+    },
+    {
+      "id": "limonene",
+      "names": ["limonene", "d-limonene", "l-limonene"],
+      "aliases": ["en:limonene"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Limonene",
+      "why": "Citrus-scented terpene and EU-listed fragrance allergen. Common in fragranced products and essential-oil blends; can oxidise on air exposure and contribute to contact allergy in sensitive people. Mild note only unless you know you react.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "linalool",
+      "names": ["linalool"],
+      "aliases": ["en:linalool"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Linalool",
+      "why": "Floral/lavender-scented terpene and EU-listed fragrance allergen. Appears from essential oils and synthetic fragrance; oxidised forms are more sensitising. Low severity for most users; relevant if you avoid fragrance allergens.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "citronellol",
+      "names": ["citronellol"],
+      "aliases": ["en:citronellol"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Citronellol",
+      "why": "Rose-scented fragrance ingredient and EU-listed allergen. Used for scent rather than skincare benefit; may contribute to fragrance contact allergy when above labelling thresholds.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "IFRA standards context (public summaries)"
+      ]
+    },
+    {
+      "id": "geraniol",
+      "names": ["geraniol"],
+      "aliases": ["en:geraniol"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Geraniol",
+      "why": "Rose-like fragrance alcohol and EU-listed allergen. Present in many essential oils and perfume mixes; a mild sensitisation note for fragrance-sensitive users.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "eugenol",
+      "names": ["eugenol"],
+      "aliases": ["en:eugenol"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Eugenol",
+      "why": "Clove-scented phenol and EU-listed fragrance allergen. Can sensitise some users, especially at higher fragrance loads; also found in certain essential oils.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "coumarin",
+      "names": ["coumarin"],
+      "aliases": ["en:coumarin"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Coumarin",
+      "why": "Sweet hay-like fragrance note and EU-listed allergen. Used for scent; mild concern mainly for people with known fragrance allergy.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "cinnamal",
+      "names": ["cinnamal", "cinnamaldehyde"],
+      "aliases": ["en:cinnamal", "en:cinnamaldehyde"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Cinnamal",
+      "why": "Cinnamon-scented aldehyde and relatively potent EU-listed fragrance allergen. More often a problem for fragrance-sensitive skin than mild terpenes; still a scenting agent, not a treatment.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "isoeugenol",
+      "names": ["isoeugenol"],
+      "aliases": ["en:isoeugenol"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["allergen", "fragrance-component", "essential-oil-sensitizer"],
+      "title": "Isoeugenol",
+      "why": "Fragrance allergen related to eugenol, often from spice or floral notes. Known sensitiser; EU labelling applies above thresholds. Mild–moderate note depending on your fragrance history.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "evernia-prunastri",
+      "names": ["evernia prunastri", "evernia prunastri extract", "oakmoss extract", "oakmoss"],
+      "aliases": ["en:evernia-prunastri", "en:oakmoss"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["allergen", "fragrance-component", "essential-oil-sensitizer"],
+      "title": "Oakmoss (Evernia prunastri)",
+      "why": "Natural moss extract used in chypre and woody fragrances; well-known contact allergen with IFRA restrictions. Listed among classic fragrance sensitisers—relevant if oakmoss or perfume allergy is a concern.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "IFRA standards on oakmoss/tree moss (public summaries)"
+      ]
+    },
+    {
+      "id": "sodium-lauryl-sulfate",
+      "names": ["sodium lauryl sulfate", "sodium lauryl sulphate", "sls", "sodium dodecyl sulfate"],
+      "aliases": ["en:sodium-lauryl-sulfate", "en:sodium-lauryl-sulphate"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["surfactant", "irritant"],
+      "title": "Sodium lauryl sulfate (SLS)",
+      "why": "Strong foaming cleanser/surfactant. Not a banned or endocrine concern; can dry or irritate skin and scalp, especially at high concentration or with frequent use. Mild severity for irritation nuance only.",
+      "sources": [
+        "EU CosIng entry for sodium lauryl sulfate (public)",
+        "SCCS/public reviews of alkyl sulfates as irritants (summaries)"
+      ]
+    },
+    {
+      "id": "retinol",
+      "names": ["retinol", "vitamin a", "vitamin a alcohol"],
+      "aliases": ["en:retinol", "en:vitamin-a"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["active", "retinoid"],
+      "title": "Retinol",
+      "why": "Vitamin A derivative used for anti-ageing and skin renewal. SCCS 2023 opinions address concentration limits and cumulative vitamin A exposure; can irritate and is not for everyone (e.g. pregnancy caution per product labelling). Low–moderate severity for informed use.",
+      "sources": [
+        "SCCS opinion on vitamin A (retinol, retinyl esters) 2023 (public summary)",
+        "EU CosIng / Cosmetic Regulation entries (public)"
+      ]
+    },
+    {
+      "id": "talc",
+      "names": ["talc", "talcum"],
+      "aliases": ["en:talc", "en:talcum"],
+      "domain": "beauty",
+      "severity": 2,
+      "categories": ["mineral", "powder"],
+      "title": "Talc",
+      "why": "Soft mineral powder used for texture and absorbency. Cosmetic talc should be asbestos-free under modern standards; historical contamination debates and inhalation concerns for loose powders drive a cautious low severity flag—not an automatic ban signal.",
+      "sources": [
+        "EU CosIng entry for talc (public)",
+        "Public regulatory purity/asbestos requirements for cosmetic talc"
+      ]
+    },
+    {
+      "id": "aluminum-salts",
+      "names": [
+        "aluminum chlorohydrate",
+        "aluminium chlorohydrate",
+        "aluminum zirconium tetrachlorohydrex gly",
+        "aluminium zirconium tetrachlorohydrex gly",
+        "aluminum chloride",
+        "aluminium chloride"
+      ],
+      "aliases": [
+        "en:aluminum-chlorohydrate",
+        "en:aluminium-chlorohydrate",
+        "en:aluminum-chloride"
+      ],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["antiperspirant", "mineral-salt"],
+      "title": "Aluminum salts (antiperspirant)",
+      "why": "Active antiperspirant salts that reduce sweat. Extensive use history; public debate about systemic aluminum is not matched by a cosmetic ban. Balanced low severity—function is sweat control; rinse-off and topical use differ from other aluminum exposures.",
+      "sources": [
+        "SCCS opinions on aluminum in cosmetics (public summaries)",
+        "EU CosIng entries for aluminum chlorohydrate and related salts"
+      ]
+    },
+    {
+      "id": "cyclotetrasiloxane",
+      "names": ["cyclotetrasiloxane", "d4", "octamethylcyclotetrasiloxane"],
+      "aliases": ["en:cyclotetrasiloxane", "en:d4"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["silicone", "restricted", "environmental"],
+      "title": "Cyclotetrasiloxane (D4)",
+      "why": "Cyclic silicone used for silky feel and spread. EU restricts D4 in rinse-off products largely on environmental (persistence/bioaccumulation) grounds rather than acute human toxicity. Framing is regulatory/environmental, not a medical claim.",
+      "sources": [
+        "EU REACH / Cosmetic Regulation restrictions on D4 in rinse-off (public)",
+        "ECHA substance information on D4 (public summaries)"
+      ]
+    },
+    {
+      "id": "cyclopentasiloxane",
+      "names": ["cyclopentasiloxane", "d5", "decamethylcyclopentasiloxane"],
+      "aliases": ["en:cyclopentasiloxane", "en:d5"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["silicone", "restricted", "environmental"],
+      "title": "Cyclopentasiloxane (D5)",
+      "why": "Very common cyclic silicone for slip and volatility. EU rinse-off restrictions focus on environmental profile (PBT-related concerns), not a claim that skin contact is acutely hazardous at cosmetic levels.",
+      "sources": [
+        "EU REACH / Cosmetic Regulation restrictions on D5 in rinse-off (public)",
+        "ECHA substance information on D5 (public summaries)"
+      ]
+    },
+    {
+      "id": "benzyl-alcohol",
+      "names": ["benzyl alcohol"],
+      "aliases": ["en:benzyl-alcohol"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "preservative", "fragrance-component"],
+      "title": "Benzyl alcohol",
+      "why": "Used as preservative, solvent, and fragrance component; also an EU-listed fragrance allergen above thresholds. Generally low concern at permitted levels; mild note for fragrance-sensitive users.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS opinions on benzyl alcohol where applicable (public)"
+      ]
+    },
+    {
+      "id": "hexyl-cinnamal",
+      "names": ["hexyl cinnamal", "hexylcinnamal", "alpha-hexyl cinnamaldehyde"],
+      "aliases": ["en:hexyl-cinnamal", "en:hexylcinnamal"],
+      "domain": "beauty",
+      "severity": 1,
+      "categories": ["allergen", "fragrance-component"],
+      "title": "Hexyl cinnamal",
+      "why": "Jasmine-like fragrance allergen on the EU labelling list. Scenting agent only; low severity unless you avoid listed fragrance allergens.",
+      "sources": [
+        "EU Cosmetic Regulation Annex III — fragrance allergens",
+        "SCCS fragrance allergen opinions (public summaries)"
+      ]
+    }
+  ]
+}

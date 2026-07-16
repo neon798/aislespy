@@ -8,6 +8,7 @@ import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
 import app.aislespy.data.remote.ProductRepository
+import app.aislespy.domain.scoring.BeautyScoreEngine
 import app.aislespy.domain.scoring.CategoryResolver
 import app.aislespy.domain.scoring.FoodScoreEngine
 import app.aislespy.domain.scoring.ScoreEngine
@@ -30,7 +31,6 @@ import java.util.concurrent.TimeUnit
  *
  * Planned wiring (placeholders until the owning tasks ship):
  * - **db** — Room [AisleSpyDatabase] for history + product cache (T-500)
- * - **beautyEngine** — [BeautyScoreEngine] (T-410)
  */
 class AppContainer(
     private val appContext: Context,
@@ -76,7 +76,7 @@ class AppContainer(
      * Food knowledge pack (T-300/T-310). Loaded lazily on first access from assets.
      * Prefer loading off the main thread when first needed (lazy is fine for MVP).
      */
-    val knowledgePack: KnowledgePack by lazy {
+    val foodKnowledgePack: KnowledgePack by lazy {
         KnowledgePackLoader.loadFromAssets(
             context = appContext,
             assetPath = KnowledgePackLoader.FOOD_PACK_ASSET,
@@ -84,14 +84,30 @@ class AppContainer(
         )
     }
 
+    /**
+     * Beauty knowledge pack (T-400). Loaded lazily, independent of the food pack.
+     */
+    val beautyKnowledgePack: KnowledgePack by lazy {
+        KnowledgePackLoader.loadFromAssets(
+            context = appContext,
+            assetPath = KnowledgePackLoader.BEAUTY_PACK_ASSET,
+            json = json,
+        )
+    }
+
+    /** @deprecated Prefer [foodKnowledgePack]; kept for any residual call sites. */
+    val knowledgePack: KnowledgePack get() = foodKnowledgePack
+
     /** Pure food scoring engine (T-320). Stateless; safe to share. */
     val foodScoreEngine: ScoreEngine by lazy { FoodScoreEngine() }
+
+    /** Pure beauty scoring engine (T-410). Stateless; safe to share. */
+    val beautyScoreEngine: ScoreEngine by lazy { BeautyScoreEngine() }
 
     /** Last scored concerns for ingredient detail navigation (T-330). */
     val concernDetailStore: ConcernDetailStore by lazy { ConcernDetailStore() }
 
     // TODO(T-500): val db: AisleSpyDatabase
-    // TODO(T-410): val beautyEngine: BeautyScoreEngine
 
     private fun createRetrofit(baseUrl: String): Retrofit {
         val contentType = "application/json".toMediaType()

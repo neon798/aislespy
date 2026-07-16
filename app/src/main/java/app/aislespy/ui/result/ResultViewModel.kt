@@ -16,6 +16,7 @@ import app.aislespy.domain.model.Product
 import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.ScoreComponent
 import app.aislespy.domain.model.ScoreResult
+import app.aislespy.domain.scoring.BeautyScoreEngine
 import app.aislespy.domain.scoring.FoodScoreEngine
 import app.aislespy.domain.scoring.ScoreEngine
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,15 +28,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * Loads product data, runs food matcher + [FoodScoreEngine], and maps to UI state.
- * Beauty products keep raw display with a “coming soon” score placeholder (T-410).
+ * Loads product data, runs knowledge matcher + score engine by category, maps to UI state.
+ *
+ * Food → [foodKnowledgePack] + [FoodScoreEngine].
+ * Beauty → [beautyKnowledgePack] + [BeautyScoreEngine]; products with no ingredient data
+ * take the Partial path (score hidden, message shown).
  */
 class ResultViewModel(
     private val repository: ProductLookup,
     private val barcode: String,
     private val source: String = SOURCE_AUTO,
-    private val knowledgePack: KnowledgePack? = null,
+    private val foodKnowledgePack: KnowledgePack? = null,
+    private val beautyKnowledgePack: KnowledgePack? = null,
     private val foodScoreEngine: ScoreEngine = FoodScoreEngine(),
+    private val beautyScoreEngine: ScoreEngine = BeautyScoreEngine(),
     private val concernStore: ConcernDetailStore = ConcernDetailStore(),
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
@@ -125,7 +131,7 @@ class ResultViewModel(
         )
         val ingredients = ingredientsText?.takeIf { it.isNotBlank() }
 
-        if (category == ProductCategory.Beauty) {
+        if (category == ProductCategory.Beauty && !BeautyScoreEngine.hasIngredientData(this)) {
             concernStore.publishEmpty()
             return ResultUiState.Success(
                 product = header,
@@ -135,14 +141,24 @@ class ResultViewModel(
                 badges = emptyList(),
                 disclaimerVisible = true,
                 ingredientsText = ingredients,
-                beautyScoringPending = true,
+                beautyScoringPending = false,
+                partialMessage = PARTIAL_NO_INGREDIENTS,
             )
         }
 
+        val pack = when (category) {
+            ProductCategory.Food -> foodKnowledgePack
+            ProductCategory.Beauty -> beautyKnowledgePack
+        }
+        val engine = when (category) {
+            ProductCategory.Food -> foodScoreEngine
+            ProductCategory.Beauty -> beautyScoreEngine
+        }
+
         val scoreResult = withContext(defaultDispatcher) {
-            val matches = if (knowledgePack != null) {
+            val matches = if (pack != null) {
                 KnowledgeMatcher.match(
-                    pack = knowledgePack,
+                    pack = pack,
                     additivesTags = additivesTags,
                     ingredientsTags = ingredientsTags,
                     allergensTags = allergensTags,
@@ -151,7 +167,7 @@ class ResultViewModel(
             } else {
                 emptyList()
             }
-            foodScoreEngine.score(this@toSuccessState, matches)
+            engine.score(this@toSuccessState, matches)
         }
         concernStore.publish(scoreResult)
 
@@ -164,6 +180,7 @@ class ResultViewModel(
             disclaimerVisible = true,
             ingredientsText = ingredients,
             beautyScoringPending = false,
+            partialMessage = null,
         )
     }
 
@@ -242,8 +259,10 @@ class ResultViewModel(
                 repository = container.repository,
                 barcode = barcode,
                 source = source,
-                knowledgePack = container.knowledgePack,
+                foodKnowledgePack = container.foodKnowledgePack,
+                beautyKnowledgePack = container.beautyKnowledgePack,
                 foodScoreEngine = container.foodScoreEngine,
+                beautyScoreEngine = container.beautyScoreEngine,
                 concernStore = container.concernDetailStore,
             ) as T
         }
@@ -253,6 +272,10 @@ class ResultViewModel(
         const val SOURCE_AUTO = "auto"
         const val SOURCE_FOOD = "food"
         const val SOURCE_BEAUTY = "beauty"
+
+        /** Partial path copy per docs/SCORING.md preferred MVP behaviour. */
+        const val PARTIAL_NO_INGREDIENTS =
+            "Found product, but no ingredients to score"
 
         /** Mandatory disclaimer from docs/SCORING.md (also shown in UI footer). */
         const val DISCLAIMER_TEXT =

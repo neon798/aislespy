@@ -80,10 +80,15 @@ sealed class ResultUiState {
         /** Free-text ingredients for display / transparency. */
         val ingredientsText: String?,
         /**
-         * Beauty products keep raw display until T-410; when true, show
-         * "Beauty scoring coming soon" instead of [score].
+         * Legacy flag (pre–T-410). Prefer [partialMessage] for no-score paths.
+         * When true, UI may still show a non-score placeholder.
          */
         val beautyScoringPending: Boolean = false,
+        /**
+         * When set, product was found but numeric score is omitted (Partial path),
+         * e.g. beauty with no ingredient data. UI shows this message and “—”.
+         */
+        val partialMessage: String? = null,
     ) : ResultUiState()
 
     data class NotFound(

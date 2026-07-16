@@ -21,7 +21,31 @@ object ScoringConfig {
         const val POSITIVES: Double = 0.05
     }
 
-    /** Severity → additives subscore deduction (applied once per unique entry id). */
+    /** Beauty component base weights (docs/SCORING.md). */
+    object BeautyWeights {
+        const val HAZARDS: Double = 0.70
+        const val ALLERGENS_FRAGRANCE: Double = 0.15
+        const val REGULATORY: Double = 0.15
+    }
+
+    /** Fragrance umbrella deduction on the allergens/fragrance subscore. */
+    const val BEAUTY_FRAGRANCE_DEDUCTION: Int = 25
+
+    /** Per EU-listed allergen match; total allergen-only deductions capped. */
+    const val BEAUTY_ALLERGEN_DEDUCTION: Int = 5
+    const val BEAUTY_ALLERGEN_DEDUCTION_CAP: Int = 40
+
+    /** Regulatory category deductions. */
+    const val BEAUTY_REGULATORY_SEV5: Int = 20
+    const val BEAUTY_REGULATORY_SEV4_OR_LOWER: Int = 12
+
+    /**
+     * Position weight when ordered list is unknown (free text / tags only).
+     * docs/SCORING.md: use 0.7 for all matches and cap confidence ≤ Medium.
+     */
+    const val BEAUTY_UNKNOWN_POSITION_WEIGHT: Double = 0.7
+
+    /** Severity → base deduction (food additives & beauty hazards). */
     fun severityDeduction(severity: Int): Int = when (severity) {
         1 -> 2
         2 -> 4
