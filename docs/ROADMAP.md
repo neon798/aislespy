@@ -2,9 +2,15 @@
 
 Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent set) at a time and meet acceptance criteria.
 
+## Implementation status (2026-07-16)
+
+T-100…T-520 implemented by Grok Build under Claude advisor review. Verified via JVM unit tests (99 green) and `assembleDebug` / `assembleRelease`; CI runs on GitHub Actions. **Emulator/device manual verification pending.** Phase 6 (T-600/610/620) not started.
+
+Acceptance checkboxes below are marked `[x]` only where criteria are verifiable by build config, source structure, or unit tests. Device-dependent items (emulator runs, manual smoke, TalkBack checks, fresh-install UI flows) remain unchecked.
+
 ---
 
-## Phase 0 — Documentation (current)
+## Phase 0 — Documentation
 
 ### T-000 Project documentation scaffold
 - **Phase:** 0
@@ -25,10 +31,10 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-000
 - **Files (expected):** `settings.gradle.kts`, `app/build.gradle.kts`, `MainActivity.kt`, theme files, `AndroidManifest.xml`
 - **Acceptance criteria:**
-  - [ ] Application ID `app.aislespy`
-  - [ ] minSdk 26, targetSdk 35
+  - [x] Application ID `app.aislespy`
+  - [x] minSdk 26, targetSdk 35
   - [ ] Empty Compose “AisleSpy” screen runs on emulator
-  - [ ] No Play Services dependencies
+  - [x] No Play Services dependencies
 - **Verify:** `./gradlew assembleDebug`
 
 ### T-110 Navigation shell
@@ -36,7 +42,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-100
 - **Files:** `ui/navigation/NavGraph.kt`, stub screens for all UI_UX routes
 - **Acceptance criteria:**
-  - [ ] All routes in UI_UX.md exist as stubs
+  - [x] All routes in UI_UX.md exist as stubs
   - [ ] Bottom/top nav: Scan, History, Settings reachable
 - **Verify:** Manual navigation smoke test
 
@@ -45,8 +51,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-100
 - **Files:** `di/AppContainer.kt`
 - **Acceptance criteria:**
-  - [ ] Container constructed from Application/Activity
-  - [ ] Placeholders for APIs/DB documented
+  - [x] Container constructed from Application/Activity
+  - [x] Placeholders for APIs/DB documented
 - **Verify:** App launches
 
 ### T-130 CI workflow
@@ -54,7 +60,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-100
 - **Files:** `.github/workflows/android.yml`
 - **Acceptance criteria:**
-  - [ ] On push: `assembleDebug` (+ unit tests when present)
+  - [x] On push: `assembleDebug` (+ unit tests when present)
 - **Verify:** Workflow file valid YAML
 
 ---
@@ -67,7 +73,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Files:** `ui/scan/*`, camera permission flow
 - **Acceptance criteria:**
   - [ ] Continuous scan; debounce 2s
-  - [ ] Works without Play Services
+  - [x] Works without Play Services
   - [ ] Manual entry path works
 - **Verify:** VERIFICATION § Scanner
 
@@ -76,9 +82,9 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-120
 - **Files:** `data/remote/*`
 - **Acceptance criteria:**
-  - [ ] Correct User-Agent + fields filter
-  - [ ] Maps to domain Product
-  - [ ] MockWebServer tests for found/not found
+  - [x] Correct User-Agent + fields filter
+  - [x] Maps to domain Product
+  - [x] MockWebServer tests for found/not found
 - **Verify:** VERIFICATION § API
 
 ### T-220 ProductRepository + CategoryResolver
@@ -86,8 +92,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-210
 - **Files:** `ProductRepository.kt`, `CategoryResolver.kt`
 - **Acceptance criteria:**
-  - [ ] Parallel lookup per API_CONTRACTS
-  - [ ] NeedsCategoryChoice when both hit ambiguously
+  - [x] Parallel lookup per API_CONTRACTS
+  - [x] NeedsCategoryChoice when both hit ambiguously
 - **Verify:** Unit tests for resolution matrix
 
 ### T-230 Result screen (raw product, no custom score)
@@ -96,7 +102,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Files:** `ui/result/*`
 - **Acceptance criteria:**
   - [ ] Shows name, brand, image, ingredients text
-  - [ ] Loading / not found / network error states
+  - [x] Loading / not found / network error states
 - **Verify:** Manual lookup Nutella barcode
 
 ---
@@ -108,7 +114,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-000
 - **Files:** `assets/knowledge/food_additives_v1.json` (≥ 50 entries)
 - **Acceptance criteria:**
-  - [ ] Schema-valid; sources on every entry
+  - [x] Schema-valid; sources on every entry
 - **Verify:** JSON schema validation
 
 ### T-310 KnowledgePackLoader + match
@@ -116,8 +122,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-300, T-100
 - **Files:** `data/knowledge/*`
 - **Acceptance criteria:**
-  - [ ] Matches aliases/tags per KNOWLEDGE_PACK.md
-  - [ ] Unit tests with sample product tags
+  - [x] Matches aliases/tags per KNOWLEDGE_PACK.md
+  - [x] Unit tests with sample product tags
 - **Verify:** VERIFICATION § Knowledge
 
 ### T-320 FoodScoreEngine
@@ -125,8 +131,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-310
 - **Files:** `domain/scoring/FoodScoreEngine.kt`
 - **Acceptance criteria:**
-  - [ ] Implements SCORING.md v1.0.0 food section
-  - [ ] Golden tests (high / low / partial data)
+  - [x] Implements SCORING.md v1.0.0 food section
+  - [x] Golden tests (high / low / partial data)
 - **Verify:** VERIFICATION § Food scoring
 
 ### T-330 Result UI score + concerns (food)
@@ -146,7 +152,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-000
 - **Files:** `assets/knowledge/beauty_ingredients_v1.json`
 - **Acceptance criteria:**
-  - [ ] Schema-valid; includes fragrance + high-concern INCI
+  - [x] Schema-valid; includes fragrance + high-concern INCI
 - **Verify:** Schema validation
 
 ### T-410 BeautyScoreEngine
@@ -154,8 +160,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-400, T-310
 - **Files:** `domain/scoring/BeautyScoreEngine.kt`
 - **Acceptance criteria:**
-  - [ ] Position weighting per SCORING.md
-  - [ ] Golden tests
+  - [x] Position weighting per SCORING.md
+  - [x] Golden tests
 - **Verify:** VERIFICATION § Beauty scoring
 
 ### T-420 Category chooser UI
@@ -163,8 +169,8 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-220, T-110
 - **Files:** `ui` category_chooser
 - **Acceptance criteria:**
-  - [ ] Shown only on dual ambiguous hit
-  - [ ] Routes with source=food|beauty
+  - [x] Shown only on dual ambiguous hit
+  - [x] Routes with source=food|beauty
 - **Verify:** Instrumented or manual with fixture override
 
 ---
@@ -176,9 +182,10 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Depends on:** T-220
 - **Files:** `data/local/*`
 - **Acceptance criteria:**
-  - [ ] History CRUD; product cache TTL
+  - [x] History CRUD; product cache TTL
   - [ ] Offline history readable
 - **Verify:** VERIFICATION § Offline
+- **Note:** Cache TTL and history write path covered by unit tests (in-memory fakes); full Room CRUD / offline UI not instrumented.
 
 ### T-510 Onboarding + settings + methodology
 - **Phase:** 5
@@ -186,8 +193,9 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 - **Files:** settings screens, DataStore flag
 - **Acceptance criteria:**
   - [ ] First-launch privacy copy matches PRIVACY.md
-  - [ ] Versions displayed
+  - [x] Versions displayed
 - **Verify:** Fresh install flow
+- **Note:** SettingsViewModel exposes app / methodology / knowledge-pack versions (unit-tested); first-launch copy match is manual.
 
 ### T-520 Visual polish + a11y pass
 - **Phase:** 5

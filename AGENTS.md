@@ -1,6 +1,6 @@
 # AGENTS.md — AisleSpy
 
-**STATUS:** `documentation complete; implementation not started`
+**STATUS:** `phases 1–5 implemented (unit-tested, CI green); phase 6 (ship) not started; device verification pending`
 
 This file is the primary entry point for any human or coding agent working on AisleSpy. You do **not** need prior chat context if you follow the read order and non-negotiables below.
 
@@ -24,13 +24,15 @@ Full product vision: [docs/PRODUCT.md](docs/PRODUCT.md)
 
 | Phase | Name | Status |
 |-------|------|--------|
-| 0 | Documentation & agent handoff | **Done** (this tree) |
-| 1 | Android project bootstrap | Not started |
-| 2 | Scan + dual API lookup | Not started |
-| 3 | Food scoring + concerns | Not started |
-| 4 | Beauty scoring + concerns | Not started |
-| 5 | History, polish, trust | Not started |
+| 0 | Documentation & agent handoff | **Done** |
+| 1 | Android project bootstrap | **Done** |
+| 2 | Scan + dual API lookup | **Done** |
+| 3 | Food scoring + concerns | **Done** |
+| 4 | Beauty scoring + concerns | **Done** |
+| 5 | History, polish, trust | **Done** |
 | 6 | Ship (GitHub Releases + F-Droid) | Not started |
+
+Phases 1–5 are implemented under `app/`, covered by JVM unit tests and green CI (`assembleDebug` / `assembleRelease` / unit tests). **On-device and emulator manual verification has not been performed.** Phase 6 (release signing, F-Droid metadata verification, inclusion request) is not started.
 
 **Do not invent product decisions.** If something is unspecified, check `docs/DECISIONS.md` and open a decision entry rather than guessing.
 
@@ -79,7 +81,7 @@ Also read when relevant:
 | Language | Kotlin |
 | UI | Jetpack Compose + Material 3 |
 | Barcode | CameraX + **zxing-cpp** (not ML Kit) |
-| HTTP | Ktor Client (OkHttp engine) *or* Retrofit + OkHttp |
+| HTTP | Retrofit + OkHttp (ADR-013; not Ktor) |
 | JSON | Kotlinx Serialization |
 | Local DB | Room (history + product cache) |
 | Prefs | DataStore |
@@ -139,6 +141,6 @@ Never hard-code mystery multipliers only in code.
 
 ---
 
-## What not to do in Phase 0
+## Current state
 
-This repository currently has **documentation and schemas only**. Do not add Gradle/Kotlin/Compose sources until an explicit “start Phase 1 / start coding” instruction.
+Application code lives under `app/` (Kotlin, Jetpack Compose). The Gradle wrapper is committed; build with `./gradlew assembleDebug` / `test`. Docs under `docs/` remain the product and architecture source of truth. Scoring or knowledge-pack changes still require updates to [docs/SCORING.md](docs/SCORING.md) and [docs/DECISIONS.md](docs/DECISIONS.md) (and golden tests / `knowledge/` as appropriate)—never mystery multipliers only in code.

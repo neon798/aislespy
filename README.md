@@ -4,7 +4,7 @@
 
 Privacy-first Android app to scan food and beauty barcodes, score products **1–100**, and explain problem ingredients in plain language—using open data, not user surveillance.
 
-[![Status](https://img.shields.io/badge/status-docs%20only-blue)](#project-status)
+[![Status](https://img.shields.io/badge/status-alpha%20(phases%201–5)-blue)](#project-status)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green)](LICENSE)
 
 ---
@@ -23,20 +23,21 @@ Data comes from **[Open Food Facts](https://world.openfoodfacts.org/)** and **[O
 ## Project status
 
 ```
-STATUS: documentation complete; implementation not started
+STATUS: alpha — phases 1–5 implemented (unit-tested, CI green);
+        phase 6 (ship) not started; device verification pending
 ```
 
-Phase 0 is done: product specs, architecture, UI/view contracts, scoring methodology, API contracts, and agent handoff docs. **No Android application source yet.**
+Implementation covers scan, dual OFF/OBF lookup, food and beauty scoring, history, settings, and polish under `app/`. Verified via JVM unit tests and debug/release builds; **emulator/device manual verification is still pending.** Phase 6 (release signing, F-Droid path) has not started.
 
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 0 | Docs & agent handoff | Done |
-| 1 | Android bootstrap (Compose) | Pending |
-| 2 | Barcode scan + OFF/OBF lookup | Pending |
-| 3 | Food scoring | Pending |
-| 4 | Beauty scoring | Pending |
-| 5 | History & polish | Pending |
-| 6 | GitHub Releases + F-Droid | Pending |
+| 1 | Android bootstrap (Compose) | Done |
+| 2 | Barcode scan + OFF/OBF lookup | Done |
+| 3 | Food scoring | Done |
+| 4 | Beauty scoring | Done |
+| 5 | History & polish | Done |
+| 6 | GitHub Releases + F-Droid | Not started |
 
 See [docs/ROADMAP.md](docs/ROADMAP.md).
 
@@ -76,9 +77,9 @@ Start at **[AGENTS.md](AGENTS.md)**. Read order and non-negotiables are defined 
 
 ---
 
-## Stack (planned)
+## Stack
 
-Kotlin · Jetpack Compose · Material 3 · CameraX · zxing-cpp · Room · OkHttp/Ktor · Coil
+Kotlin · Jetpack Compose · Material 3 · CameraX · zxing-cpp · Room · Retrofit + OkHttp · Coil
 
 Application ID: `app.aislespy`
 
@@ -94,4 +95,4 @@ Product data is © Open Food Facts / Open Beauty Facts contributors, available u
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Implementation has not started; documentation PRs and scoring methodology feedback are welcome once the repo is public.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Phases 1–5 are implemented; contributions that match the docs (especially scoring methodology, knowledge packs, and Phase 6 ship work) are welcome.
