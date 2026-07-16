@@ -4,18 +4,23 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import app.aislespy.di.AppContainer
+import app.aislespy.ui.navigation.AisleSpyNavGraph
 import app.aislespy.ui.theme.AisleSpyTheme
 
 class MainActivity : ComponentActivity() {
+
+    /** Application-scoped composition root; wiring grows as features land. */
+    lateinit var container: AppContainer
+        private set
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        container = (application as AisleSpyApp).container
         enableEdgeToEdge()
         setContent {
             AisleSpyTheme {
@@ -23,15 +28,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "AisleSpy",
-                            style = MaterialTheme.typography.headlineMedium,
-                        )
-                    }
+                    AisleSpyNavGraph()
                 }
             }
         }
