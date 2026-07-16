@@ -15,9 +15,34 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = "0.1.0-beta.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Conditional release signing: only when all four props/env vars are present.
+    // Absent in CI → unsigned release (same as before). Never commit secrets.
+    // Prefer -P gradle properties; fall back to env vars with the same names.
+    val keystorePath = (findProperty("aislespy.keystore.path") as String?)
+        ?: System.getenv("aislespy.keystore.path")
+    val keystorePassword = (findProperty("aislespy.keystore.password") as String?)
+        ?: System.getenv("aislespy.keystore.password")
+    val keyAlias = (findProperty("aislespy.key.alias") as String?)
+        ?: System.getenv("aislespy.key.alias")
+    val keyPassword = (findProperty("aislespy.key.password") as String?)
+        ?: System.getenv("aislespy.key.password")
+    val releaseSigningReady = listOf(keystorePath, keystorePassword, keyAlias, keyPassword)
+        .all { !it.isNullOrBlank() }
+
+    if (releaseSigningReady) {
+        signingConfigs {
+            create("release") {
+                storeFile = file(keystorePath!!)
+                storePassword = keystorePassword
+                this.keyAlias = keyAlias
+                this.keyPassword = keyPassword
+            }
+        }
     }
 
     buildTypes {
@@ -27,6 +52,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            if (releaseSigningReady) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 
