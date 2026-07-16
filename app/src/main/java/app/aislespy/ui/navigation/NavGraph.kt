@@ -19,6 +19,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import app.aislespy.ui.history.HistoryScreen
 import app.aislespy.ui.ingredient.IngredientDetailScreen
+import app.aislespy.ui.onboarding.OnboardingScreen
 import app.aislespy.ui.result.CategoryChooserScreen
 import app.aislespy.ui.result.ResultScreen
 import app.aislespy.ui.result.ResultViewModel
@@ -34,6 +35,7 @@ import app.aislespy.ui.settings.SettingsScreen
  * Keep in sync; do not invent routes without updating the doc.
  */
 object Routes {
+    const val ONBOARDING = "onboarding"
     const val SCAN = "scan"
     const val MANUAL = "manual"
     const val RESULT = "result/{barcode}?source={source}"
@@ -75,12 +77,14 @@ private val bottomBarRoutes = topLevelDestinations.map { it.route }.toSet()
 
 @Composable
 fun AisleSpyNavGraph(
+    firstLaunchDone: Boolean,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val showBottomBar = currentDestination?.route in bottomBarRoutes
+    val startDestination = if (firstLaunchDone) Routes.SCAN else Routes.ONBOARDING
 
     Scaffold(
         modifier = modifier,
@@ -112,9 +116,18 @@ fun AisleSpyNavGraph(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Routes.SCAN,
+            startDestination = startDestination,
             modifier = Modifier.padding(innerPadding),
         ) {
+            composable(Routes.ONBOARDING) {
+                OnboardingScreen(
+                    onFinished = {
+                        navController.navigate(Routes.SCAN) {
+                            popUpTo(Routes.ONBOARDING) { inclusive = true }
+                        }
+                    },
+                )
+            }
             composable(Routes.SCAN) {
                 ScanScreen(
                     onManualEntry = {
@@ -245,16 +258,26 @@ fun AisleSpyNavGraph(
                 )
             }
             composable(Routes.SETTINGS) {
-                SettingsScreen()
+                SettingsScreen(
+                    onMethodology = { navController.navigate(Routes.METHODOLOGY) },
+                    onPrivacy = { navController.navigate(Routes.PRIVACY) },
+                    onLicenses = { navController.navigate(Routes.LICENSES) },
+                )
             }
             composable(Routes.METHODOLOGY) {
-                MethodologyScreen()
+                MethodologyScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(Routes.PRIVACY) {
-                PrivacyScreen()
+                PrivacyScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(Routes.LICENSES) {
-                LicensesScreen()
+                LicensesScreen(
+                    onBack = { navController.popBackStack() },
+                )
             }
         }
     }

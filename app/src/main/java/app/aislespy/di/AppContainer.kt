@@ -9,6 +9,7 @@ import app.aislespy.data.local.AisleSpyDatabase
 import app.aislespy.data.local.HistoryDao
 import app.aislespy.data.local.HistoryRepository
 import app.aislespy.data.local.ProductCacheDao
+import app.aislespy.data.prefs.UserPrefs
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
@@ -73,6 +74,9 @@ class AppContainer(
     val productCacheDao: ProductCacheDao by lazy { db.productCacheDao() }
 
     val historyRepository: HistoryRepository by lazy { HistoryRepository(historyDao) }
+
+    /** First-launch / onboarding preferences (T-510). Theme follows system — no theme pref yet. */
+    val userPrefs: UserPrefs by lazy { UserPrefs.create(appContext) }
 
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
