@@ -1,0 +1,1434 @@
+{
+  "version": "1.0.0",
+  "domain": "food",
+  "entries": [
+    {
+      "id": "e102",
+      "names": [
+        "tartrazine",
+        "e102",
+        "fd&c yellow 5",
+        "yellow 5"
+      ],
+      "aliases": [
+        "en:e102",
+        "en:tartrazine"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye"
+      ],
+      "title": "Tartrazine (E102)",
+      "why": "A synthetic azo yellow colour used in sweets, drinks, and snacks. The Southampton study and later EFSA reviews linked some colours (including tartrazine) with hyperactivity in sensitive children when combined with sodium benzoate; EU products may carry a warning label.",
+      "sources": [
+        "EFSA opinion on tartrazine (E 102), 2009",
+        "Southampton study (McCann et al., Lancet 2007) — mixture context"
+      ]
+    },
+    {
+      "id": "e104",
+      "names": [
+        "quinoline yellow",
+        "e104"
+      ],
+      "aliases": [
+        "en:e104",
+        "en:quinoline-yellow"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour"
+      ],
+      "title": "Quinoline yellow (E104)",
+      "why": "A synthetic yellow dye used in confectionery and drinks. Included among colours associated with attention effects in some children when mixed with other additives; the EU requires a warning on products containing it.",
+      "sources": [
+        "EFSA opinion on quinoline yellow (E 104)",
+        "Regulation (EC) No 1333/2008 — colour warning label"
+      ]
+    },
+    {
+      "id": "e110",
+      "names": [
+        "sunset yellow",
+        "sunset yellow fcf",
+        "e110",
+        "fd&c yellow 6",
+        "yellow 6"
+      ],
+      "aliases": [
+        "en:e110",
+        "en:sunset-yellow-fcf"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye"
+      ],
+      "title": "Sunset yellow FCF (E110)",
+      "why": "An azo orange-yellow colour common in soft drinks and snacks. Part of the Southampton colour mix studied for behavioural effects in children; EFSA set an ADI and the EU requires a warning label on products that use it.",
+      "sources": [
+        "EFSA opinion on sunset yellow FCF (E 110)",
+        "Southampton study (McCann et al., Lancet 2007) — mixture context"
+      ]
+    },
+    {
+      "id": "e122",
+      "names": [
+        "azorubine",
+        "carmoisine",
+        "e122"
+      ],
+      "aliases": [
+        "en:e122",
+        "en:azorubine",
+        "en:carmoisine"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye"
+      ],
+      "title": "Azorubine / carmoisine (E122)",
+      "why": "A red azo dye used in confectionery and desserts. Included in EU colour-warning requirements after reviews of possible effects on children's activity and attention when combined with other additives.",
+      "sources": [
+        "EFSA opinion on azorubine/carmoisine (E 122)",
+        "Regulation (EC) No 1333/2008 — colour warning label"
+      ]
+    },
+    {
+      "id": "e123",
+      "names": [
+        "amaranth",
+        "e123"
+      ],
+      "aliases": [
+        "en:e123",
+        "en:amaranth"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye",
+        "restricted"
+      ],
+      "title": "Amaranth (E123)",
+      "why": "A red azo colour with restricted uses in some jurisdictions. Authorised in the EU only for limited food categories with maximum levels; historical safety debates led to tighter controls.",
+      "sources": [
+        "EFSA re-evaluation of amaranth (E 123)",
+        "Regulation (EC) No 1333/2008 annexes"
+      ]
+    },
+    {
+      "id": "e124",
+      "names": [
+        "ponceau 4r",
+        "cochineal red a",
+        "e124"
+      ],
+      "aliases": [
+        "en:e124",
+        "en:ponceau-4r"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye"
+      ],
+      "title": "Ponceau 4R (E124)",
+      "why": "A red azo dye used in sweets and soft drinks. Subject to the EU hyperactivity warning label for certain synthetic colours; EFSA has set an acceptable daily intake after re-evaluation.",
+      "sources": [
+        "EFSA opinion on Ponceau 4R (E 124)",
+        "Regulation (EC) No 1333/2008 — colour warning label"
+      ]
+    },
+    {
+      "id": "e129",
+      "names": [
+        "allura red",
+        "allura red ac",
+        "e129",
+        "fd&c red 40",
+        "red 40"
+      ],
+      "aliases": [
+        "en:e129",
+        "en:allura-red-ac"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour",
+        "azo-dye"
+      ],
+      "title": "Allura red AC (E129)",
+      "why": "A widely used red azo colour (Red 40 in the US). One of the colours in the Southampton mix; EU law requires a warning that it may have an adverse effect on activity and attention in children.",
+      "sources": [
+        "EFSA opinion on Allura Red AC (E 129)",
+        "Southampton study (McCann et al., Lancet 2007) — mixture context"
+      ]
+    },
+    {
+      "id": "e150a",
+      "names": [
+        "plain caramel",
+        "e150a",
+        "caramel color"
+      ],
+      "aliases": [
+        "en:e150a",
+        "en:plain-caramel"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "colour"
+      ],
+      "title": "Plain caramel (E150a)",
+      "why": "Caramel colour made without ammonia or sulfite processes. Generally viewed as the simplest caramel class; listed for transparency when colour is used, not as a high-priority hazard.",
+      "sources": [
+        "EFSA re-evaluation of caramel colours (E 150a–d)",
+        "JECFA monographs on caramel colour"
+      ]
+    },
+    {
+      "id": "e150c",
+      "names": [
+        "ammonia caramel",
+        "e150c"
+      ],
+      "aliases": [
+        "en:e150c",
+        "en:ammonia-caramel"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "colour"
+      ],
+      "title": "Ammonia caramel (E150c)",
+      "why": "Caramel colour produced with ammonia, common in beers and sauces. EFSA evaluated process-related constituents (e.g. 4-MEI) and set group ADIs; concern is dose- and process-dependent rather than absolute.",
+      "sources": [
+        "EFSA re-evaluation of caramel colours (E 150a–d)",
+        "JECFA evaluation of caramel colour III"
+      ]
+    },
+    {
+      "id": "e150d",
+      "names": [
+        "sulfite ammonia caramel",
+        "e150d",
+        "caramel colour iv"
+      ],
+      "aliases": [
+        "en:e150d",
+        "en:sulfite-ammonia-caramel"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "colour"
+      ],
+      "title": "Sulfite ammonia caramel (E150d)",
+      "why": "The most intensively processed caramel class, widely used in colas. Discussions focus on 4-methylimidazole (4-MEI) formed in manufacture; regulators set specifications and ADIs rather than a blanket ban.",
+      "sources": [
+        "EFSA re-evaluation of caramel colours (E 150a–d)",
+        "IARC Monographs — 4-methylimidazole (context)"
+      ]
+    },
+    {
+      "id": "e171",
+      "names": [
+        "titanium dioxide",
+        "e171",
+        "tiO2",
+        "titanium dioxide e171"
+      ],
+      "aliases": [
+        "en:e171",
+        "en:titanium-dioxide"
+      ],
+      "domain": "food",
+      "severity": 5,
+      "categories": [
+        "colour",
+        "banned"
+      ],
+      "title": "Titanium dioxide (E171)",
+      "why": "A whitening agent formerly common in confectionery and coatings. EFSA (2021) concluded it could no longer be considered safe as a food additive due to genotoxicity concerns for particles; the EU banned it in food from 2022.",
+      "sources": [
+        "EFSA opinion on titanium dioxide (E 171), 2021",
+        "Commission Regulation (EU) 2022/63 — ban as food additive"
+      ]
+    },
+    {
+      "id": "e200",
+      "names": [
+        "sorbic acid",
+        "e200"
+      ],
+      "aliases": [
+        "en:e200",
+        "en:sorbic-acid"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Sorbic acid (E200)",
+      "why": "A preservative that inhibits moulds and yeasts in cheese, baked goods, and drinks. Widely authorised with an established ADI; listed mainly for transparency and rare sensitivity reports.",
+      "sources": [
+        "EFSA re-evaluation of sorbic acid and sorbates (E 200–203)",
+        "JECFA evaluations of sorbic acid"
+      ]
+    },
+    {
+      "id": "e202",
+      "names": [
+        "potassium sorbate",
+        "e202"
+      ],
+      "aliases": [
+        "en:e202",
+        "en:potassium-sorbate"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Potassium sorbate (E202)",
+      "why": "The potassium salt of sorbic acid, used to extend shelf life. Generally regarded as a low-priority additive at authorised levels; some people report mild sensitivity.",
+      "sources": [
+        "EFSA re-evaluation of sorbic acid and sorbates (E 200–203)"
+      ]
+    },
+    {
+      "id": "e210",
+      "names": [
+        "benzoic acid",
+        "e210"
+      ],
+      "aliases": [
+        "en:e210",
+        "en:benzoic-acid"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Benzoic acid (E210)",
+      "why": "A preservative used in acidic foods and drinks. Can form benzene with ascorbic acid under certain conditions; ADIs apply and some individuals report sensitivity.",
+      "sources": [
+        "EFSA re-evaluation of benzoic acid and benzoates (E 210–213)",
+        "FAO/WHO JECFA monographs on benzoates"
+      ]
+    },
+    {
+      "id": "e211",
+      "names": [
+        "sodium benzoate",
+        "e211"
+      ],
+      "aliases": [
+        "en:e211",
+        "en:sodium-benzoate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Sodium benzoate (E211)",
+      "why": "A common preservative in soft drinks and sauces. Under some conditions it can form benzene with ascorbic acid (vitamin C). Regulators set an acceptable daily intake; some people report sensitivity. Also used in the Southampton colour-mix study context.",
+      "sources": [
+        "EFSA re-evaluation of benzoic acid and benzoates (E 210–213)",
+        "Southampton study (McCann et al., Lancet 2007) — mixture context"
+      ]
+    },
+    {
+      "id": "e212",
+      "names": [
+        "potassium benzoate",
+        "e212"
+      ],
+      "aliases": [
+        "en:e212",
+        "en:potassium-benzoate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Potassium benzoate (E212)",
+      "why": "A benzoate preservative similar in function and regulatory profile to sodium benzoate. Same class concerns around benzene formation with ascorbate and individual sensitivity apply.",
+      "sources": [
+        "EFSA re-evaluation of benzoic acid and benzoates (E 210–213)"
+      ]
+    },
+    {
+      "id": "e214",
+      "names": [
+        "ethylparaben",
+        "ethyl p-hydroxybenzoate",
+        "e214"
+      ],
+      "aliases": [
+        "en:e214",
+        "en:ethyl-p-hydroxybenzoate"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "preservative",
+        "paraben"
+      ],
+      "title": "Ethylparaben (E214)",
+      "why": "A paraben preservative authorised for limited food uses in some regions. Parabens are more discussed in cosmetics; food uses are tightly limited. Severity stays moderate given restricted dietary exposure.",
+      "sources": [
+        "EFSA opinion on parabens as food additives",
+        "Regulation (EC) No 1333/2008 — paraben authorisations"
+      ]
+    },
+    {
+      "id": "e216",
+      "names": [
+        "propylparaben",
+        "propyl p-hydroxybenzoate",
+        "e216"
+      ],
+      "aliases": [
+        "en:e216",
+        "en:propyl-p-hydroxybenzoate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "paraben",
+        "restricted"
+      ],
+      "title": "Propylparaben (E216)",
+      "why": "A propyl paraben once used as a food preservative. EU authorisation as a food additive was withdrawn for propyl- and butylparabens after EFSA raised concerns about reproductive toxicity at higher exposures.",
+      "sources": [
+        "EFSA opinion on parabens (propyl- and butylparaben), 2004/updated reviews",
+        "Regulation (EC) No 1333/2008 amendments"
+      ]
+    },
+    {
+      "id": "e218",
+      "names": [
+        "methylparaben",
+        "methyl p-hydroxybenzoate",
+        "e218"
+      ],
+      "aliases": [
+        "en:e218",
+        "en:methyl-p-hydroxybenzoate"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "preservative",
+        "paraben"
+      ],
+      "title": "Methylparaben (E218)",
+      "why": "A methyl paraben preservative with limited remaining food uses. Generally considered lower priority than longer-chain parabens; still flagged for transparency when present on labels.",
+      "sources": [
+        "EFSA opinion on parabens as food additives",
+        "JECFA evaluations of hydroxybenzoates"
+      ]
+    },
+    {
+      "id": "e220",
+      "names": [
+        "sulfur dioxide",
+        "sulphur dioxide",
+        "e220"
+      ],
+      "aliases": [
+        "en:e220",
+        "en:sulfur-dioxide",
+        "en:sulphur-dioxide"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Sulfur dioxide (E220)",
+      "why": "Used to preserve dried fruit, wine, and some processed foods. Can trigger asthma symptoms in sensitive people; EU law requires labeling above low thresholds because sulfites are a recognised allergen class.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)",
+        "Regulation (EU) No 1169/2011 — sulfites allergen labeling"
+      ]
+    },
+    {
+      "id": "e221",
+      "names": [
+        "sodium sulfite",
+        "sodium sulphite",
+        "e221"
+      ],
+      "aliases": [
+        "en:e221",
+        "en:sodium-sulfite"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Sodium sulfite (E221)",
+      "why": "A sulfite preservative and antioxidant. Same class concerns as other sulfites: respiratory sensitivity in some people and mandatory allergen-style labeling above set levels.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)",
+        "Regulation (EU) No 1169/2011 — sulfites allergen labeling"
+      ]
+    },
+    {
+      "id": "e222",
+      "names": [
+        "sodium bisulfite",
+        "sodium hydrogen sulfite",
+        "e222"
+      ],
+      "aliases": [
+        "en:e222",
+        "en:sodium-hydrogen-sulphite"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Sodium bisulfite (E222)",
+      "why": "A sulfite used for preservation and bleaching in some foods. Can provoke reactions in sulfite-sensitive individuals; labeled when present above regulatory thresholds.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)"
+      ]
+    },
+    {
+      "id": "e223",
+      "names": [
+        "sodium metabisulfite",
+        "sodium metabisulphite",
+        "e223"
+      ],
+      "aliases": [
+        "en:e223",
+        "en:sodium-metabisulphite"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Sodium metabisulfite (E223)",
+      "why": "Common sulfite preservative in dried fruit, shrimp, and wine-related products. Well-documented asthma trigger for a minority of consumers; always check labels if you are sulfite-sensitive.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)",
+        "Regulation (EU) No 1169/2011 — sulfites allergen labeling"
+      ]
+    },
+    {
+      "id": "e224",
+      "names": [
+        "potassium metabisulfite",
+        "potassium metabisulphite",
+        "e224"
+      ],
+      "aliases": [
+        "en:e224",
+        "en:potassium-metabisulphite"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Potassium metabisulfite (E224)",
+      "why": "Sulfite preservative often used in winemaking and food processing. Shares the sulfite class profile: useful against spoilage, but relevant for people with sulfite sensitivity.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)"
+      ]
+    },
+    {
+      "id": "e228",
+      "names": [
+        "potassium bisulfite",
+        "potassium hydrogen sulfite",
+        "e228"
+      ],
+      "aliases": [
+        "en:e228",
+        "en:potassium-hydrogen-sulphite"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative",
+        "allergen-related"
+      ],
+      "title": "Potassium bisulfite (E228)",
+      "why": "A less common sulfite preservative in the E220–E228 group. Same regulatory and sensitivity considerations as other food sulfites.",
+      "sources": [
+        "EFSA opinions on sulfur dioxide–sulfites (E 220–228)"
+      ]
+    },
+    {
+      "id": "e249",
+      "names": [
+        "potassium nitrite",
+        "e249"
+      ],
+      "aliases": [
+        "en:e249",
+        "en:potassium-nitrite"
+      ],
+      "domain": "food",
+      "severity": 4,
+      "categories": [
+        "preservative",
+        "color-fixant"
+      ],
+      "title": "Potassium nitrite (E249)",
+      "why": "Used in cured meats to inhibit Clostridium botulinum and fix pink colour. Can contribute to nitrosamine formation; public-health guidance often advises limiting processed meat intake (IARC classifies processed meat as carcinogenic to humans).",
+      "sources": [
+        "EFSA opinions on nitrites (E 249–250) and nitrates (E 251–252)",
+        "IARC Monographs Vol. 114 — processed meat (context)"
+      ]
+    },
+    {
+      "id": "e250",
+      "names": [
+        "sodium nitrite",
+        "e250"
+      ],
+      "aliases": [
+        "en:e250",
+        "en:sodium-nitrite"
+      ],
+      "domain": "food",
+      "severity": 4,
+      "categories": [
+        "preservative",
+        "color-fixant"
+      ],
+      "title": "Sodium nitrite (E250)",
+      "why": "Used in cured meats to prevent botulism and fix colour. Can contribute to nitrosamine formation under some conditions; many public-health authorities advise limiting processed meat intake.",
+      "sources": [
+        "EFSA opinions on nitrites (E 249–250) and nitrates (E 251–252)",
+        "IARC Monographs Vol. 114 — processed meat (context)"
+      ]
+    },
+    {
+      "id": "e251",
+      "names": [
+        "sodium nitrate",
+        "e251",
+        "chile saltpeter"
+      ],
+      "aliases": [
+        "en:e251",
+        "en:sodium-nitrate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Sodium nitrate (E251)",
+      "why": "Used in longer-cured meats; can convert to nitrite in the product or body. Related to the same nitrosamine and processed-meat discussions as nitrites, typically with somewhat lower immediate nitrosating activity than added nitrite.",
+      "sources": [
+        "EFSA opinions on nitrates (E 251–252)",
+        "IARC Monographs — processed meat context"
+      ]
+    },
+    {
+      "id": "e252",
+      "names": [
+        "potassium nitrate",
+        "e252",
+        "saltpeter",
+        "saltpetre"
+      ],
+      "aliases": [
+        "en:e252",
+        "en:potassium-nitrate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "preservative"
+      ],
+      "title": "Potassium nitrate (E252)",
+      "why": "Traditional curing agent in some meats and cheeses. Converts partly to nitrite; assessed together with other nitrates/nitrites for exposure and nitrosamine-related concerns.",
+      "sources": [
+        "EFSA opinions on nitrates (E 251–252)"
+      ]
+    },
+    {
+      "id": "e310",
+      "names": [
+        "propyl gallate",
+        "e310"
+      ],
+      "aliases": [
+        "en:e310",
+        "en:propyl-gallate"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "antioxidant"
+      ],
+      "title": "Propyl gallate (E310)",
+      "why": "An antioxidant that slows rancidity in fats and oils. Authorised with use limits; some toxicology debates exist at high doses, so severity is moderate pending conservative labeling transparency.",
+      "sources": [
+        "EFSA re-evaluation of propyl gallate (E 310)",
+        "JECFA monographs on propyl gallate"
+      ]
+    },
+    {
+      "id": "e319",
+      "names": [
+        "tbhq",
+        "tertiary butylhydroquinone",
+        "tert-butylhydroquinone",
+        "e319"
+      ],
+      "aliases": [
+        "en:e319",
+        "en:tertiary-butylhydroquinone"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "antioxidant"
+      ],
+      "title": "TBHQ (E319)",
+      "why": "A synthetic antioxidant used to stabilise oils and fried snacks. Authorised with maximum levels; animal studies at high doses have raised questions, while typical dietary exposure is intended to stay within ADI.",
+      "sources": [
+        "EFSA re-evaluation of TBHQ (E 319)",
+        "JECFA evaluations of tertiary butylhydroquinone"
+      ]
+    },
+    {
+      "id": "e320",
+      "names": [
+        "bha",
+        "butylated hydroxyanisole",
+        "e320"
+      ],
+      "aliases": [
+        "en:e320",
+        "en:butylated-hydroxyanisole"
+      ],
+      "domain": "food",
+      "severity": 4,
+      "categories": [
+        "antioxidant"
+      ],
+      "title": "BHA (E320)",
+      "why": "An antioxidant that prevents fat rancidity. IARC classifies BHA as Group 2B (possibly carcinogenic to humans) based mainly on high-dose animal data; food use remains authorised with limits in many regions.",
+      "sources": [
+        "IARC Monographs — butylated hydroxyanisole (Group 2B)",
+        "EFSA re-evaluation of BHA (E 320)"
+      ]
+    },
+    {
+      "id": "e321",
+      "names": [
+        "bht",
+        "butylated hydroxytoluene",
+        "e321"
+      ],
+      "aliases": [
+        "en:e321",
+        "en:butylated-hydroxytoluene"
+      ],
+      "domain": "food",
+      "severity": 3,
+      "categories": [
+        "antioxidant"
+      ],
+      "title": "BHT (E321)",
+      "why": "A synthetic antioxidant related to BHA, used in fats, cereals, and packaging-contact foods. Authorised with ADI limits; discussed for cumulative intake and sensitivity in some consumers rather than as a banned substance.",
+      "sources": [
+        "EFSA re-evaluation of BHT (E 321)",
+        "JECFA monographs on butylated hydroxytoluene"
+      ]
+    },
+    {
+      "id": "e338",
+      "names": [
+        "phosphoric acid",
+        "e338"
+      ],
+      "aliases": [
+        "en:e338",
+        "en:phosphoric-acid"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "acidulant",
+        "phosphate"
+      ],
+      "title": "Phosphoric acid (E338)",
+      "why": "Gives acidity and tang to cola-type drinks. Contributes to overall phosphate load; high phosphate intake is a discussion topic for people with kidney disease, not a general acute hazard at typical use.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)",
+        "EFSA dietary phosphate exposure assessments"
+      ]
+    },
+    {
+      "id": "e339",
+      "names": [
+        "sodium phosphates",
+        "sodium phosphate",
+        "e339"
+      ],
+      "aliases": [
+        "en:e339",
+        "en:sodium-phosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier",
+        "phosphate"
+      ],
+      "title": "Sodium phosphates (E339)",
+      "why": "Used as emulsifiers, buffers, and moisture retainers in processed foods. Add to total dietary phosphate; EFSA has reviewed cumulative phosphate exposure from additives.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e340",
+      "names": [
+        "potassium phosphates",
+        "potassium phosphate",
+        "e340"
+      ],
+      "aliases": [
+        "en:e340",
+        "en:potassium-phosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier",
+        "phosphate"
+      ],
+      "title": "Potassium phosphates (E340)",
+      "why": "Functional phosphates used for texture and pH control. Same class consideration as other food phosphates: cumulative intake rather than single-use toxicity for the general population.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e341",
+      "names": [
+        "calcium phosphates",
+        "calcium phosphate",
+        "e341"
+      ],
+      "aliases": [
+        "en:e341",
+        "en:calcium-phosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "anti-caking",
+        "phosphate"
+      ],
+      "title": "Calcium phosphates (E341)",
+      "why": "Used as anti-caking agents, acidity regulators, and calcium sources. Part of the broader phosphate additive group reviewed for total dietary phosphorus contribution.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e407",
+      "names": [
+        "carrageenan",
+        "e407",
+        "irish moss extract"
+      ],
+      "aliases": [
+        "en:e407",
+        "en:carrageenan"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "thickener",
+        "stabiliser"
+      ],
+      "title": "Carrageenan (E407)",
+      "why": "A seaweed-derived thickener in plant milks, desserts, and processed meats. Food-grade carrageenan is authorised, but scientific debate continues about degraded forms and gut inflammation signals; evidence in typical food use remains mixed, so severity stays moderate.",
+      "sources": [
+        "EFSA re-evaluation of carrageenan (E 407) and processed Eucheuma seaweed (E 407a)",
+        "JECFA evaluations of carrageenan"
+      ]
+    },
+    {
+      "id": "e410",
+      "names": [
+        "locust bean gum",
+        "carob gum",
+        "e410"
+      ],
+      "aliases": [
+        "en:e410",
+        "en:locust-bean-gum"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "thickener",
+        "gum"
+      ],
+      "title": "Locust bean gum (E410)",
+      "why": "A plant-derived gum used to thicken ice cream and sauces. Generally low-priority for health flags at normal use; listed for completeness of common thickeners.",
+      "sources": [
+        "EFSA re-evaluation of locust bean gum (E 410)"
+      ]
+    },
+    {
+      "id": "e412",
+      "names": [
+        "guar gum",
+        "e412"
+      ],
+      "aliases": [
+        "en:e412",
+        "en:guar-gum"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "thickener",
+        "gum"
+      ],
+      "title": "Guar gum (E412)",
+      "why": "A soluble fiber gum that thickens dressings, dairy, and gluten-free products. Authorised with a long history of use; high intakes can cause digestive discomfort in some people.",
+      "sources": [
+        "EFSA re-evaluation of guar gum (E 412)"
+      ]
+    },
+    {
+      "id": "e414",
+      "names": [
+        "gum arabic",
+        "acacia gum",
+        "e414"
+      ],
+      "aliases": [
+        "en:e414",
+        "en:acacia-gum"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "stabiliser",
+        "gum"
+      ],
+      "title": "Gum arabic / acacia gum (E414)",
+      "why": "A tree-sap gum used to stabilise flavours and soft drinks. Treated as a low-severity functional additive with established food use.",
+      "sources": [
+        "EFSA re-evaluation of gum arabic (E 414)"
+      ]
+    },
+    {
+      "id": "e415",
+      "names": [
+        "xanthan gum",
+        "e415"
+      ],
+      "aliases": [
+        "en:e415",
+        "en:xanthan-gum"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "thickener",
+        "gum"
+      ],
+      "title": "Xanthan gum (E415)",
+      "why": "A fermentation-derived thickener common in sauces and gluten-free baking. Generally low concern at culinary levels; large amounts may affect digestion for some people.",
+      "sources": [
+        "EFSA re-evaluation of xanthan gum (E 415)"
+      ]
+    },
+    {
+      "id": "e433",
+      "names": [
+        "polysorbate 80",
+        "polyoxyethylene sorbitan monooleate",
+        "tween 80",
+        "e433"
+      ],
+      "aliases": [
+        "en:e433",
+        "en:polysorbate-80"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier"
+      ],
+      "title": "Polysorbate 80 (E433)",
+      "why": "An emulsifier that keeps oil and water mixed in ice cream and sauces. Emerging animal and microbiome research has raised questions about effects of some emulsifiers on gut barrier function; human evidence is still limited, so severity stays low–moderate.",
+      "sources": [
+        "EFSA re-evaluation of polysorbates (E 432–436)",
+        "Emerging microbiome research summaries (Chassaing et al. context — animal models)"
+      ]
+    },
+    {
+      "id": "e450",
+      "names": [
+        "diphosphates",
+        "disodium diphosphate",
+        "e450",
+        "sodium acid pyrophosphate"
+      ],
+      "aliases": [
+        "en:e450",
+        "en:diphosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier",
+        "phosphate",
+        "raising-agent"
+      ],
+      "title": "Diphosphates (E450)",
+      "why": "Used as leavening aids, sequestrants, and texture agents in processed foods. Contribute to total phosphate intake reviewed by EFSA for cumulative exposure.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e451",
+      "names": [
+        "triphosphates",
+        "pentasodium triphosphate",
+        "e451",
+        "sodium tripolyphosphate"
+      ],
+      "aliases": [
+        "en:e451",
+        "en:triphosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier",
+        "phosphate"
+      ],
+      "title": "Triphosphates (E451)",
+      "why": "Common in processed meats and seafood to retain moisture. Same phosphate-class considerations on cumulative dietary phosphorus as other polyphosphates.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e452",
+      "names": [
+        "polyphosphates",
+        "sodium polyphosphate",
+        "e452"
+      ],
+      "aliases": [
+        "en:e452",
+        "en:polyphosphates"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "emulsifier",
+        "phosphate"
+      ],
+      "title": "Polyphosphates (E452)",
+      "why": "Longer-chain phosphates used for water binding and emulsification. Flagged for cumulative phosphate load rather than as a uniquely high-hazard single additive.",
+      "sources": [
+        "EFSA re-evaluation of phosphoric acid–phosphates (E 338–341, E 343, E 450–452)"
+      ]
+    },
+    {
+      "id": "e466",
+      "names": [
+        "carboxymethyl cellulose",
+        "carboxymethylcellulose",
+        "cmc",
+        "cellulose gum",
+        "e466"
+      ],
+      "aliases": [
+        "en:e466",
+        "en:sodium-carboxy-methyl-cellulose"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "thickener",
+        "emulsifier"
+      ],
+      "title": "Carboxymethyl cellulose / CMC (E466)",
+      "why": "A cellulose-derived thickener and stabiliser. Authorised food additive; some experimental microbiome studies suggest possible gut effects at high doses, while human dietary evidence remains limited—severity kept low–moderate.",
+      "sources": [
+        "EFSA re-evaluation of celluloses (E 460–466, E 468–469)",
+        "Emerging microbiome research summaries (animal/model context)"
+      ]
+    },
+    {
+      "id": "e621",
+      "names": [
+        "monosodium glutamate",
+        "msg",
+        "e621",
+        "sodium glutamate"
+      ],
+      "aliases": [
+        "en:e621",
+        "en:monosodium-glutamate"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "flavour-enhancer"
+      ],
+      "title": "Monosodium glutamate (E621)",
+      "why": "Flavour enhancer that supplies free glutamate, the same taste compound found naturally in tomatoes and cheese. Major regulators consider it acceptable at normal use levels; a minority of people report sensitivity. Listed for transparency, not as a high-hazard additive.",
+      "sources": [
+        "JECFA / FAO-WHO evaluations of glutamate",
+        "EFSA re-evaluation of glutamic acid and glutamates (E 620–625)"
+      ]
+    },
+    {
+      "id": "e627",
+      "names": [
+        "disodium guanylate",
+        "sodium guanylate",
+        "e627"
+      ],
+      "aliases": [
+        "en:e627",
+        "en:disodium-guanylate"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "flavour-enhancer"
+      ],
+      "title": "Disodium guanylate (E627)",
+      "why": "A nucleotide flavour enhancer often paired with MSG in savoury snacks. Generally low regulatory concern; people limiting purines for medical reasons sometimes watch nucleotide additives.",
+      "sources": [
+        "EFSA re-evaluation of ribonucleotides (E 626–635)"
+      ]
+    },
+    {
+      "id": "e631",
+      "names": [
+        "disodium inosinate",
+        "sodium inosinate",
+        "e631"
+      ],
+      "aliases": [
+        "en:e631",
+        "en:disodium-inosinate"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "flavour-enhancer"
+      ],
+      "title": "Disodium inosinate (E631)",
+      "why": "Works with glutamate to boost umami in processed savoury foods. Low severity in general-population assessments; listed mainly for label transparency.",
+      "sources": [
+        "EFSA re-evaluation of ribonucleotides (E 626–635)"
+      ]
+    },
+    {
+      "id": "e950",
+      "names": [
+        "acesulfame k",
+        "acesulfame potassium",
+        "e950",
+        "ace-k"
+      ],
+      "aliases": [
+        "en:e950",
+        "en:acesulfame-k"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Acesulfame K (E950)",
+      "why": "A high-intensity non-sugar sweetener in diet drinks and tabletop blends. Authorised with an ADI; scientific debate continues about long-term metabolic and microbiome effects, so severity stays in the mild–moderate range without panic framing.",
+      "sources": [
+        "EFSA re-evaluation of acesulfame K (E 950)",
+        "JECFA evaluations of acesulfame potassium"
+      ]
+    },
+    {
+      "id": "e951",
+      "names": [
+        "aspartame",
+        "e951"
+      ],
+      "aliases": [
+        "en:e951",
+        "en:aspartame"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Aspartame (E951)",
+      "why": "A widely used intense sweetener. EFSA and other bodies maintain an ADI for the general population; IARC (2023) classified aspartame as Group 2B (possibly carcinogenic) while JECFA reaffirmed the ADI—uncertainty is acknowledged without treating typical diet-drink use as proven high hazard. Not suitable for people with phenylketonuria (PKU).",
+      "sources": [
+        "EFSA full risk assessment of aspartame (E 951), 2013",
+        "IARC / JECFA joint evaluations of aspartame, 2023"
+      ]
+    },
+    {
+      "id": "e952",
+      "names": [
+        "cyclamate",
+        "cyclamic acid",
+        "sodium cyclamate",
+        "e952"
+      ],
+      "aliases": [
+        "en:e952",
+        "en:cyclamic-acid",
+        "en:sodium-cyclamate"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Cyclamate (E952)",
+      "why": "An intense sweetener authorised in the EU and many countries but not as a general-purpose sweetener in the US. ADI-based regulation applies; historical carcinogenicity concerns at very high doses drove regional policy differences.",
+      "sources": [
+        "EFSA evaluations of cyclamates (E 952)",
+        "JECFA monographs on cyclamic acid and its salts"
+      ]
+    },
+    {
+      "id": "e954",
+      "names": [
+        "saccharin",
+        "saccharin sodium",
+        "e954"
+      ],
+      "aliases": [
+        "en:e954",
+        "en:saccharin",
+        "en:sodium-saccharin"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Saccharin (E954)",
+      "why": "One of the oldest intense sweeteners. Early high-dose animal findings led to historical warning labels later removed in some countries after re-evaluation; modern assessments use ADI limits with residual scientific debate.",
+      "sources": [
+        "EFSA re-evaluation of saccharin and its salts (E 954)",
+        "IARC historical evaluations of saccharin (context)"
+      ]
+    },
+    {
+      "id": "e955",
+      "names": [
+        "sucralose",
+        "e955"
+      ],
+      "aliases": [
+        "en:e955",
+        "en:sucralose"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Sucralose (E955)",
+      "why": "A chlorinated sucrose-derived intense sweetener heat-stable enough for baking. Authorised with an ADI; ongoing research examines heating by-products and microbiome effects, so AisleSpy keeps a cautious mild–moderate note.",
+      "sources": [
+        "EFSA re-evaluation of sucralose (E 955)",
+        "JECFA evaluations of sucralose"
+      ]
+    },
+    {
+      "id": "e960",
+      "names": [
+        "steviol glycosides",
+        "stevia",
+        "e960"
+      ],
+      "aliases": [
+        "en:e960",
+        "en:steviol-glycosides"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "sweetener"
+      ],
+      "title": "Steviol glycosides (E960)",
+      "why": "Sweet compounds from Stevia leaves, purified for food use. Authorised after EFSA/JECFA assessments with an ADI; generally lower public-concern priority than some synthetic sweeteners, listed for completeness.",
+      "sources": [
+        "EFSA opinions on steviol glycosides (E 960)",
+        "JECFA monographs on steviol glycosides"
+      ]
+    },
+    {
+      "id": "e120",
+      "names": [
+        "carmine",
+        "cochineal",
+        "carminic acid",
+        "e120",
+        "natural red 4"
+      ],
+      "aliases": [
+        "en:e120",
+        "en:cochineal",
+        "en:carmines"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "colour"
+      ],
+      "title": "Carmine / cochineal (E120)",
+      "why": "A red colour from cochineal insects used in yoghurts, sweets, and drinks. Main concerns are allergenicity in rare cases and dietary preferences (not vegan); not framed as a general toxicology emergency.",
+      "sources": [
+        "EFSA re-evaluation of cochineal, carminic acid, carmines (E 120)",
+        "Regulation (EU) No 1169/2011 — allergen/label context where applicable"
+      ]
+    },
+    {
+      "id": "e385",
+      "names": [
+        "calcium disodium edta",
+        "edta",
+        "e385"
+      ],
+      "aliases": [
+        "en:e385",
+        "en:calcium-disodium-edta"
+      ],
+      "domain": "food",
+      "severity": 2,
+      "categories": [
+        "sequestrant",
+        "preservative"
+      ],
+      "title": "Calcium disodium EDTA (E385)",
+      "why": "A chelating agent that binds metals to protect colour and flavour in sauces and canned foods. Authorised with limits; discussion centres on mineral binding at high intakes rather than everyday residual use.",
+      "sources": [
+        "EFSA re-evaluation of calcium disodium EDTA (E 385)",
+        "JECFA evaluations of EDTA salts"
+      ]
+    },
+    {
+      "id": "potassium-bromate",
+      "names": [
+        "potassium bromate",
+        "bromated flour"
+      ],
+      "aliases": [
+        "en:potassium-bromate",
+        "en:e924"
+      ],
+      "domain": "food",
+      "severity": 5,
+      "categories": [
+        "flour-treatment",
+        "banned"
+      ],
+      "title": "Potassium bromate",
+      "why": "A flour improver once used to strengthen dough. Classified by IARC as possibly carcinogenic (Group 2B) and banned as a food additive in the EU and many other regions; still a concern if encountered on imported or non-compliant products.",
+      "sources": [
+        "IARC Monographs — potassium bromate (Group 2B)",
+        "EU food additive bans — potassium bromate not authorised (Reg. 1333/2008)"
+      ]
+    },
+    {
+      "id": "e924",
+      "names": [
+        "calcium bromate",
+        "e924a"
+      ],
+      "aliases": [
+        "en:e924a",
+        "en:calcium-bromate"
+      ],
+      "domain": "food",
+      "severity": 5,
+      "categories": [
+        "flour-treatment",
+        "banned"
+      ],
+      "title": "Calcium bromate",
+      "why": "A bromate flour-treatment agent related to potassium bromate. Not authorised in the EU; treated as highest-pack severity because of the same bromate-class carcinogenicity concerns.",
+      "sources": [
+        "IARC Monographs — bromate compounds (context)",
+        "Regulation (EC) No 1333/2008 — non-authorised flour treatment agents"
+      ]
+    },
+    {
+      "id": "artificial-flavours",
+      "names": [
+        "artificial flavours",
+        "artificial flavors",
+        "artificial flavouring",
+        "artificial flavoring"
+      ],
+      "aliases": [
+        "en:artificial-flavouring",
+        "en:artificial-flavoring"
+      ],
+      "domain": "food",
+      "severity": 1,
+      "categories": [
+        "flavouring"
+      ],
+      "title": "Artificial flavouring (label term)",
+      "why": "A broad legal labeling term covering many chemically defined flavouring substances, not a single additive. Composition varies by product; AisleSpy flags the term only as a processing transparency cue, not as proof of a specific hazard.",
+      "sources": [
+        "Regulation (EC) No 1334/2008 on flavourings",
+        "Open Food Facts ingredients taxonomy (label term mapping)"
+      ]
+    }
+  ]
+}

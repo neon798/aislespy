@@ -2,6 +2,8 @@ package app.aislespy.di
 
 import android.content.Context
 import app.aislespy.BuildConfig
+import app.aislespy.data.knowledge.KnowledgePack
+import app.aislespy.data.knowledge.KnowledgePackLoader
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
@@ -30,7 +32,7 @@ import java.util.concurrent.TimeUnit
  * - **beautyEngine** — [BeautyScoreEngine] (T-410)
  */
 class AppContainer(
-    @Suppress("unused") private val appContext: Context,
+    private val appContext: Context,
 ) {
     val json: Json by lazy {
         Json {
@@ -69,8 +71,19 @@ class AppContainer(
         )
     }
 
+    /**
+     * Food knowledge pack (T-300/T-310). Loaded lazily on first access from assets.
+     * Prefer loading off the main thread when first needed (lazy is fine for MVP).
+     */
+    val knowledgePack: KnowledgePack by lazy {
+        KnowledgePackLoader.loadFromAssets(
+            context = appContext,
+            assetPath = KnowledgePackLoader.FOOD_PACK_ASSET,
+            json = json,
+        )
+    }
+
     // TODO(T-500): val db: AisleSpyDatabase
-    // TODO(T-310): val knowledgePack: KnowledgePack
     // TODO(T-320): val foodEngine: FoodScoreEngine
     // TODO(T-410): val beautyEngine: BeautyScoreEngine
 
