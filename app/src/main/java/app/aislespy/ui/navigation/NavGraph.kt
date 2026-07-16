@@ -119,6 +119,21 @@ fun AisleSpyNavGraph(
                     onManualEntry = {
                         navController.navigate(Routes.MANUAL)
                     },
+                    onBarcodeDecoded = { barcode ->
+                        navController.navigate(Routes.result(barcode)) {
+                            // Avoid stacking duplicate result destinations from a double-fire.
+                            launchSingleTop = true
+                        }
+                    },
+                    onSettings = {
+                        navController.navigate(Routes.SETTINGS) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                 )
             }
             composable(Routes.MANUAL) {
