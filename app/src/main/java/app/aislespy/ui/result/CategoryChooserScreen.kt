@@ -1,6 +1,5 @@
 package app.aislespy.ui.result
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,10 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import app.aislespy.AisleSpyApp
+import app.aislespy.ui.components.ProductImagePlaceholder
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
@@ -84,7 +87,7 @@ fun CategoryChooserScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 16.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -138,7 +141,11 @@ private fun CategoryOptionCard(
 ) {
     Card(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics {
+                contentDescription = "$categoryLabel: $productName"
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
@@ -162,6 +169,8 @@ private fun CategoryOptionCard(
                     text = productName,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 4.dp),
                 )
             }
@@ -175,18 +184,8 @@ private fun OptionThumbnail(imageUrl: String?, name: String) {
     val shape = RoundedCornerShape(10.dp)
     val size = 72.dp
     if (imageUrl.isNullOrBlank()) {
-        Box(
-            modifier = Modifier
-                .size(size)
-                .clip(shape)
-                .background(MaterialTheme.colorScheme.surface),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "—",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        Box(modifier = Modifier.size(size)) {
+            ProductImagePlaceholder(shape = shape, label = "—")
         }
     } else {
         SubcomposeAsyncImage(
@@ -200,24 +199,10 @@ private fun OptionThumbnail(imageUrl: String?, name: String) {
                 .size(size)
                 .clip(shape),
             loading = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface),
-                )
+                ProductImagePlaceholder(shape = shape, showLabel = false)
             },
             error = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.surface),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "—",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                }
+                ProductImagePlaceholder(shape = shape, label = "—")
             },
         )
     }

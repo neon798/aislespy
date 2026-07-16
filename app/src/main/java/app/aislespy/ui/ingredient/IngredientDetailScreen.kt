@@ -3,6 +3,7 @@ package app.aislespy.ui.ingredient
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,9 +25,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.aislespy.AisleSpyApp
+import app.aislespy.ui.components.SectionHeader
+import app.aislespy.ui.components.SeverityChip
 import app.aislespy.ui.result.IngredientDetailUi
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,19 +82,26 @@ fun IngredientDetailScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text(
                     text = resolved.name,
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
+                    modifier = Modifier.semantics { heading() },
                 )
-                Text(
-                    text = "Severity ${resolved.severity} of 5",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    SeverityChip(severity = resolved.severity)
+                    Text(
+                        text = "Severity ${resolved.severity} of 5",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                }
                 if (!resolved.positionHint.isNullOrBlank()) {
                     Text(
                         text = resolved.positionHint,
@@ -97,9 +109,8 @@ fun IngredientDetailScreen(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
-                Text(
+                SectionHeader(
                     text = "Why it matters",
-                    style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(top = 8.dp),
                 )
                 Text(
@@ -107,9 +118,8 @@ fun IngredientDetailScreen(
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 if (resolved.sources.isNotEmpty()) {
-                    Text(
+                    SectionHeader(
                         text = "Sources",
-                        style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(top = 8.dp),
                     )
                     resolved.sources.forEach { source ->

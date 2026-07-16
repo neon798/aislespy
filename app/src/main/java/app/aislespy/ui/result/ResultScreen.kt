@@ -2,7 +2,6 @@ package app.aislespy.ui.result
 
 import android.content.Intent
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,7 +23,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -33,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -44,23 +40,24 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.AisleSpyApp
 import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.SourceDb
+import app.aislespy.ui.components.InfoChip
+import app.aislespy.ui.components.LoadingRecon
+import app.aislespy.ui.components.ProductImagePlaceholder
 import app.aislespy.ui.components.ScoreRing
-import app.aislespy.ui.theme.scoreBad
-import app.aislespy.ui.theme.scoreOk
-import app.aislespy.ui.theme.scorePoor
+import app.aislespy.ui.components.SectionHeader
+import app.aislespy.ui.components.SeverityChip
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
@@ -118,7 +115,7 @@ fun ResultScreen(
                 .padding(innerPadding),
         ) {
             when (val s = state) {
-                is ResultUiState.Loading -> LoadingContent(barcode = s.barcode)
+                is ResultUiState.Loading -> LoadingRecon(subtitle = s.barcode)
                 is ResultUiState.Success -> SuccessContent(
                     state = s,
                     onConcernClick = onConcernClick,
@@ -136,33 +133,9 @@ fun ResultScreen(
                 // Brief pass-through while navigation to the dedicated chooser runs.
                 is ResultUiState.NeedsCategoryChoice,
                 is ResultUiState.NavigateToCategoryChooser,
-                -> LoadingContent(barcode = barcode)
+                -> LoadingRecon(subtitle = barcode)
             }
         }
-    }
-}
-
-@Composable
-private fun LoadingContent(barcode: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        CircularProgressIndicator()
-        Spacer(Modifier.height(16.dp))
-        Text(
-            text = "Running recon…",
-            style = MaterialTheme.typography.titleMedium,
-        )
-        Text(
-            text = barcode,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 8.dp),
-        )
     }
 }
 
@@ -177,23 +150,15 @@ private fun SuccessContent(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            SuggestionChip(
-                onClick = {},
-                label = { Text(categoryLabel(product.category)) },
-                enabled = false,
-            )
-            SuggestionChip(
-                onClick = {},
-                label = { Text(sourceDbLabel(product.sourceDb)) },
-                enabled = false,
-            )
+            InfoChip(label = categoryLabel(product.category))
+            InfoChip(label = sourceDbLabel(product.sourceDb))
         }
 
         ProductImage(imageUrl = product.imageUrl, name = product.name)
@@ -201,12 +166,16 @@ private fun SuccessContent(
         Text(
             text = product.name,
             style = MaterialTheme.typography.titleLarge,
+            maxLines = 3,
+            overflow = TextOverflow.Ellipsis,
         )
         if (!product.brand.isNullOrBlank()) {
             Text(
                 text = product.brand,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
             )
         }
         Text(
@@ -236,6 +205,7 @@ private fun SuccessContent(
                         value = score.value,
                         band = score.band,
                         label = score.label,
+                        confidenceLabel = score.confidenceLabel,
                     )
                     Spacer(Modifier.height(8.dp))
                     Text(
@@ -244,10 +214,10 @@ private fun SuccessContent(
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(4.dp))
-                    SuggestionChip(
-                        onClick = {},
-                        label = { Text(score.confidenceLabel) },
-                        enabled = false,
+                    // Adjacent readable confidence (also in ScoreRing TalkBack).
+                    InfoChip(
+                        label = score.confidenceLabel,
+                        contentDescription = score.confidenceLabel,
                     )
                 }
             }
@@ -262,39 +232,26 @@ private fun SuccessContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 state.badges.forEach { badge ->
-                    SuggestionChip(
-                        onClick = {},
-                        label = { Text(badge.label) },
-                        enabled = false,
-                    )
+                    InfoChip(label = badge.label)
                 }
             }
         }
 
         // Breakdown
         if (state.breakdown.isNotEmpty()) {
-            Text(
+            SectionHeader(
                 text = "Score breakdown",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .semantics { heading() },
+                modifier = Modifier.padding(top = 4.dp),
             )
             state.breakdown.forEach { component ->
                 BreakdownRow(component)
             }
         }
 
-        // Suspect ingredients
-        Text(
+        // Suspect ingredients (microcopy bank)
+        SectionHeader(
             text = "Suspect ingredients",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .semantics {
-                    heading()
-                    contentDescription = "Suspect ingredients"
-                },
+            modifier = Modifier.padding(top = 8.dp),
         )
         if (state.beautyScoringPending) {
             Text(
@@ -324,9 +281,8 @@ private fun SuccessContent(
         }
 
         // Ingredients text (transparency)
-        Text(
+        SectionHeader(
             text = "Ingredients",
-            style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(top = 8.dp),
         )
         Text(
@@ -429,6 +385,7 @@ private fun BreakdownRow(component: ScoreComponentUi) {
             text = component.score.toString(),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 8.dp),
         )
     }
 }
@@ -441,7 +398,11 @@ private fun ConcernCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
+            .semantics {
+                contentDescription =
+                    "${concern.name}, severity ${concern.severity} of 5. ${concern.shortWhy}"
+            },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
@@ -459,11 +420,14 @@ private fun ConcernCard(
                     text = concern.name,
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 Text(
                     text = concern.shortWhy,
                     style = MaterialTheme.typography.bodyMedium,
                     maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
                 if (!concern.positionHint.isNullOrBlank()) {
                     Text(
@@ -475,36 +439,10 @@ private fun ConcernCard(
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                contentDescription = "Open ${concern.name} details",
+                contentDescription = null,
             )
         }
     }
-}
-
-@Composable
-private fun SeverityChip(severity: Int) {
-    val color = severityColor(severity)
-    Box(
-        modifier = Modifier
-            .size(36.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(color.copy(alpha = 0.2f)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = severity.toString(),
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = color,
-        )
-    }
-}
-
-@Composable
-private fun severityColor(severity: Int): Color = when (severity) {
-    1, 2 -> scoreOk
-    3 -> scorePoor
-    else -> scoreBad
 }
 
 @Composable
@@ -523,29 +461,12 @@ private fun ProductImage(imageUrl: String?, name: String) {
             .height(200.dp)
             .clip(shape),
         loading = {
-            ImagePlaceholder(shape = shape)
+            ProductImagePlaceholder(shape = shape)
         },
         error = {
-            ImagePlaceholder(shape = shape)
+            ProductImagePlaceholder(shape = shape)
         },
     )
-}
-
-@Composable
-private fun ImagePlaceholder(shape: RoundedCornerShape) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clip(shape)
-            .background(MaterialTheme.colorScheme.surfaceVariant),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = "No image",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
 }
 
 @Composable
@@ -557,7 +478,7 @@ private fun NotFoundContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -609,7 +530,7 @@ private fun NetworkErrorContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp),
+            .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

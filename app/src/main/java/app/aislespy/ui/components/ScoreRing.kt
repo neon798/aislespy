@@ -19,21 +19,23 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.aislespy.domain.model.ScoreBand
-import app.aislespy.ui.theme.scoreBad
-import app.aislespy.ui.theme.scoreExcellent
-import app.aislespy.ui.theme.scoreOk
-import app.aislespy.ui.theme.scorePoor
+import app.aislespy.ui.theme.scoreBandColors
+import app.aislespy.ui.util.rememberReducedMotion
 
 /**
  * Hero 1–100 score ring (docs/COMPONENTS.md).
  *
- * TalkBack: “Score {value} out of 100, {label}”.
+ * TalkBack: “Score {value} out of 100, {label}” and optional confidence.
+ * Respects system reduce-motion (ANIMATOR_DURATION_SCALE == 0 → jump to final).
  */
 @Composable
 fun ScoreRing(
@@ -42,16 +44,25 @@ fun ScoreRing(
     label: String,
     modifier: Modifier = Modifier,
     animated: Boolean = true,
+    confidenceLabel: String? = null,
     size: Dp = 160.dp,
     strokeWidth: Dp = 14.dp,
 ) {
     val clamped = value.coerceIn(1, 100)
-    val bandColor = bandColor(band)
+    val colors = scoreBandColors(band)
+    val bandColor = colors.accent
     val trackColor = MaterialTheme.colorScheme.surfaceVariant
+    val reducedMotion = rememberReducedMotion()
+    val shouldAnimate = animated && !reducedMotion
+
+    // Grow ring slightly with large system font so center numerals stay readable.
+    val fontScale = LocalDensity.current.fontScale
+    val ringSize = (size.value * fontScale.coerceIn(1f, 1.45f)).dp
+    val ringStroke = (strokeWidth.value * fontScale.coerceIn(1f, 1.2f)).dp
 
     val progress = remember { Animatable(0f) }
-    LaunchedEffect(clamped, animated) {
-        if (animated) {
+    LaunchedEffect(clamped, shouldAnimate) {
+        if (shouldAnimate) {
             progress.snapTo(0f)
             progress.animateTo(
                 targetValue = clamped / 100f,
@@ -62,22 +73,29 @@ fun ScoreRing(
         }
     }
 
-    val a11y = "Score $clamped out of 100, $label"
+    val a11y = buildString {
+        append("Score $clamped out of 100, $label")
+        if (!confidenceLabel.isNullOrBlank()) {
+            append(", $confidenceLabel")
+        }
+    }
+
+    // Center score uses sp so it tracks fontScale; clamp style size so it fits the ring.
+    val scoreSp = (36f * fontScale.coerceIn(1f, 1.35f)).sp
 
     Column(
-        modifier = modifier.semantics { contentDescription = a11y },
+        modifier = modifier.semantics(mergeDescendants = true) { contentDescription = a11y },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.size(size),
+            modifier = Modifier.size(ringSize),
         ) {
-            Canvas(modifier = Modifier.size(size)) {
-                val stroke = strokeWidth.toPx()
+            Canvas(modifier = Modifier.size(ringSize)) {
+                val stroke = ringStroke.toPx()
                 val diameter = this.size.minDimension - stroke
                 val topLeft = Offset(stroke / 2f, stroke / 2f)
                 val arcSize = Size(diameter, diameter)
-                // Background track
                 drawArc(
                     color = trackColor,
                     startAngle = -90f,
@@ -87,7 +105,6 @@ fun ScoreRing(
                     size = arcSize,
                     style = Stroke(width = stroke, cap = StrokeCap.Round),
                 )
-                // Progress arc
                 drawArc(
                     color = bandColor,
                     startAngle = -90f,
@@ -101,9 +118,11 @@ fun ScoreRing(
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = clamped.toString(),
-                    style = MaterialTheme.typography.displayMedium,
+                    fontSize = scoreSp,
                     fontWeight = FontWeight.Bold,
                     color = bandColor,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
                 )
                 Text(
                     text = "/100",
@@ -116,14 +135,11 @@ fun ScoreRing(
             text = label,
             style = MaterialTheme.typography.titleMedium,
             color = bandColor,
+            textAlign = TextAlign.Center,
         )
     }
 }
 
+/** Theme-aware accent for a [ScoreBand] (arcs, labels). */
 @Composable
-fun bandColor(band: ScoreBand): Color = when (band) {
-    ScoreBand.Excellent -> scoreExcellent
-    ScoreBand.Ok -> scoreOk
-    ScoreBand.Poor -> scorePoor
-    ScoreBand.Bad -> scoreBad
-}
+fun bandColor(band: ScoreBand): Color = scoreBandColors(band).accent

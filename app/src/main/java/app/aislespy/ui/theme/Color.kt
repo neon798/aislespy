@@ -28,12 +28,47 @@ val DarkOnBackground = Color(0xFFE1E3DD)
 val DarkSurface = Color(0xFF101410)
 val DarkOnSurface = Color(0xFFE1E3DD)
 
+// ---------------------------------------------------------------------------
 // Semantic score band colors (docs/COMPONENTS.md / UI_UX.md)
-val scoreExcellent = Color(0xFF2E7D32) // green
-val scoreOk = Color(0xFFF9A825) // yellow/amber
-val scorePoor = Color(0xFFEF6C00) // orange
-val scoreBad = Color(0xFFC62828) // red
+// Light: dark enough for text on light surfaces (~WCAG AA vs white).
+// Dark: light enough for arcs/labels on dark surfaces.
+// Chip fills are separate so white (or near-white) label text stays AA.
+// ---------------------------------------------------------------------------
 
-// Brand extras
+/** Light-theme arc / label colors. */
+val scoreExcellentLight = Color(0xFF2E7D32)
+val scoreOkLight = Color(0xFFB36B00) // darkened amber — better text contrast than pure yellow
+val scorePoorLight = Color(0xFFD84315)
+val scoreBadLight = Color(0xFFC62828)
+
+/** Dark-theme arc / label colors. */
+val scoreExcellentDark = Color(0xFF81C784)
+val scoreOkDark = Color(0xFFFFB74D)
+val scorePoorDark = Color(0xFFFF8A65)
+val scoreBadDark = Color(0xFFEF9A9A)
+
+/**
+ * Filled chip / badge container colors.
+ * Tuned so [scoreChipOn] (white) meets ~WCAG AA contrast on both themes.
+ */
+val scoreChipExcellent = Color(0xFF1B5E20)
+val scoreChipOk = Color(0xFF8A5A00)
+val scoreChipPoor = Color(0xFFBF360C)
+val scoreChipBad = Color(0xFFB71C1C)
+
+/** Text/icon color on filled score chips. */
+val scoreChipOn = Color(0xFFFFFFFF)
+
+// Backward-compatible aliases (light defaults) used by non-composable call sites.
+val scoreExcellent = scoreExcellentLight
+val scoreOk = scoreOkLight
+val scorePoor = scorePoorLight
+val scoreBad = scoreBadLight
+
+// Brand extras (UI_UX visual language)
 val brandTeal = Color(0xFF0F6B6B)
 val brandAmber = Color(0xFFF5A524)
+/** Darker amber for text on light surfaces. */
+val brandAmberOnLight = Color(0xFF9A6700)
+/** Lighter amber for accents on dark surfaces. */
+val brandAmberOnDark = Color(0xFFFFB74D)

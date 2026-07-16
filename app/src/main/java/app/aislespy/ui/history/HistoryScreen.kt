@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -35,7 +34,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
@@ -45,12 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.domain.model.ProductCategory
-import app.aislespy.domain.model.ScoreBand
-import app.aislespy.ui.theme.scoreBad
-import app.aislespy.ui.theme.scoreExcellent
-import app.aislespy.ui.theme.scoreOk
-import app.aislespy.ui.theme.scorePoor
-import coil.compose.AsyncImage
+import app.aislespy.ui.components.ProductImagePlaceholder
+import app.aislespy.ui.components.ScoreBadge
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 
 private const val EMPTY_COPY = "No missions yet—scan something in the aisle."
 
@@ -74,13 +70,10 @@ fun HistoryScreen(
                     if (!uiState.empty) {
                         IconButton(
                             onClick = resolvedVm::requestClearAll,
-                            modifier = Modifier.semantics {
-                                contentDescription = "Clear all history"
-                            },
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.DeleteSweep,
-                                contentDescription = null,
+                                contentDescription = "Clear all history",
                             )
                         }
                     }
@@ -155,89 +148,100 @@ fun HistoryRow(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val bandColor = item.band.toColor()
+    val thumbShape = RoundedCornerShape(8.dp)
+    val rowDescription = buildString {
+        append(item.name)
+        append(", score ${item.score}")
+        append(", ${item.scannedAtLabel}")
+        append(", ${item.category.name}")
+    }
+    // Main row is one semantic action; delete stays a separate focusable control.
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 10.dp)
-            .semantics {
-                contentDescription = "${item.name}, score ${item.score}"
-            },
+            .padding(horizontal = 16.dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (item.thumbnailUrl != null) {
-            AsyncImage(
-                model = item.thumbnailUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop,
-            )
-        } else {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-            )
-        }
-        Spacer(Modifier.width(12.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = item.name,
-                style = MaterialTheme.typography.titleSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = item.scannedAtLabel,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(onClick = onClick)
+                .padding(vertical = 6.dp)
+                .semantics(mergeDescendants = true) {
+                    contentDescription = rowDescription
+                },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (item.thumbnailUrl != null) {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(item.thumbnailUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(thumbShape),
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        ProductImagePlaceholder(shape = thumbShape, showLabel = false)
+                    },
+                    error = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(thumbShape)
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                        )
+                    },
                 )
-                Text(
-                    text = item.category.name,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+            } else {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(thumbShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
                 )
             }
-        }
-        Spacer(Modifier.width(8.dp))
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(bandColor),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = item.score.toString(),
-                style = MaterialTheme.typography.labelLarge,
-                color = Color.White,
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = item.scannedAtLabel,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Text(
+                        text = item.category.name,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1,
+                    )
+                }
+            }
+            Spacer(Modifier.width(8.dp))
+            ScoreBadge(
+                score = item.score,
+                band = item.band,
+                contentDescription = null,
             )
         }
-        IconButton(
-            onClick = onDelete,
-            modifier = Modifier.semantics {
-                contentDescription = "Delete ${item.name} from history"
-            },
-        ) {
+        IconButton(onClick = onDelete) {
             Icon(
                 imageVector = Icons.Filled.Delete,
-                contentDescription = null,
+                contentDescription = "Delete ${item.name} from history",
             )
         }
     }
-}
-
-private fun ScoreBand.toColor(): Color = when (this) {
-    ScoreBand.Excellent -> scoreExcellent
-    ScoreBand.Ok -> scoreOk
-    ScoreBand.Poor -> scorePoor
-    ScoreBand.Bad -> scoreBad
 }

@@ -72,16 +72,16 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.domain.model.ProductCategory
-import app.aislespy.domain.model.ScoreBand
+import app.aislespy.ui.components.ScoreBadge
 import app.aislespy.ui.history.HistoryItemUi
-import app.aislespy.ui.theme.scoreBad
-import app.aislespy.ui.theme.scoreExcellent
-import app.aislespy.ui.theme.scoreOk
-import app.aislespy.ui.theme.scorePoor
+import app.aislespy.ui.theme.brandAmber
 import java.util.concurrent.Executors
 
 /** Amber reticle accent from UI_UX visual language. */
-private val ReticleAmber = Color(0xFFF5A524)
+private val ReticleAmber = brandAmber
+
+/** Overlay scan hint (readable + TalkBack). */
+private const val SCAN_HINT = "Point at a barcode"
 
 private const val RATIONALE_COPY =
     "Camera access is only used to read product barcodes. " +
@@ -259,12 +259,12 @@ private fun ScanOverlay(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
-        // Decorative viewfinder; a11y announces ready state separately.
+        // Decorative viewfinder; a11y announces ready state + scan hint.
         Canvas(
             modifier = Modifier
                 .fillMaxSize()
                 .semantics {
-                    contentDescription = "Camera ready, point at a barcode"
+                    contentDescription = "Camera ready, $SCAN_HINT"
                 },
         ) {
             val frameWidth = size.width * 0.72f
@@ -312,14 +312,17 @@ private fun ScanOverlay(
         }
 
         Text(
-            text = "Point at a barcode",
+            text = SCAN_HINT,
             color = Color.White,
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .align(Alignment.Center)
                 .padding(top = 140.dp)
                 .background(Color.Black.copy(alpha = 0.45f), RoundedCornerShape(8.dp))
-                .padding(horizontal = 12.dp, vertical = 6.dp),
+                .padding(horizontal = 12.dp, vertical = 6.dp)
+                .semantics {
+                    contentDescription = SCAN_HINT
+                },
         )
 
         IconButton(
@@ -327,11 +330,18 @@ private fun ScanOverlay(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(12.dp)
-                .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(50)),
+                .background(Color.Black.copy(alpha = 0.4f), RoundedCornerShape(50))
+                .semantics {
+                    contentDescription = if (torchEnabled) {
+                        "Flashlight on, double-tap to turn off"
+                    } else {
+                        "Flashlight off, double-tap to turn on"
+                    }
+                },
         ) {
             Icon(
                 imageVector = if (torchEnabled) Icons.Filled.FlashOn else Icons.Filled.FlashOff,
-                contentDescription = if (torchEnabled) "Turn flashlight off" else "Turn flashlight on",
+                contentDescription = null,
                 tint = Color.White,
             )
         }
@@ -344,7 +354,7 @@ private fun ScanOverlay(
             tonalElevation = 0.dp,
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Button(
@@ -388,12 +398,6 @@ private fun RecentChip(
     item: HistoryItemUi,
     onClick: () -> Unit,
 ) {
-    val bandColor = when (item.band) {
-        ScoreBand.Excellent -> scoreExcellent
-        ScoreBand.Ok -> scoreOk
-        ScoreBand.Poor -> scorePoor
-        ScoreBand.Bad -> scoreBad
-    }
     Surface(
         modifier = Modifier
             .clickable(onClick = onClick)
@@ -408,19 +412,12 @@ private fun RecentChip(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Box(
-                modifier = Modifier
-                    .height(22.dp)
-                    .background(bandColor, RoundedCornerShape(11.dp))
-                    .padding(horizontal = 6.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = item.score.toString(),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White,
-                )
-            }
+            ScoreBadge(
+                score = item.score,
+                band = item.band,
+                contentDescription = null,
+                compact = true,
+            )
             Text(
                 text = item.name,
                 style = MaterialTheme.typography.labelMedium,

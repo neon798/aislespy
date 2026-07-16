@@ -28,13 +28,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.domain.ScoringConfig
+import app.aislespy.ui.components.SectionHeader
 import app.aislespy.ui.result.ResultViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -419,12 +417,7 @@ private fun ScrollableInfoScaffold(
 @Composable
 private fun SectionHeading(text: String) {
     Spacer(modifier = Modifier.height(8.dp))
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.SemiBold,
-        modifier = Modifier.semantics { heading() },
-    )
+    SectionHeader(text = text)
 }
 
 @Composable
