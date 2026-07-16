@@ -1,6 +1,6 @@
 # Scoring methodology — AisleSpy
 
-**methodologyVersion:** `1.0.0`  
+**methodologyVersion:** `1.0.1`  
 **Convention:** **100 = best** (healthier / fewer concerns), **1 = worst**.
 
 This document is the source of truth. Code must implement these rules; formula changes require a version bump and an entry in [DECISIONS.md](DECISIONS.md).
@@ -207,6 +207,7 @@ See API_CONTRACTS for lookup. Scoring uses:
 - Personalized allergen profile beyond listing product allergens
 - Dose / daily intake calculations
 - Brand reputation
+- Dietary flags (vegan / vegetarian / dairy-free) — shown as informational badges only; never factored into totals or components
 
 ---
 
@@ -215,6 +216,7 @@ See API_CONTRACTS for lookup. Scoring uses:
 | Version | Date | Notes |
 |---------|------|-------|
 | 1.0.0 | 2026-07-16 | Initial methodology |
+| 1.0.1 | 2026-07-16 | Dietary flags shown, not scored — copy/version bump only, no formula change |
 
 Any weight or mapping change → bump semver (patch for copy, minor for weight tweaks, major for reinterpretation of scale).
 

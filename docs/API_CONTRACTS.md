@@ -51,7 +51,7 @@ Always request a reduced field set:
 fields=code,product_name,brands,image_front_url,image_front_small_url,
 nutriscore_grade,nutriscore_score,nova_group,additives_tags,
 ingredients_text,ingredients_tags,allergens_tags,labels_tags,
-categories_tags,nutriments
+categories_tags,nutriments,ingredients_analysis_tags
 ```
 
 Beauty may ignore nutriscore/nova/nutriments when absent; still safe to request.

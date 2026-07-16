@@ -127,6 +127,72 @@ class ResultViewModelTest {
     }
 
     @Test
+    fun nutellaLike_dietaryBadges_notVegan_vegetarian_containsDairy() = runTest {
+        val food = sampleProduct(
+            name = "Nutella",
+            brands = "Ferrero",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Sugar, palm oil, hazelnuts, skimmed milk powder",
+            nutriscoreGrade = 'e',
+            novaGroup = 4,
+            allergensTags = listOf("en:milk"),
+            ingredientsAnalysisTags = listOf("en:non-vegan", "en:vegetarian"),
+        )
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val labels = success.badges.map { it.label }
+        assertTrue(labels.contains("Not vegan"))
+        assertTrue(labels.contains("Vegetarian"))
+        assertTrue(labels.contains("Contains dairy"))
+        assertFalse(labels.contains("Vegan"))
+        assertFalse(labels.contains("Dairy-free"))
+        // Negative dietary badges use warn style, not red-alarm
+        val notVegan = success.badges.first { it.label == "Not vegan" }
+        assertEquals("warn", notVegan.style)
+        val containsDairy = success.badges.first { it.label == "Contains dairy" }
+        assertEquals("warn", containsDairy.style)
+        val vegetarian = success.badges.first { it.label == "Vegetarian" }
+        assertEquals("positive", vegetarian.style)
+        // Score still present and independent of dietary badges
+        assertNotNull(success.score)
+    }
+
+    @Test
+    fun beautyProduct_skipsDietaryBadges() = runTest {
+        val beauty = sampleProduct(
+            name = "Shampoo",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = "Aqua, Glycerin",
+            ingredientsAnalysisTags = listOf("en:vegan"),
+            labelsTags = listOf("en:vegan", "en:vegetarian"),
+        )
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(beauty)),
+            barcode = barcode,
+            beautyScoreEngine = BeautyScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val labels = success.badges.map { it.label }
+        assertFalse(labels.contains("Vegan"))
+        assertFalse(labels.contains("Vegetarian"))
+        assertFalse(labels.contains("Dairy-free"))
+    }
+
+    @Test
     fun successBeauty_withIngredients_carriesScoreUi() = runTest {
         val beauty = sampleProduct(
             name = "Shampoo",
@@ -558,6 +624,9 @@ class ResultViewModelTest {
         nutriscoreGrade: Char? = null,
         novaGroup: Int? = null,
         additivesTags: List<String> = emptyList(),
+        allergensTags: List<String> = emptyList(),
+        labelsTags: List<String> = emptyList(),
+        ingredientsAnalysisTags: List<String> = emptyList(),
     ): Product = Product(
         barcode = code,
         name = name,
@@ -568,9 +637,10 @@ class ResultViewModelTest {
         ingredientsText = ingredientsText,
         ingredientsTags = emptyList(),
         additivesTags = additivesTags,
-        allergensTags = emptyList(),
-        labelsTags = emptyList(),
+        allergensTags = allergensTags,
+        labelsTags = labelsTags,
         categoriesTags = emptyList(),
+        ingredientsAnalysisTags = ingredientsAnalysisTags,
         nutriscoreGrade = nutriscoreGrade,
         nutriscoreScore = null,
         novaGroup = novaGroup,

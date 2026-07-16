@@ -50,6 +50,7 @@ object ProductMapper {
             allergensTags = allergensTags.orEmpty(),
             labelsTags = labelsTags.orEmpty(),
             categoriesTags = categoriesTags.orEmpty(),
+            ingredientsAnalysisTags = ingredientsAnalysisTags,
             nutriscoreGrade = nutriscoreGrade.toNutriscoreChar(),
             nutriscoreScore = nutriscoreScore,
             novaGroup = novaGroup,

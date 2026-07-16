@@ -23,6 +23,7 @@ data class Product(
     val allergensTags: List<String>,
     val labelsTags: List<String>,
     val categoriesTags: List<String>,
+    val ingredientsAnalysisTags: List<String> = emptyList(),
     val nutriscoreGrade: Char?,
     val nutriscoreScore: Int?,
     val novaGroup: Int?,

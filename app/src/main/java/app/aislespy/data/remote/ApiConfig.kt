@@ -16,7 +16,7 @@ object ApiConfig {
         "code,product_name,brands,image_front_url,image_front_small_url," +
             "nutriscore_grade,nutriscore_score,nova_group,additives_tags," +
             "ingredients_text,ingredients_tags,allergens_tags,labels_tags," +
-            "categories_tags,nutriments"
+            "categories_tags,nutriments,ingredients_analysis_tags"
 
     const val CONNECT_TIMEOUT_SECONDS = 10L
     const val READ_TIMEOUT_SECONDS = 20L

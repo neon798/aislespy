@@ -134,6 +134,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-014 — Dietary flags: vegan / vegetarian / dairy-free (informational only)
+
+- **Date:** 2026-07-16
+- **Status:** Accepted
+- **Context:** Users want glanceable dietary signals (vegan, vegetarian, dairy-free) from Open Food Facts tags. Scoring must stay nutrition/processing/hazard-focused; dietary lifestyle flags must not shift the 1–100 total.
+- **Decision:** Resolve vegan, vegetarian, and dairy-free as a **tri-state** (`Yes` / `No` / `Unknown`) from OFF `ingredients_analysis_tags`, `labels_tags`, and `allergens_tags` (see DOMAIN_MODELS.md). Display only as result-screen badges for **food** products. **Never** feed flags into `FoodScoreEngine` / `BeautyScoreEngine` or any `ScoreResult` component. Conservative display: **Unknown is hidden**; definitive negatives are shown with clear copy (“Not vegan”, “Not vegetarian”, “Contains dairy”); positives use “Vegan”, “Vegetarian”, “Dairy-free”. Beauty products skip dietary badges in MVP.
+- **Consequences:** `ingredients_analysis_tags` added to the API fields filter; domain `Product.ingredientsAnalysisTags` + pure `DietaryFlags` resolver; methodologyVersion bumped to `1.0.1` (copy/version only, no formula change). Badge styles for negatives stay neutral/warn—not red-alarm.
+
+---
+
 ## Template for new entries
 
 ```markdown

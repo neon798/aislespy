@@ -62,10 +62,31 @@ NetworkError(message: String, barcode: String)
 | allergensTags | List\<String\> | |
 | labelsTags | List\<String\> | organic, etc. |
 | categoriesTags | List\<String\> | for heuristics |
+| ingredientsAnalysisTags | List\<String\> | OFF analysis e.g. `en:vegan`, `en:non-vegan` |
 | nutriscoreGrade | Char? | `a`–`e` lowercase |
 | nutriscoreScore | Int? | raw OFF score if present |
 | novaGroup | Int? | 1–4 |
 | nutriments | Nutriments? | optional subset |
+
+### Dietary flags (informational only — not scored)
+
+Resolved on-device from OFF tags; never factored into `ScoreResult`.
+
+### `DietaryStatus` (tri-state)
+```text
+Yes
+No
+Unknown
+```
+
+### `DietaryFlags`
+| Field | Type | Resolution sketch |
+|-------|------|-------------------|
+| vegan | DietaryStatus | `en:vegan` (analysis or labels) → Yes; `en:non-vegan` → No; maybe/absent → Unknown |
+| vegetarian | DietaryStatus | `en:vegetarian` (analysis or labels) → Yes; `en:non-vegetarian` → No; Yes vegan implies Yes vegetarian when vegetarian Unknown |
+| dairyFree | DietaryStatus | allergen `en:milk` → No; labels `en:no-lactose` / `en:lactose-free` / `en:dairy-free` / `en:milk-free` → Yes; vegan Yes → Yes; else Unknown |
+
+**UI (food only):** Yes → badge “Vegan” / “Vegetarian” / “Dairy-free”; No → “Not vegan” / “Not vegetarian” / “Contains dairy”; Unknown → no badge. Beauty: skip dietary badges.
 
 ### `Nutriments` (optional subset)
 | Field | Type |

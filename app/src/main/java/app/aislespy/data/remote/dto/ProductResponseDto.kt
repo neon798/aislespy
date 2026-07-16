@@ -30,6 +30,7 @@ data class ProductDto(
     @SerialName("allergens_tags") val allergensTags: List<String>? = null,
     @SerialName("labels_tags") val labelsTags: List<String>? = null,
     @SerialName("categories_tags") val categoriesTags: List<String>? = null,
+    @SerialName("ingredients_analysis_tags") val ingredientsAnalysisTags: List<String> = emptyList(),
     val nutriments: NutrimentsDto? = null,
 )
 

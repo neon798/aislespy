@@ -5,7 +5,7 @@ package app.aislespy.domain
  * Keep in sync with docs/SCORING.md (methodologyVersion).
  */
 object ScoringConfig {
-    const val METHODOLOGY_VERSION: String = "1.0.0"
+    const val METHODOLOGY_VERSION: String = "1.0.1"
 
     const val SCORE_MIN: Int = 1
     const val SCORE_MAX: Int = 100

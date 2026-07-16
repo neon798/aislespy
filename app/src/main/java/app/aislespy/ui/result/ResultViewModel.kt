@@ -10,6 +10,8 @@ import app.aislespy.data.knowledge.KnowledgePack
 import app.aislespy.data.local.HistoryWriter
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
+import app.aislespy.domain.DietaryFlagsResolver
+import app.aislespy.domain.DietaryStatus
 import app.aislespy.domain.model.Concern
 import app.aislespy.domain.model.Confidence
 import app.aislespy.domain.model.HistoryEntry
@@ -265,7 +267,40 @@ class ResultViewModel(
                 style = "organic",
             )
         }
+        // Dietary flags: food only, informational badges — never affect ScoreResult (ADR-014).
+        if (product.category == ProductCategory.Food) {
+            badges += dietaryBadges(product)
+        }
         return badges
+    }
+
+    /**
+     * Map [DietaryFlagsResolver] tri-state to badges.
+     * Yes → positive; No → neutral/warn (not red-alarm); Unknown → omitted.
+     */
+    private fun dietaryBadges(product: Product): List<BadgeUi> {
+        val flags = DietaryFlagsResolver.from(product)
+        val out = mutableListOf<BadgeUi>()
+        when (flags.vegan) {
+            DietaryStatus.Yes -> out += BadgeUi(id = "vegan", label = "Vegan", style = "positive")
+            DietaryStatus.No -> out += BadgeUi(id = "vegan", label = "Not vegan", style = "warn")
+            DietaryStatus.Unknown -> Unit
+        }
+        when (flags.vegetarian) {
+            DietaryStatus.Yes ->
+                out += BadgeUi(id = "vegetarian", label = "Vegetarian", style = "positive")
+            DietaryStatus.No ->
+                out += BadgeUi(id = "vegetarian", label = "Not vegetarian", style = "warn")
+            DietaryStatus.Unknown -> Unit
+        }
+        when (flags.dairyFree) {
+            DietaryStatus.Yes ->
+                out += BadgeUi(id = "dairy_free", label = "Dairy-free", style = "positive")
+            DietaryStatus.No ->
+                out += BadgeUi(id = "dairy_free", label = "Contains dairy", style = "warn")
+            DietaryStatus.Unknown -> Unit
+        }
+        return out
     }
 
     private fun Confidence.toLabel(): String = when (this) {

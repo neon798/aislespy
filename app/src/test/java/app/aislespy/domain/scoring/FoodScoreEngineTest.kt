@@ -255,6 +255,37 @@ class FoodScoreEngineTest {
         assertEquals("Near top of ingredient list", result.concerns.single().positionHint)
     }
 
+    // -------------------------------------------------------------------------
+    // Dietary flags must never change ScoreResult (ADR-014 / methodology 1.0.1)
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun analysisTags_doNotChangeScoreResult() {
+        // Only ingredientsAnalysisTags differ — dietary flags must not affect scoring.
+        val without = baseProduct(
+            nutriscoreGrade = 'e',
+            novaGroup = 4,
+            ingredientsText = "Sugar, palm oil, milk",
+            additivesTags = listOf("en:e322"),
+            ingredientsAnalysisTags = emptyList(),
+        )
+        val with = without.copy(
+            ingredientsAnalysisTags = listOf("en:non-vegan", "en:vegetarian", "en:maybe-vegan"),
+        )
+        val matches = listOf(match("e322", "Lecithins", severity = 2))
+        val a = engine.score(without, matches)
+        val b = engine.score(with, matches)
+
+        assertEquals(a.total, b.total)
+        assertEquals(a.band, b.band)
+        assertEquals(a.confidence, b.confidence)
+        assertEquals(a.summarySentence, b.summarySentence)
+        assertEquals(a.methodologyVersion, b.methodologyVersion)
+        assertEquals(a.components, b.components)
+        assertEquals(a.concerns, b.concerns)
+        assertEquals(ScoringConfig.METHODOLOGY_VERSION, a.methodologyVersion)
+    }
+
     // --- fixtures ---
 
     private fun baseProduct(
@@ -265,6 +296,8 @@ class FoodScoreEngineTest {
         additivesTags: List<String> = emptyList(),
         ingredientsTags: List<String> = emptyList(),
         labelsTags: List<String> = emptyList(),
+        ingredientsAnalysisTags: List<String> = emptyList(),
+        allergensTags: List<String> = emptyList(),
         nutriments: Nutriments? = null,
     ): Product = Product(
         barcode = "0000000000000",
@@ -276,9 +309,10 @@ class FoodScoreEngineTest {
         ingredientsText = ingredientsText,
         ingredientsTags = ingredientsTags,
         additivesTags = additivesTags,
-        allergensTags = emptyList(),
+        allergensTags = allergensTags,
         labelsTags = labelsTags,
         categoriesTags = emptyList(),
+        ingredientsAnalysisTags = ingredientsAnalysisTags,
         nutriscoreGrade = nutriscoreGrade,
         nutriscoreScore = nutriscoreScore,
         novaGroup = novaGroup,
