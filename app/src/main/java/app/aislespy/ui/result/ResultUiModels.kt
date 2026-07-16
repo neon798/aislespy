@@ -104,10 +104,19 @@ sealed class ResultUiState {
 
     /**
      * Both OFF and OBF returned data; user must pick a category.
+     * Kept as a brief pass-through; dedicated chooser is [NavigateToCategoryChooser].
      */
     data class NeedsCategoryChoice(
         val barcode: String,
         val foodName: String,
         val beautyName: String,
+    ) : ResultUiState()
+
+    /**
+     * Dual ambiguous hit with [source]=auto: navigate to [choose/{barcode}].
+     * Pair is already published to [ChoicePairStore].
+     */
+    data class NavigateToCategoryChooser(
+        val barcode: String,
     ) : ResultUiState()
 }

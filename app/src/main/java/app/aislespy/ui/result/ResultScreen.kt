@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -72,6 +73,7 @@ fun ResultScreen(
     onScanAnother: () -> Unit = onBack,
     onConcernClick: (concernId: String) -> Unit = {},
     onMethodology: () -> Unit = {},
+    onNavigateToCategoryChooser: (barcode: String) -> Unit = {},
     modifier: Modifier = Modifier,
     resultViewModel: ResultViewModel? = null,
 ) {
@@ -84,6 +86,15 @@ fun ResultScreen(
         ),
     )
     val state by resolvedViewModel.uiState.collectAsState()
+
+    // State-driven handoff to choose/{barcode}. Popping this destination in NavGraph
+    // prevents a second navigation on config change (screen is disposed).
+    LaunchedEffect(state) {
+        val s = state
+        if (s is ResultUiState.NavigateToCategoryChooser) {
+            onNavigateToCategoryChooser(s.barcode)
+        }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -122,10 +133,10 @@ fun ResultScreen(
                     onRetry = resolvedViewModel::retry,
                     onScanAnother = onScanAnother,
                 )
-                is ResultUiState.NeedsCategoryChoice -> NeedsCategoryChoiceContent(
-                    state = s,
-                    onChoose = resolvedViewModel::choose,
-                )
+                // Brief pass-through while navigation to the dedicated chooser runs.
+                is ResultUiState.NeedsCategoryChoice,
+                is ResultUiState.NavigateToCategoryChooser,
+                -> LoadingContent(barcode = barcode)
             }
         }
     }
@@ -621,61 +632,6 @@ private fun NetworkErrorContent(
         OutlinedButton(onClick = onScanAnother) {
             Text("Scan another")
         }
-    }
-}
-
-@Composable
-private fun NeedsCategoryChoiceContent(
-    state: ResultUiState.NeedsCategoryChoice,
-    onChoose: (ProductCategory) -> Unit,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            text = "Which kind of product?",
-            style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center,
-        )
-        Text(
-            text = state.barcode,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
-        )
-        CategoryChoiceCard(
-            title = "Food — ${state.foodName}",
-            onClick = { onChoose(ProductCategory.Food) },
-        )
-        Spacer(Modifier.height(12.dp))
-        CategoryChoiceCard(
-            title = "Beauty — ${state.beautyName}",
-            onClick = { onChoose(ProductCategory.Beauty) },
-        )
-    }
-}
-
-@Composable
-private fun CategoryChoiceCard(
-    title: String,
-    onClick: () -> Unit,
-) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-    ) {
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(20.dp),
-        )
     }
 }
 

@@ -33,6 +33,11 @@ import kotlinx.coroutines.withContext
  * Food → [foodKnowledgePack] + [FoodScoreEngine].
  * Beauty → [beautyKnowledgePack] + [BeautyScoreEngine]; products with no ingredient data
  * take the Partial path (score hidden, message shown).
+ *
+ * Category choice (T-420): on auto + ambiguous dual hit, publishes the pair to
+ * [ChoicePairStore] and emits [ResultUiState.NavigateToCategoryChooser]. When
+ * re-opened with source=food|beauty, uses the stored product (no refetch) when
+ * present; otherwise refetches and resolves by requested source.
  */
 class ResultViewModel(
     private val repository: ProductLookup,
@@ -43,15 +48,14 @@ class ResultViewModel(
     private val foodScoreEngine: ScoreEngine = FoodScoreEngine(),
     private val beautyScoreEngine: ScoreEngine = BeautyScoreEngine(),
     private val concernStore: ConcernDetailStore = ConcernDetailStore(),
+    private val choicePairStore: ChoicePairStore = ChoicePairStore(),
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ResultUiState>(ResultUiState.Loading(barcode))
     val uiState: StateFlow<ResultUiState> = _uiState.asStateFlow()
 
-    /** Cached pair when [LookupOutcome.NeedsCategoryChoice] — used by [choose]. */
-    private var pendingFood: Product? = null
-    private var pendingBeauty: Product? = null
+    private val sourceNorm: String = source.lowercase()
 
     init {
         load()
@@ -61,32 +65,26 @@ class ResultViewModel(
         load()
     }
 
-    /**
-     * User picks Food or Beauty after [ResultUiState.NeedsCategoryChoice].
-     * Resolves from the already-fetched pair; does not re-request.
-     */
-    fun choose(category: ProductCategory) {
-        val product = when (category) {
-            ProductCategory.Food -> pendingFood
-            ProductCategory.Beauty -> pendingBeauty
-        }
-        if (product == null) return
-        pendingFood = null
-        pendingBeauty = null
-        viewModelScope.launch {
-            _uiState.value = product.toSuccessState()
-        }
-    }
-
     /** Resolve ingredient detail from the last scored product (for nav tests / screen). */
     fun concernDetail(concernId: String): IngredientDetailUi? = concernStore.get(concernId)
 
     private fun load() {
-        pendingFood = null
-        pendingBeauty = null
         concernStore.publishEmpty()
         _uiState.value = ResultUiState.Loading(barcode)
         viewModelScope.launch {
+            // Explicit source + pair still in memory → score without network.
+            if (sourceNorm == SOURCE_FOOD || sourceNorm == SOURCE_BEAUTY) {
+                val stored = choicePairStore.get(barcode)
+                if (stored != null) {
+                    val product = when (sourceNorm) {
+                        SOURCE_FOOD -> stored.food
+                        else -> stored.beauty
+                    }
+                    _uiState.value = product.toSuccessState()
+                    return@launch
+                }
+            }
+
             _uiState.value = mapOutcome(repository.lookup(barcode))
         }
     }
@@ -106,16 +104,14 @@ class ResultViewModel(
         )
 
         is LookupOutcome.NeedsCategoryChoice -> {
-            pendingFood = outcome.food
-            pendingBeauty = outcome.beauty
-            when (source.lowercase()) {
+            when (sourceNorm) {
                 SOURCE_FOOD -> outcome.food.toSuccessState()
                 SOURCE_BEAUTY -> outcome.beauty.toSuccessState()
-                else -> ResultUiState.NeedsCategoryChoice(
-                    barcode = barcode,
-                    foodName = outcome.food.name.ifBlank { "Food product" },
-                    beautyName = outcome.beauty.name.ifBlank { "Beauty product" },
-                )
+                else -> {
+                    // auto: hand off to dedicated chooser (once per load).
+                    choicePairStore.put(barcode, outcome.food, outcome.beauty)
+                    ResultUiState.NavigateToCategoryChooser(barcode = barcode)
+                }
             }
         }
     }
@@ -264,6 +260,7 @@ class ResultViewModel(
                 foodScoreEngine = container.foodScoreEngine,
                 beautyScoreEngine = container.beautyScoreEngine,
                 concernStore = container.concernDetailStore,
+                choicePairStore = container.choicePairStore,
             ) as T
         }
     }

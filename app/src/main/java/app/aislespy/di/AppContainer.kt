@@ -12,6 +12,7 @@ import app.aislespy.domain.scoring.BeautyScoreEngine
 import app.aislespy.domain.scoring.CategoryResolver
 import app.aislespy.domain.scoring.FoodScoreEngine
 import app.aislespy.domain.scoring.ScoreEngine
+import app.aislespy.ui.result.ChoicePairStore
 import app.aislespy.ui.result.ConcernDetailStore
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
@@ -106,6 +107,9 @@ class AppContainer(
 
     /** Last scored concerns for ingredient detail navigation (T-330). */
     val concernDetailStore: ConcernDetailStore by lazy { ConcernDetailStore() }
+
+    /** Ambiguous food/beauty pair for category chooser → result (T-420). */
+    val choicePairStore: ChoicePairStore by lazy { ChoicePairStore() }
 
     // TODO(T-500): val db: AisleSpyDatabase
 

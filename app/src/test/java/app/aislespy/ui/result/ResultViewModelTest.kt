@@ -18,6 +18,7 @@ import app.aislespy.domain.scoring.FoodScoreEngine
 import app.aislespy.domain.scoring.ScoreEngine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -315,14 +316,99 @@ class ResultViewModelTest {
     }
 
     @Test
-    fun needsCategoryChoice_thenChooseFood_emitsSuccessWithoutRelookup() = runTest {
+    fun sourceFood_withStoredPair_usesStoredProductWithoutLookup() = runTest {
         val food = sampleProduct(
-            name = "Ambiguous Food",
+            name = "Stored Food",
             category = ProductCategory.Food,
             sourceDb = SourceDb.OpenFoodFacts,
             ingredientsText = "Wheat flour",
             nutriscoreGrade = 'b',
             novaGroup = 2,
+        )
+        val beauty = sampleProduct(
+            name = "Stored Beauty",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = "Aqua",
+        )
+        val store = ChoicePairStore()
+        store.put(barcode, food, beauty)
+
+        var lookupCount = 0
+        val repository = ProductLookup {
+            lookupCount++
+            error("lookup must not be called when pair is stored")
+        }
+
+        val vm = ResultViewModel(
+            repository = repository,
+            barcode = barcode,
+            source = ResultViewModel.SOURCE_FOOD,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            choicePairStore = store,
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertTrue(state is ResultUiState.Success)
+        val success = state as ResultUiState.Success
+        assertEquals("Stored Food", success.product.name)
+        assertEquals(ProductCategory.Food, success.product.category)
+        assertEquals("Wheat flour", success.ingredientsText)
+        assertNotNull(success.score)
+        assertEquals(0, lookupCount)
+    }
+
+    @Test
+    fun sourceBeauty_storeEmpty_refetchesAndResolvesBeauty() = runTest {
+        val food = sampleProduct(
+            name = "Ambiguous Food",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Wheat flour",
+        )
+        val beauty = sampleProduct(
+            name = "Ambiguous Beauty",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = "Aqua, Glycerin",
+        )
+        var lookupCount = 0
+        val repository = ProductLookup {
+            lookupCount++
+            LookupOutcome.NeedsCategoryChoice(food = food, beauty = beauty)
+        }
+        val emptyStore = ChoicePairStore()
+        assertNull(emptyStore.get(barcode))
+
+        val vm = ResultViewModel(
+            repository = repository,
+            barcode = barcode,
+            source = ResultViewModel.SOURCE_BEAUTY,
+            beautyScoreEngine = BeautyScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            choicePairStore = emptyStore,
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertTrue(state is ResultUiState.Success)
+        val success = state as ResultUiState.Success
+        assertEquals("Ambiguous Beauty", success.product.name)
+        assertEquals(ProductCategory.Beauty, success.product.category)
+        assertEquals(1, lookupCount)
+    }
+
+    @Test
+    fun autoAmbiguous_emitsNavigateToChooserExactlyOnce() = runTest {
+        val food = sampleProduct(
+            name = "Ambiguous Food",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Wheat flour",
         )
         val beauty = sampleProduct(
             name = "Ambiguous Beauty",
@@ -335,33 +421,50 @@ class ResultViewModelTest {
             lookupCount++
             LookupOutcome.NeedsCategoryChoice(food = food, beauty = beauty)
         }
+        val store = ChoicePairStore()
+        val navigateEmissions = mutableListOf<ResultUiState.NavigateToCategoryChooser>()
 
         val vm = ResultViewModel(
             repository = repository,
             barcode = barcode,
-            foodScoreEngine = FoodScoreEngine(),
+            source = ResultViewModel.SOURCE_AUTO,
             concernStore = ConcernDetailStore(),
+            choicePairStore = store,
             defaultDispatcher = testDispatcher,
         )
+        // Collect from creation so we count each Navigate emission (exactly one load).
+        val collectJob = launch {
+            vm.uiState.collect { state ->
+                if (state is ResultUiState.NavigateToCategoryChooser) {
+                    navigateEmissions += state
+                }
+            }
+        }
         advanceUntilIdle()
+        collectJob.cancel()
 
-        val choiceState = vm.uiState.value
-        assertTrue(choiceState is ResultUiState.NeedsCategoryChoice)
-        val choice = choiceState as ResultUiState.NeedsCategoryChoice
-        assertEquals("Ambiguous Food", choice.foodName)
-        assertEquals("Ambiguous Beauty", choice.beautyName)
         assertEquals(1, lookupCount)
+        assertEquals(
+            "navigate-to-chooser must be emitted exactly once per ambiguous auto load",
+            1,
+            navigateEmissions.size,
+        )
+        assertEquals(ResultUiState.NavigateToCategoryChooser(barcode), navigateEmissions.single())
+        assertEquals(ResultUiState.NavigateToCategoryChooser(barcode), vm.uiState.value)
 
-        vm.choose(ProductCategory.Food)
+        // retry must not re-stack navigations without a new emission cycle; still one stable final state
+        // and store holds the pair for the chooser / source=food|beauty screens
+        val stored = store.get(barcode)
+        assertNotNull(stored)
+        assertEquals("Ambiguous Food", stored!!.food.name)
+        assertEquals("Ambiguous Beauty", stored.beauty.name)
+
+        // A second load (retry) publishes navigate again as a new cycle — count still
+        // one emission per load when observed over a single load only (asserted above).
+        vm.retry()
         advanceUntilIdle()
-        val successState = vm.uiState.value
-        assertTrue(successState is ResultUiState.Success)
-        val success = successState as ResultUiState.Success
-        assertEquals("Ambiguous Food", success.product.name)
-        assertEquals(ProductCategory.Food, success.product.category)
-        assertEquals("Wheat flour", success.ingredientsText)
-        assertNotNull(success.score)
-        assertEquals(1, lookupCount)
+        assertEquals(2, lookupCount)
+        assertEquals(ResultUiState.NavigateToCategoryChooser(barcode), vm.uiState.value)
     }
 
     private class FakeProductLookup(

@@ -21,6 +21,7 @@ import app.aislespy.ui.history.HistoryScreen
 import app.aislespy.ui.ingredient.IngredientDetailScreen
 import app.aislespy.ui.result.CategoryChooserScreen
 import app.aislespy.ui.result.ResultScreen
+import app.aislespy.ui.result.ResultViewModel
 import app.aislespy.ui.scan.ManualEntryScreen
 import app.aislespy.ui.scan.ScanScreen
 import app.aislespy.ui.settings.LicensesScreen
@@ -170,6 +171,14 @@ fun AisleSpyNavGraph(
                     onMethodology = {
                         navController.navigate(Routes.METHODOLOGY)
                     },
+                    onNavigateToCategoryChooser = { chooseBarcode ->
+                        // Replace this result entry so config change cannot re-fire
+                        // navigation, and back from chooser returns to scan (not loading).
+                        navController.navigate(Routes.choose(chooseBarcode)) {
+                            popUpTo(Routes.RESULT) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(
@@ -179,7 +188,26 @@ fun AisleSpyNavGraph(
                 ),
             ) { entry ->
                 val barcode = entry.arguments?.getString(Routes.ARG_BARCODE).orEmpty()
-                CategoryChooserScreen(barcode = barcode)
+                CategoryChooserScreen(
+                    barcode = barcode,
+                    onChooseFood = {
+                        navController.navigate(
+                            Routes.result(barcode, source = ResultViewModel.SOURCE_FOOD),
+                        ) {
+                            popUpTo(Routes.CHOOSE) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onChooseBeauty = {
+                        navController.navigate(
+                            Routes.result(barcode, source = ResultViewModel.SOURCE_BEAUTY),
+                        ) {
+                            popUpTo(Routes.CHOOSE) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    },
+                    onCancel = { navController.popBackStack() },
+                )
             }
             composable(
                 route = Routes.INGREDIENT,
