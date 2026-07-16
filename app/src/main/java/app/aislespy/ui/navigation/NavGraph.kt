@@ -115,10 +115,19 @@ fun AisleSpyNavGraph(
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Routes.SCAN) {
-                ScanScreen()
+                ScanScreen(
+                    onManualEntry = {
+                        navController.navigate(Routes.MANUAL)
+                    },
+                )
             }
             composable(Routes.MANUAL) {
-                ManualEntryScreen()
+                ManualEntryScreen(
+                    onLookup = { barcode ->
+                        navController.navigate(Routes.result(barcode))
+                    },
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(
                 route = Routes.RESULT,
@@ -133,7 +142,14 @@ fun AisleSpyNavGraph(
                 val barcode = entry.arguments?.getString(Routes.ARG_BARCODE).orEmpty()
                 val source = entry.arguments?.getString(Routes.ARG_SOURCE)
                     ?: Routes.SOURCE_DEFAULT
-                ResultScreen(barcode = barcode, source = source)
+                ResultScreen(
+                    barcode = barcode,
+                    source = source,
+                    onBack = { navController.popBackStack() },
+                    onScanAnother = {
+                        navController.popBackStack(Routes.SCAN, inclusive = false)
+                    },
+                )
             }
             composable(
                 route = Routes.CHOOSE,

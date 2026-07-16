@@ -6,6 +6,13 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 /**
+ * Seam for product lookup (production dual-DB repo or test fakes).
+ */
+fun interface ProductLookup {
+    suspend fun lookup(barcode: String): LookupOutcome
+}
+
+/**
  * Dual-database product lookup (Open Food Facts + Open Beauty Facts).
  *
  * Implements the parallel algorithm from API_CONTRACTS.md exactly.
@@ -15,7 +22,7 @@ class ProductRepository(
     private val offApi: OffApi,
     private val obfApi: ObfApi,
     private val categoryResolver: CategoryResolver = CategoryResolver,
-) {
+) : ProductLookup {
 
     /**
      * Look up [barcode] against OFF and OBF in parallel.
@@ -24,7 +31,7 @@ class ProductRepository(
      * // return Found(cached) or NeedsCategoryChoice if the cached row stored a pair.
      * // Only hit the network when cache is cold or expired.
      */
-    suspend fun lookup(barcode: String): LookupOutcome = coroutineScope {
+    override suspend fun lookup(barcode: String): LookupOutcome = coroutineScope {
         val offDeferred = async {
             safeProductApiCall { offApi.getProduct(barcode) }
         }

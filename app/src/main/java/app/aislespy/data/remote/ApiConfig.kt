@@ -26,4 +26,14 @@ object ApiConfig {
     /** Template: `AisleSpy/<version> (Android; https://github.com/neon798/aislespy)` */
     fun userAgent(versionName: String): String =
         "AisleSpy/$versionName (Android; $USER_AGENT_REPO)"
+
+    /**
+     * Contribute / search URLs for products not in OFF/OBF (API_CONTRACTS.md).
+     * Open in browser via Intent.ACTION_VIEW from the NotFound result state.
+     */
+    fun contributeFoodUrl(barcode: String): String =
+        "$OFF_BASE_URL/cgi/product.pl?type=search&code=$barcode"
+
+    fun contributeBeautyUrl(barcode: String): String =
+        "$OBF_BASE_URL/cgi/product.pl?type=search&code=$barcode"
 }
