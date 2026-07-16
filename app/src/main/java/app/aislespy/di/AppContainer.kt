@@ -5,6 +5,8 @@ import app.aislespy.BuildConfig
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
+import app.aislespy.data.remote.ProductRepository
+import app.aislespy.domain.scoring.CategoryResolver
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -24,7 +26,6 @@ import java.util.concurrent.TimeUnit
  * Planned wiring (placeholders until the owning tasks ship):
  * - **db** — Room [AisleSpyDatabase] for history + product cache (T-500)
  * - **knowledgePack** — loaded food/beauty risk JSON (T-310)
- * - **repository** — [ProductRepository] dual lookup + cache (T-220)
  * - **foodEngine** — [FoodScoreEngine] (T-320)
  * - **beautyEngine** — [BeautyScoreEngine] (T-410)
  */
@@ -60,9 +61,16 @@ class AppContainer(
         createRetrofit(ApiConfig.OBF_BASE_URL).create(ObfApi::class.java)
     }
 
+    val repository: ProductRepository by lazy {
+        ProductRepository(
+            offApi = offApi,
+            obfApi = obfApi,
+            categoryResolver = CategoryResolver,
+        )
+    }
+
     // TODO(T-500): val db: AisleSpyDatabase
     // TODO(T-310): val knowledgePack: KnowledgePack
-    // TODO(T-220): val repository: ProductRepository
     // TODO(T-320): val foodEngine: FoodScoreEngine
     // TODO(T-410): val beautyEngine: BeautyScoreEngine
 
