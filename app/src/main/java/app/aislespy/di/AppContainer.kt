@@ -1,9 +1,14 @@
 package app.aislespy.di
 
 import android.content.Context
+import androidx.room.Room
 import app.aislespy.BuildConfig
 import app.aislespy.data.knowledge.KnowledgePack
 import app.aislespy.data.knowledge.KnowledgePackLoader
+import app.aislespy.data.local.AisleSpyDatabase
+import app.aislespy.data.local.HistoryDao
+import app.aislespy.data.local.HistoryRepository
+import app.aislespy.data.local.ProductCacheDao
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
@@ -29,9 +34,6 @@ import java.util.concurrent.TimeUnit
  *
  * Dependencies are added as phases land — do not introduce Hilt unless complexity forces it
  * (see ARCHITECTURE.md / AGENTS.md).
- *
- * Planned wiring (placeholders until the owning tasks ship):
- * - **db** — Room [AisleSpyDatabase] for history + product cache (T-500)
  */
 class AppContainer(
     private val appContext: Context,
@@ -43,6 +45,34 @@ class AppContainer(
             coerceInputValues = true
         }
     }
+
+    /**
+     * Injectable clock for cache TTL and history timestamps (testable via constructor fakes).
+     */
+    val clock: () -> Long = { System.currentTimeMillis() }
+
+    /**
+     * Room database (history + product_cache).
+     *
+     * Pre-1.0: [RoomDatabase.Builder.fallbackToDestructiveMigration] is OK — no production
+     * users yet; schema may change without migrations. Replace with proper migrations before
+     * a release that must preserve local history across upgrades.
+     */
+    val db: AisleSpyDatabase by lazy {
+        Room.databaseBuilder(
+            appContext.applicationContext,
+            AisleSpyDatabase::class.java,
+            DB_NAME,
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    val historyDao: HistoryDao by lazy { db.historyDao() }
+
+    val productCacheDao: ProductCacheDao by lazy { db.productCacheDao() }
+
+    val historyRepository: HistoryRepository by lazy { HistoryRepository(historyDao) }
 
     val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -70,6 +100,10 @@ class AppContainer(
             offApi = offApi,
             obfApi = obfApi,
             categoryResolver = CategoryResolver,
+            productCacheDao = productCacheDao,
+            clock = clock,
+            cacheTtlMs = ApiConfig.PRODUCT_CACHE_TTL_MS,
+            json = ProductRepository.defaultCacheJson,
         )
     }
 
@@ -111,8 +145,6 @@ class AppContainer(
     /** Ambiguous food/beauty pair for category chooser → result (T-420). */
     val choicePairStore: ChoicePairStore by lazy { ChoicePairStore() }
 
-    // TODO(T-500): val db: AisleSpyDatabase
-
     private fun createRetrofit(baseUrl: String): Retrofit {
         val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
@@ -120,6 +152,10 @@ class AppContainer(
             .client(okHttpClient)
             .addConverterFactory(json.asConverterFactory(contentType))
             .build()
+    }
+
+    companion object {
+        private const val DB_NAME = "aislespy.db"
     }
 }
 

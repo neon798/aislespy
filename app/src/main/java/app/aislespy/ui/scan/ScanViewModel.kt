@@ -1,13 +1,22 @@
 package app.aislespy.ui.scan
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import app.aislespy.AisleSpyApp
+import app.aislespy.data.local.HistoryRepository
+import app.aislespy.ui.history.HistoryItemUi
+import app.aislespy.ui.history.toHistoryItemUi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -23,12 +32,16 @@ enum class CameraPermission {
     Granted,
 }
 
+/**
+ * Scan screen state (DOMAIN_MODELS.md [ScanUiState]).
+ * [recent] is capped at [HistoryRepository.RECENT_LIMIT] (10).
+ */
 data class ScanUiState(
     val permission: CameraPermission = CameraPermission.Rationale,
     val cameraActive: Boolean = false,
     val torchEnabled: Boolean = false,
     val lastError: String? = null,
-    // recent: List<HistoryItemUi> — wired when history (T-500) lands
+    val recent: List<HistoryItemUi> = emptyList(),
 )
 
 sealed interface ScanEvent {
@@ -40,13 +53,39 @@ sealed interface ScanEvent {
  *
  * Debounce/stability lives in [ScanDebouncer] (shared with the analyzer);
  * this VM only reacts to accepted codes and permission/torch UI.
+ * Recent strip shares [HistoryRepository] with the history screen.
  */
 class ScanViewModel(
     private val debouncer: ScanDebouncer = ScanDebouncer(),
+    historyRepository: HistoryRepository? = null,
+    private val clock: () -> Long = { System.currentTimeMillis() },
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ScanUiState())
-    val uiState: StateFlow<ScanUiState> = _uiState.asStateFlow()
+    private val permissionState = MutableStateFlow(
+        ScanUiState(
+            permission = CameraPermission.Rationale,
+            cameraActive = false,
+            torchEnabled = false,
+            lastError = null,
+            recent = emptyList(),
+        ),
+    )
+
+    private val recentFlow = historyRepository
+        ?.observeRecent(HistoryRepository.RECENT_LIMIT)
+        ?: flowOf(emptyList())
+
+    val uiState: StateFlow<ScanUiState> = combine(
+        permissionState,
+        recentFlow,
+    ) { base, entries ->
+        val now = clock()
+        base.copy(recent = entries.map { it.toHistoryItemUi(now) })
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = ScanUiState(),
+    )
 
     private val _events = MutableSharedFlow<ScanEvent>(extraBufferCapacity = 1)
     val events: SharedFlow<ScanEvent> = _events.asSharedFlow()
@@ -56,7 +95,7 @@ class ScanViewModel(
 
     fun onPermissionStatus(granted: Boolean, fromUserRequest: Boolean = false) {
         if (granted) {
-            _uiState.update {
+            permissionState.update {
                 it.copy(
                     permission = CameraPermission.Granted,
                     cameraActive = true,
@@ -70,7 +109,7 @@ class ScanViewModel(
             } else {
                 CameraPermission.Rationale
             }
-            _uiState.update {
+            permissionState.update {
                 it.copy(
                     permission = next,
                     cameraActive = false,
@@ -81,14 +120,16 @@ class ScanViewModel(
     }
 
     fun toggleTorch() {
-        _uiState.update {
+        permissionState.update {
             if (it.permission != CameraPermission.Granted) it
             else it.copy(torchEnabled = !it.torchEnabled)
         }
     }
 
     fun setTorch(enabled: Boolean) {
-        _uiState.update { it.copy(torchEnabled = enabled && it.permission == CameraPermission.Granted) }
+        permissionState.update {
+            it.copy(torchEnabled = enabled && it.permission == CameraPermission.Granted)
+        }
     }
 
     /**
@@ -101,6 +142,22 @@ class ScanViewModel(
     }
 
     fun reportCameraError(message: String) {
-        _uiState.update { it.copy(lastError = message) }
+        permissionState.update { it.copy(lastError = message) }
+    }
+
+    class Factory(
+        private val application: Application,
+    ) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            require(modelClass.isAssignableFrom(ScanViewModel::class.java)) {
+                "Unknown ViewModel class: ${modelClass.name}"
+            }
+            val container = (application as AisleSpyApp).container
+            return ScanViewModel(
+                historyRepository = container.historyRepository,
+                clock = container.clock,
+            ) as T
+        }
     }
 }

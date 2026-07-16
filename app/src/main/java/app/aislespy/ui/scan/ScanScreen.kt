@@ -13,16 +13,21 @@ import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.core.resolutionselector.ResolutionStrategy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import android.app.Application
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlashOff
@@ -37,6 +42,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -58,12 +64,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import app.aislespy.domain.model.ProductCategory
+import app.aislespy.domain.model.ScoreBand
+import app.aislespy.ui.history.HistoryItemUi
+import app.aislespy.ui.theme.scoreBad
+import app.aislespy.ui.theme.scoreExcellent
+import app.aislespy.ui.theme.scoreOk
+import app.aislespy.ui.theme.scorePoor
 import java.util.concurrent.Executors
 
 /** Amber reticle accent from UI_UX visual language. */
@@ -82,10 +96,16 @@ fun ScanScreen(
     onManualEntry: () -> Unit,
     onBarcodeDecoded: (barcode: String) -> Unit,
     onSettings: () -> Unit = {},
+    onHistory: () -> Unit = {},
+    onRecentClick: (barcode: String, source: String) -> Unit = { barcode, _ ->
+        onBarcodeDecoded(barcode)
+    },
     modifier: Modifier = Modifier,
-    viewModel: ScanViewModel = viewModel(),
+    scanViewModel: ScanViewModel? = null,
 ) {
     val context = LocalContext.current
+    val app = context.applicationContext as Application
+    val viewModel = scanViewModel ?: viewModel(factory = ScanViewModel.Factory(app))
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -155,6 +175,9 @@ fun ScanScreen(
                         torchEnabled = uiState.torchEnabled,
                         onToggleTorch = viewModel::toggleTorch,
                         onManualEntry = onManualEntry,
+                        recent = uiState.recent,
+                        onRecentClick = onRecentClick,
+                        onHistory = onHistory,
                         modifier = Modifier.fillMaxSize(),
                     )
                     uiState.lastError?.let { err ->
@@ -230,6 +253,9 @@ private fun ScanOverlay(
     torchEnabled: Boolean,
     onToggleTorch: () -> Unit,
     onManualEntry: () -> Unit,
+    recent: List<HistoryItemUi>,
+    onRecentClick: (barcode: String, source: String) -> Unit,
+    onHistory: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -327,7 +353,82 @@ private fun ScanOverlay(
                 ) {
                     Text("Enter barcode")
                 }
+                if (recent.isNotEmpty()) {
+                    Spacer(Modifier.height(12.dp))
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        recent.forEach { item ->
+                            RecentChip(
+                                item = item,
+                                onClick = {
+                                    val source = when (item.category) {
+                                        ProductCategory.Food -> "food"
+                                        ProductCategory.Beauty -> "beauty"
+                                    }
+                                    onRecentClick(item.barcode, source)
+                                },
+                            )
+                        }
+                    }
+                }
+                TextButton(onClick = onHistory) {
+                    Text("History", color = Color.White)
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun RecentChip(
+    item: HistoryItemUi,
+    onClick: () -> Unit,
+) {
+    val bandColor = when (item.band) {
+        ScoreBand.Excellent -> scoreExcellent
+        ScoreBand.Ok -> scoreOk
+        ScoreBand.Poor -> scorePoor
+        ScoreBand.Bad -> scoreBad
+    }
+    Surface(
+        modifier = Modifier
+            .clickable(onClick = onClick)
+            .semantics {
+                contentDescription = "${item.name}, score ${item.score}"
+            },
+        shape = RoundedCornerShape(20.dp),
+        color = Color.White.copy(alpha = 0.15f),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(22.dp)
+                    .background(bandColor, RoundedCornerShape(11.dp))
+                    .padding(horizontal = 6.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    text = item.score.toString(),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.White,
+                )
+            }
+            Text(
+                text = item.name,
+                style = MaterialTheme.typography.labelMedium,
+                color = Color.White,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(end = 2.dp),
+            )
         }
     }
 }

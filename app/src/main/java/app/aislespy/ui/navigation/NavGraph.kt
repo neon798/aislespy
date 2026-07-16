@@ -135,6 +135,20 @@ fun AisleSpyNavGraph(
                             restoreState = true
                         }
                     },
+                    onHistory = {
+                        navController.navigate(Routes.HISTORY) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    onRecentClick = { barcode, source ->
+                        navController.navigate(Routes.result(barcode, source)) {
+                            launchSingleTop = true
+                        }
+                    },
                 )
             }
             composable(Routes.MANUAL) {
@@ -222,7 +236,13 @@ fun AisleSpyNavGraph(
                 )
             }
             composable(Routes.HISTORY) {
-                HistoryScreen()
+                HistoryScreen(
+                    onOpenResult = { barcode, source ->
+                        navController.navigate(Routes.result(barcode, source)) {
+                            launchSingleTop = true
+                        }
+                    },
+                )
             }
             composable(Routes.SETTINGS) {
                 SettingsScreen()

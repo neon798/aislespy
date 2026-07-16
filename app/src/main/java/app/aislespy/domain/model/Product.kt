@@ -1,9 +1,15 @@
 package app.aislespy.domain.model
 
+import kotlinx.serialization.Serializable
+
 /**
  * Domain product entity mapped from OFF/OBF DTOs.
  * See DOMAIN_MODELS.md for field meanings.
+ *
+ * [Serializable] for Room product_cache JSON payloads (kotlinx-serialization is pure Kotlin;
+ * domain stays Android-free).
  */
+@Serializable
 data class Product(
     val barcode: String,
     val name: String,

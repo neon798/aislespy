@@ -2,9 +2,11 @@ package app.aislespy.ui.result
 
 import app.aislespy.data.knowledge.KnowledgePack
 import app.aislespy.data.knowledge.KnowledgePackEntry
+import app.aislespy.data.local.HistoryWriter
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
 import app.aislespy.domain.model.Confidence
+import app.aislespy.domain.model.HistoryEntry
 import app.aislespy.domain.model.LookupOutcome
 import app.aislespy.domain.model.Nutriments
 import app.aislespy.domain.model.Product
@@ -400,6 +402,79 @@ class ResultViewModelTest {
         assertEquals("Ambiguous Beauty", success.product.name)
         assertEquals(ProductCategory.Beauty, success.product.category)
         assertEquals(1, lookupCount)
+    }
+
+    @Test
+    fun foodSuccess_recordsHistoryEntry() = runTest {
+        val food = sampleProduct(
+            name = "Nutella",
+            brands = "Ferrero",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Sugar, palm oil",
+            nutriscoreGrade = 'e',
+            novaGroup = 4,
+        )
+        val recorded = mutableListOf<HistoryEntry>()
+        val writer = HistoryWriter { entry -> recorded += entry }
+        val fixedNow = 1_700_000_111_000L
+
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            historyWriter = writer,
+            clock = { fixedNow },
+            defaultDispatcher = testDispatcher,
+            ioDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value
+        assertTrue(state is ResultUiState.Success)
+        val success = state as ResultUiState.Success
+        assertNotNull(success.score)
+
+        assertEquals(1, recorded.size)
+        val entry = recorded.single()
+        assertEquals(barcode, entry.barcode)
+        assertEquals("Nutella", entry.name)
+        assertEquals(success.score!!.value, entry.score)
+        assertEquals(ProductCategory.Food, entry.category)
+        assertEquals(fixedNow, entry.scannedAtEpochMs)
+    }
+
+    @Test
+    fun beautyPartial_doesNotRecordHistory() = runTest {
+        val beauty = sampleProduct(
+            name = "Mystery cream",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = null,
+        )
+        val recorded = mutableListOf<HistoryEntry>()
+        val writer = HistoryWriter { entry -> recorded += entry }
+
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(beauty)),
+            barcode = barcode,
+            beautyKnowledgePack = KnowledgePack(
+                version = "1.0.0",
+                domain = "beauty",
+                entries = emptyList(),
+            ),
+            beautyScoreEngine = BeautyScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            historyWriter = writer,
+            defaultDispatcher = testDispatcher,
+            ioDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value as ResultUiState.Success
+        assertNull(state.score)
+        assertTrue(recorded.isEmpty())
     }
 
     @Test

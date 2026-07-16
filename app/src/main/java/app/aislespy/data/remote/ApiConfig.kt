@@ -21,6 +21,12 @@ object ApiConfig {
     const val CONNECT_TIMEOUT_SECONDS = 10L
     const val READ_TIMEOUT_SECONDS = 20L
 
+    /**
+     * Product cache TTL (API_CONTRACTS.md caching policy).
+     * Fresh cache hits skip network; expired rows are ignored and may be purged.
+     */
+    const val PRODUCT_CACHE_TTL_MS: Long = 7L * 24 * 60 * 60 * 1000
+
     private const val USER_AGENT_REPO = "https://github.com/neon798/aislespy"
 
     /** Template: `AisleSpy/<version> (Android; https://github.com/neon798/aislespy)` */

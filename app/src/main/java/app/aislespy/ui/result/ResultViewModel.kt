@@ -7,10 +7,12 @@ import androidx.lifecycle.viewModelScope
 import app.aislespy.AisleSpyApp
 import app.aislespy.data.knowledge.KnowledgeMatcher
 import app.aislespy.data.knowledge.KnowledgePack
+import app.aislespy.data.local.HistoryWriter
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
 import app.aislespy.domain.model.Concern
 import app.aislespy.domain.model.Confidence
+import app.aislespy.domain.model.HistoryEntry
 import app.aislespy.domain.model.LookupOutcome
 import app.aislespy.domain.model.Product
 import app.aislespy.domain.model.ProductCategory
@@ -38,6 +40,15 @@ import kotlinx.coroutines.withContext
  * [ChoicePairStore] and emits [ResultUiState.NavigateToCategoryChooser]. When
  * re-opened with source=food|beauty, uses the stored product (no refetch) when
  * present; otherwise refetches and resolves by requested source.
+ *
+ * ## History recording (T-500)
+ *
+ * After a [ResultUiState.Success] emission that includes a **numeric** score, upserts a
+ * [HistoryEntry] via [historyWriter] on [ioDispatcher] (fire-and-forget).
+ *
+ * **MVP policy:** partial results (beauty without ingredients → `score == null`) are
+ * **not** history-worthy. Only Success states with a non-null [ScoreUi] are recorded.
+ * Do not invent score 0 for partials.
  */
 class ResultViewModel(
     private val repository: ProductLookup,
@@ -49,7 +60,10 @@ class ResultViewModel(
     private val beautyScoreEngine: ScoreEngine = BeautyScoreEngine(),
     private val concernStore: ConcernDetailStore = ConcernDetailStore(),
     private val choicePairStore: ChoicePairStore = ChoicePairStore(),
+    private val historyWriter: HistoryWriter? = null,
+    private val clock: () -> Long = { System.currentTimeMillis() },
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<ResultUiState>(ResultUiState.Loading(barcode))
@@ -80,12 +94,36 @@ class ResultViewModel(
                         SOURCE_FOOD -> stored.food
                         else -> stored.beauty
                     }
-                    _uiState.value = product.toSuccessState()
+                    emitSuccess(product.toSuccessState())
                     return@launch
                 }
             }
 
-            _uiState.value = mapOutcome(repository.lookup(barcode))
+            when (val mapped = mapOutcome(repository.lookup(barcode))) {
+                is ResultUiState.Success -> emitSuccess(mapped)
+                else -> _uiState.value = mapped
+            }
+        }
+    }
+
+    /**
+     * Emit Success and, when a numeric total exists, record history (async IO).
+     * Partials (`score == null`) intentionally skip history — see class KDoc.
+     */
+    private fun emitSuccess(success: ResultUiState.Success) {
+        _uiState.value = success
+        val scoreUi = success.score ?: return
+        val writer = historyWriter ?: return
+        val entry = HistoryEntry(
+            barcode = success.product.barcode,
+            name = success.product.name,
+            score = scoreUi.value,
+            category = success.product.category,
+            scannedAtEpochMs = clock(),
+            thumbnailUrl = success.product.imageUrl,
+        )
+        viewModelScope.launch(ioDispatcher) {
+            writer.upsert(entry)
         }
     }
 
@@ -261,6 +299,10 @@ class ResultViewModel(
                 beautyScoreEngine = container.beautyScoreEngine,
                 concernStore = container.concernDetailStore,
                 choicePairStore = container.choicePairStore,
+                historyWriter = HistoryWriter { entry ->
+                    container.historyRepository.upsert(entry)
+                },
+                clock = container.clock,
             ) as T
         }
     }
