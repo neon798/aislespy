@@ -9,6 +9,9 @@ import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
 import app.aislespy.data.remote.ProductRepository
 import app.aislespy.domain.scoring.CategoryResolver
+import app.aislespy.domain.scoring.FoodScoreEngine
+import app.aislespy.domain.scoring.ScoreEngine
+import app.aislespy.ui.result.ConcernDetailStore
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -27,8 +30,6 @@ import java.util.concurrent.TimeUnit
  *
  * Planned wiring (placeholders until the owning tasks ship):
  * - **db** — Room [AisleSpyDatabase] for history + product cache (T-500)
- * - **knowledgePack** — loaded food/beauty risk JSON (T-310)
- * - **foodEngine** — [FoodScoreEngine] (T-320)
  * - **beautyEngine** — [BeautyScoreEngine] (T-410)
  */
 class AppContainer(
@@ -83,8 +84,13 @@ class AppContainer(
         )
     }
 
+    /** Pure food scoring engine (T-320). Stateless; safe to share. */
+    val foodScoreEngine: ScoreEngine by lazy { FoodScoreEngine() }
+
+    /** Last scored concerns for ingredient detail navigation (T-330). */
+    val concernDetailStore: ConcernDetailStore by lazy { ConcernDetailStore() }
+
     // TODO(T-500): val db: AisleSpyDatabase
-    // TODO(T-320): val foodEngine: FoodScoreEngine
     // TODO(T-410): val beautyEngine: BeautyScoreEngine
 
     private fun createRetrofit(baseUrl: String): Retrofit {

@@ -3,6 +3,8 @@ package app.aislespy.ui.result
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,16 +15,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +35,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -37,14 +43,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.AisleSpyApp
 import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.SourceDb
+import app.aislespy.ui.components.ScoreRing
+import app.aislespy.ui.theme.scoreBad
+import app.aislespy.ui.theme.scoreOk
+import app.aislespy.ui.theme.scorePoor
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 
@@ -55,6 +70,8 @@ fun ResultScreen(
     source: String,
     onBack: () -> Unit,
     onScanAnother: () -> Unit = onBack,
+    onConcernClick: (concernId: String) -> Unit = {},
+    onMethodology: () -> Unit = {},
     modifier: Modifier = Modifier,
     resultViewModel: ResultViewModel? = null,
 ) {
@@ -91,7 +108,11 @@ fun ResultScreen(
         ) {
             when (val s = state) {
                 is ResultUiState.Loading -> LoadingContent(barcode = s.barcode)
-                is ResultUiState.Success -> SuccessContent(state = s)
+                is ResultUiState.Success -> SuccessContent(
+                    state = s,
+                    onConcernClick = onConcernClick,
+                    onMethodology = onMethodology,
+                )
                 is ResultUiState.NotFound -> NotFoundContent(
                     state = s,
                     onScanAnother = onScanAnother,
@@ -135,7 +156,11 @@ private fun LoadingContent(barcode: String) {
 }
 
 @Composable
-private fun SuccessContent(state: ResultUiState.Success) {
+private fun SuccessContent(
+    state: ResultUiState.Success,
+    onConcernClick: (String) -> Unit,
+    onMethodology: () -> Unit,
+) {
     val product = state.product
     Column(
         modifier = Modifier
@@ -179,6 +204,100 @@ private fun SuccessContent(state: ResultUiState.Success) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
+        // Score hero
+        if (state.beautyScoringPending || state.score == null) {
+            BeautyScoringPlaceholder()
+        } else {
+            val score = state.score
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                ScoreRing(
+                    value = score.value,
+                    band = score.band,
+                    label = score.label,
+                )
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = score.summarySentence,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(Modifier.height(4.dp))
+                SuggestionChip(
+                    onClick = {},
+                    label = { Text(score.confidenceLabel) },
+                    enabled = false,
+                )
+            }
+        }
+
+        // Badges
+        if (state.badges.isNotEmpty()) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                state.badges.forEach { badge ->
+                    SuggestionChip(
+                        onClick = {},
+                        label = { Text(badge.label) },
+                        enabled = false,
+                    )
+                }
+            }
+        }
+
+        // Breakdown
+        if (state.breakdown.isNotEmpty()) {
+            Text(
+                text = "Score breakdown",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .padding(top = 4.dp)
+                    .semantics { heading() },
+            )
+            state.breakdown.forEach { component ->
+                BreakdownRow(component)
+            }
+        }
+
+        // Suspect ingredients
+        Text(
+            text = "Suspect ingredients",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .semantics {
+                    heading()
+                    contentDescription = "Suspect ingredients"
+                },
+        )
+        if (state.beautyScoringPending) {
+            Text(
+                text = "Beauty ingredient flags will appear here once scoring lands.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else if (state.concerns.isEmpty()) {
+            Text(
+                text = "Clean dossier—nothing flagged in our pack.",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            state.concerns.forEach { concern ->
+                ConcernCard(
+                    concern = concern,
+                    onClick = { onConcernClick(concern.id) },
+                )
+            }
+        }
+
+        // Ingredients text (transparency)
         Text(
             text = "Ingredients",
             style = MaterialTheme.typography.titleMedium,
@@ -193,7 +312,141 @@ private fun SuccessContent(state: ResultUiState.Success) {
                 MaterialTheme.colorScheme.onSurface
             },
         )
+
+        if (state.disclaimerVisible) {
+            HorizontalDivider(modifier = Modifier.padding(top = 12.dp))
+            Text(
+                text = ResultViewModel.DISCLAIMER_TEXT,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+            TextButton(onClick = onMethodology) {
+                Text("How we score")
+            }
+        }
     }
+}
+
+@Composable
+private fun BeautyScoringPlaceholder() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+        ),
+    ) {
+        Text(
+            text = "Beauty scoring coming soon",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(16.dp),
+        )
+    }
+}
+
+@Composable
+private fun BreakdownRow(component: ScoreComponentUi) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = component.label,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+            )
+            if (!component.detail.isNullOrBlank()) {
+                Text(
+                    text = component.detail,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+        Text(
+            text = component.score.toString(),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+@Composable
+private fun ConcernCard(
+    concern: ConcernUi,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            SeverityChip(severity = concern.severity)
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = concern.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Text(
+                    text = concern.shortWhy,
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 2,
+                )
+                if (!concern.positionHint.isNullOrBlank()) {
+                    Text(
+                        text = concern.positionHint,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = "Open ${concern.name} details",
+            )
+        }
+    }
+}
+
+@Composable
+private fun SeverityChip(severity: Int) {
+    val color = severityColor(severity)
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(color.copy(alpha = 0.2f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = severity.toString(),
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = color,
+        )
+    }
+}
+
+@Composable
+private fun severityColor(severity: Int): Color = when (severity) {
+    1, 2 -> scoreOk
+    3 -> scorePoor
+    else -> scoreBad
 }
 
 @Composable

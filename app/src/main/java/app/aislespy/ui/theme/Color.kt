@@ -27,3 +27,13 @@ val DarkBackground = Color(0xFF101410)
 val DarkOnBackground = Color(0xFFE1E3DD)
 val DarkSurface = Color(0xFF101410)
 val DarkOnSurface = Color(0xFFE1E3DD)
+
+// Semantic score band colors (docs/COMPONENTS.md / UI_UX.md)
+val scoreExcellent = Color(0xFF2E7D32) // green
+val scoreOk = Color(0xFFF9A825) // yellow/amber
+val scorePoor = Color(0xFFEF6C00) // orange
+val scoreBad = Color(0xFFC62828) // red
+
+// Brand extras
+val brandTeal = Color(0xFF0F6B6B)
+val brandAmber = Color(0xFFF5A524)

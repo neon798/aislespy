@@ -164,6 +164,12 @@ fun AisleSpyNavGraph(
                     onScanAnother = {
                         navController.popBackStack(Routes.SCAN, inclusive = false)
                     },
+                    onConcernClick = { concernId ->
+                        navController.navigate(Routes.ingredient(concernId))
+                    },
+                    onMethodology = {
+                        navController.navigate(Routes.METHODOLOGY)
+                    },
                 )
             }
             composable(
@@ -182,7 +188,10 @@ fun AisleSpyNavGraph(
                 ),
             ) { entry ->
                 val concernId = entry.arguments?.getString(Routes.ARG_CONCERN_ID).orEmpty()
-                IngredientDetailScreen(concernId = concernId)
+                IngredientDetailScreen(
+                    concernId = concernId,
+                    onBack = { navController.popBackStack() },
+                )
             }
             composable(Routes.HISTORY) {
                 HistoryScreen()
