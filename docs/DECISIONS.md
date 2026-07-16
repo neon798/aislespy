@@ -124,6 +124,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-013 — HTTP stack: Retrofit + OkHttp + kotlinx-serialization
+
+- **Date:** 2026-07-16
+- **Status:** Accepted
+- **Context:** ARCHITECTURE.md / API docs allowed either Ktor (OkHttp engine) or Retrofit + OkHttp for OFF/OBF clients. Project advisor chose for library maturity, a small dependency surface on Android, and canonical MockWebServer testing patterns used across the Android ecosystem.
+- **Decision:** Use **Retrofit 2.11.0** + **OkHttp 4.12.0** + **kotlinx-serialization** (`converter-kotlinx-serialization` 2.11.0, JSON 1.7.3) for product API clients. Mandatory User-Agent interceptor; connect 10s / read 20s timeouts.
+- **Consequences:** No Ktor in the app module. Repository and unit tests use Retrofit interfaces + MockWebServer. DTOs stay in `data/remote/dto` and map to domain models before leaving the data layer.
+
+---
+
 ## Template for new entries
 
 ```markdown

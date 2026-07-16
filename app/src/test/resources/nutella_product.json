@@ -1,0 +1,57 @@
+{
+  "status": 1,
+  "code": "3017624010701",
+  "product": {
+    "code": "3017624010701",
+    "product_name": "Nutella",
+    "brands": "Ferrero",
+    "image_front_url": "http://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.54.400.jpg",
+    "image_front_small_url": "https://images.openfoodfacts.org/images/products/301/762/401/0701/front_en.54.200.jpg",
+    "nutriscore_grade": "E",
+    "nutriscore_score": 26,
+    "nova_group": 4,
+    "additives_tags": [
+      "en:e322",
+      "en:e322i"
+    ],
+    "ingredients_text": "Sugar, palm oil, hazelnuts 13%, skimmed milk powder 8.7%, fat-reduced cocoa 7.4%, emulsifier: lecithins (soya), vanillin.",
+    "ingredients_tags": [
+      "en:sugar",
+      "en:palm-oil",
+      "en:nut",
+      "en:hazelnut",
+      "en:milk",
+      "en:skimmed-milk-powder",
+      "en:cocoa",
+      "en:fat-reduced-cocoa",
+      "en:emulsifier",
+      "en:e322",
+      "en:soya-lecithin",
+      "en:vanillin"
+    ],
+    "allergens_tags": [
+      "en:milk",
+      "en:nuts",
+      "en:soybeans"
+    ],
+    "labels_tags": [],
+    "categories_tags": [
+      "en:breakfasts",
+      "en:spreads",
+      "en:sweet-spreads",
+      "en:hazelnut-spreads",
+      "en:chocolate-spreads",
+      "en:cocoa-and-hazelnuts-spreads"
+    ],
+    "nutriments": {
+      "energy-kcal_100g": 539.0,
+      "sugars_100g": 56.3,
+      "salt_100g": 0.107,
+      "saturated-fat_100g": 10.6,
+      "fiber_100g": 0.0,
+      "proteins_100g": 6.3,
+      "energy_100g": 2252,
+      "fat_100g": 30.9
+    }
+  }
+}
