@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aislespy.app/schema/beauty_ingredient.schema.json",
+  "title": "AisleSpy beauty ingredient knowledge entry",
+  "type": "object",
+  "required": ["id", "names", "domain", "severity", "title", "why", "sources"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "Stable slug, e.g. butylparaben"
+    },
+    "names": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "INCI or OBF tags"
+    },
+    "domain": { "const": "beauty" },
+    "severity": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "categories": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "e.g. fragrance, preservative, restricted, banned, allergen"
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "why": { "type": "string", "minLength": 20 },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
+}

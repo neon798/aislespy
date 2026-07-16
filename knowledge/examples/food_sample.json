@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0-example",
+  "domain": "food",
+  "entries": [
+    {
+      "id": "e211",
+      "names": ["sodium benzoate", "e211"],
+      "aliases": ["en:e211", "en:sodium-benzoate"],
+      "domain": "food",
+      "severity": 3,
+      "categories": ["preservative"],
+      "title": "Sodium benzoate (E211)",
+      "why": "A common preservative. Under some conditions it can form benzene with ascorbic acid (vitamin C). Regulators set an acceptable daily intake; some people report sensitivity.",
+      "sources": [
+        "EFSA food additive evaluations (public summaries)",
+        "Open Food Facts additives taxonomy"
+      ]
+    },
+    {
+      "id": "e250",
+      "names": ["sodium nitrite", "e250"],
+      "aliases": ["en:e250", "en:sodium-nitrite"],
+      "domain": "food",
+      "severity": 4,
+      "categories": ["preservative", "color-fixant"],
+      "title": "Sodium nitrite (E250)",
+      "why": "Used in cured meats to prevent botulism and fix color. Can contribute to nitrosamine formation; many public-health authorities advise limiting processed meat intake.",
+      "sources": [
+        "IARC classifications related to processed meat (context)",
+        "EFSA nitrite/nitrate opinions (public summaries)"
+      ]
+    },
+    {
+      "id": "e621",
+      "names": ["monosodium glutamate", "msg", "e621"],
+      "aliases": ["en:e621", "en:monosodium-glutamate"],
+      "domain": "food",
+      "severity": 1,
+      "categories": ["flavour-enhancer"],
+      "title": "Monosodium glutamate (E621)",
+      "why": "Flavour enhancer. Generally recognized as safe at normal use levels by major regulators; a minority of people report sensitivity. Listed for transparency, not as a high-hazard additive.",
+      "sources": [
+        "FDA / JECFA public positions on MSG (summarized)",
+        "Open Food Facts additives taxonomy"
+      ]
+    }
+  ]
+}

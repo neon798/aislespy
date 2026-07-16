@@ -1,0 +1,24 @@
+AisleSpy helps you see what’s really in the aisle—without tracking you.
+
+Scan a barcode (or type it) for food and beauty products. AisleSpy looks up open data from Open Food Facts and Open Beauty Facts, then scores the product from 1 to 100 and lists problem ingredients with short explanations.
+
+FEATURES
+• Barcode scanner and manual entry
+• Food and cosmetics in one app
+• Clear 1–100 score (higher is better)
+• Suspect ingredients with plain-language “why”
+• Local scan history only—no accounts
+• Modern Material interface
+• Works without Google Play Services
+• Free and open source
+
+PRIVACY
+AisleSpy does not create accounts or ship analytics SDKs. Scan history stays on your device. Looking up a product sends the barcode to Open Food Facts or Open Beauty Facts over HTTPS so the app can fetch public product data.
+
+DATA
+Product information comes from the Open Food Facts and Open Beauty Facts communities (Open Database License). Scoring methodology is documented in the app and source repository.
+
+NOT MEDICAL ADVICE
+Scores are informational tools for reading labels. They are not medical advice, allergen guarantees, or safety certifications. Always check the physical package.
+
+Anti-Features: uses the network to look up products.

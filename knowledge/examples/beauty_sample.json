@@ -1,0 +1,48 @@
+{
+  "version": "1.0.0-example",
+  "domain": "beauty",
+  "entries": [
+    {
+      "id": "fragrance",
+      "names": ["fragrance", "parfum", "aroma"],
+      "aliases": ["en:perfume", "en:fragrance"],
+      "domain": "beauty",
+      "severity": 3,
+      "categories": ["fragrance", "allergen-risk"],
+      "title": "Fragrance (Parfum)",
+      "why": "Umbrella term for scent mixtures. Formulas can include allergens and are often not fully disclosed as individual chemicals on the label. A common trigger for contact dermatitis in sensitive people.",
+      "sources": [
+        "EU Cosmetic Regulation fragrance allergen labelling (public)",
+        "SCCS opinions on fragrance allergens (public summaries)"
+      ]
+    },
+    {
+      "id": "methylisothiazolinone",
+      "names": ["methylisothiazolinone", "mit"],
+      "aliases": ["en:methylisothiazolinone"],
+      "domain": "beauty",
+      "severity": 5,
+      "categories": ["preservative", "restricted", "allergen"],
+      "title": "Methylisothiazolinone (MIT)",
+      "why": "Preservative associated with a rise in contact allergy. Use in leave-on cosmetics has been restricted in the EU; still important to notice on labels of older or imported products.",
+      "sources": [
+        "EU CosIng / Cosmetic Regulation restrictions (public)",
+        "SCCS opinions on isothiazolinones (public summaries)"
+      ]
+    },
+    {
+      "id": "butylparaben",
+      "names": ["butylparaben"],
+      "aliases": ["en:butylparaben"],
+      "domain": "beauty",
+      "severity": 4,
+      "categories": ["preservative", "endocrine-concern"],
+      "title": "Butylparaben",
+      "why": "Preservative in the paraben family. Some longer-chain parabens have faced greater regulatory scrutiny regarding endocrine activity; check current regional limits and prefer products that avoid higher-concern parabens if that matters to you.",
+      "sources": [
+        "EU CosIng entries and restrictions (public)",
+        "SCCS paraben opinions (public summaries)"
+      ]
+    }
+  ]
+}
