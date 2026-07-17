@@ -193,6 +193,79 @@ class ResultViewModelTest {
     }
 
     @Test
+    fun valuesBadges_fairTradeAndOrganic_shownAndScoreMatchesEngine() = runTest {
+        val food = sampleProduct(
+            name = "Fair Organic Cocoa",
+            brands = "Brand",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Cocoa, sugar",
+            nutriscoreGrade = 'c',
+            novaGroup = 3,
+            labelsTags = listOf("en:fair-trade", "en:organic"),
+        )
+        val engine = FoodScoreEngine()
+        val engineResult = engine.score(food, emptyList())
+
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodKnowledgePack = null,
+            foodScoreEngine = engine,
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val values = success.badges.filter { it.style == ResultViewModel.STYLE_VALUES }
+        assertTrue(
+            values.any {
+                it.id == "fair-trade" && it.label == "Fair-trade"
+            },
+        )
+        assertTrue(
+            values.any {
+                it.id == "organic-certified" && it.label == "Certified organic"
+            },
+        )
+        // Plain T-330 Organic chip must be gone (replaced by values badge).
+        assertFalse(success.badges.any { it.id == "organic" && it.label == "Organic" })
+        assertFalse(success.badges.any { it.style == "organic" })
+
+        // Score equals engine output (values badges never alter ScoreResult).
+        assertNotNull(success.score)
+        assertEquals(engineResult.total, success.score!!.value)
+        assertEquals(engineResult.band, success.score!!.band)
+        assertEquals(engineResult.summarySentence, success.score!!.summarySentence)
+    }
+
+    @Test
+    fun beautyProduct_includesValuesBadges() = runTest {
+        val beauty = sampleProduct(
+            name = "Cruelty-free cream",
+            category = ProductCategory.Beauty,
+            sourceDb = SourceDb.OpenBeautyFacts,
+            ingredientsText = "Aqua, Glycerin",
+            labelsTags = listOf("en:cruelty-free", "en:leaping-bunny"),
+        )
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(beauty)),
+            barcode = barcode,
+            beautyScoreEngine = BeautyScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val values = success.badges.filter { it.style == ResultViewModel.STYLE_VALUES }
+        assertEquals(1, values.size)
+        assertEquals("cruelty-free", values.single().id)
+        assertEquals("Cruelty-free", values.single().label)
+    }
+
+    @Test
     fun successBeauty_withIngredients_carriesScoreUi() = runTest {
         val beauty = sampleProduct(
             name = "Shampoo",

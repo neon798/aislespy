@@ -12,6 +12,7 @@ import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
 import app.aislespy.domain.DietaryFlagsResolver
 import app.aislespy.domain.DietaryStatus
+import app.aislespy.domain.ValuesBadgesResolver
 import app.aislespy.domain.model.Concern
 import app.aislespy.domain.model.Confidence
 import app.aislespy.domain.model.HistoryEntry
@@ -264,11 +265,13 @@ class ResultViewModel(
                 style = "nova",
             )
         }
-        if (product.labelsTags.any { it.lowercase().contains("organic") }) {
+        // Values badges (food + beauty): certification labels only — never scored (ADR-017).
+        // Replaces the plain T-330 "Organic" chip with values-style "Certified organic".
+        for (vb in ValuesBadgesResolver.from(product)) {
             badges += BadgeUi(
-                id = "organic",
-                label = "Organic",
-                style = "organic",
+                id = vb.id,
+                label = vb.label,
+                style = STYLE_VALUES,
             )
         }
         // Dietary flags: food only, informational badges — never affect ScoreResult (ADR-014).
@@ -360,6 +363,9 @@ class ResultViewModel(
             "AisleSpy scores are informational only. They are not medical advice, " +
                 "an allergen guarantee, or a safety certification. Always read the physical label. " +
                 "Product data comes from community databases and may be incomplete or outdated."
+
+        /** BadgeUi.style for certification / values labels (ADR-017). */
+        const val STYLE_VALUES = "values"
 
         private const val DEFAULT_NETWORK_MESSAGE = "Lost contact—check your connection."
     }

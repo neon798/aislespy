@@ -55,6 +55,7 @@ import app.aislespy.domain.model.SourceDb
 import app.aislespy.ui.components.InfoChip
 import app.aislespy.ui.components.LoadingRecon
 import app.aislespy.ui.components.ProductImagePlaceholder
+import app.aislespy.ui.components.ResultBadgeChip
 import app.aislespy.ui.components.ScoreRing
 import app.aislespy.ui.components.SectionHeader
 import app.aislespy.ui.components.SeverityChip
@@ -241,7 +242,7 @@ private fun SuccessContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 state.badges.forEach { badge ->
-                    InfoChip(label = badge.label)
+                    ResultBadgeChip(label = badge.label, style = badge.style)
                 }
             }
         }

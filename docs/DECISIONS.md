@@ -164,6 +164,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-017 — Values badges: certification labels (informational only)
+
+- **Date:** 2026-07-16
+- **Status:** Accepted
+- **Context:** Users want glanceable certification signals (fair-trade, certified organic, cruelty-free, etc.) from OFF/OBF `labels_tags`. These are lifestyle/values labels, not hazard or nutrition drivers. A brand political-affiliation indicator was also requested and is **deferred** (not rejected) pending an acceptable open data source and methodology; revisiting that requires its own ADR amending AGENTS.md non-negotiable #3 implications. EWG/Skin Deep integration remains excluded per ADR-012 (proprietary/TOS-restricted) and may be revisited **only** via an explicit commercial license from EWG, which would need its own ADR.
+- **Decision:** Derive **values badges** solely from certification label tags already present in OFF/OBF `labels_tags` (conservative exact tags and documented prefixes only—see DOMAIN_MODELS.md). Display them on the result screen for **food and beauty** with a distinct **values** style (gold/amber outline + leading star). **Never** factor values badges into `ScoreResult` or any score engine. Organic continues to contribute **solely** through the existing food **positives** component (5% weight) per SCORING.md; the “Certified organic” badge itself adds nothing. Replace the plain T-330 “Organic” badge with the values-style “Certified organic” badge to avoid duplication. Nutri-Score and NOVA badges remain unchanged.
+- **Consequences:** Domain `ValuesBadge` / `ValuesBadgesResolver`; ResultViewModel assembles `style = "values"` badges; UI chip renders gold-star treatment with meaningful TalkBack. No scoring, knowledge-pack, dietary-flags, or methodologyVersion change.
+
+---
+
 ## Template for new entries
 
 ```markdown

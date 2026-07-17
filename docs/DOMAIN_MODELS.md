@@ -88,6 +88,29 @@ Unknown
 
 **UI (food only):** Yes → badge “Vegan” / “Vegetarian” / “Dairy-free”; No → “Not vegan” / “Not vegetarian” / “Contains dairy”; Unknown → no badge. Beauty: skip dietary badges.
 
+### Values badges (informational only — not scored)
+
+Certification labels from OFF/OBF `labels_tags` only. Never factored into `ScoreResult`. Organic scoring remains solely the food positives component (SCORING.md); the badge adds nothing.
+
+### `ValuesBadge`
+| Field | Type | Notes |
+|-------|------|--------|
+| id | String | Stable machine id |
+| label | String | UI copy |
+
+| id | label | Matching tags (lowercase; exact unless noted) |
+|----|-------|-----------------------------------------------|
+| fair-trade | Fair-trade | `en:fair-trade`, `en:fairtrade-international`, `en:max-havelaar`, `en:fairtrade` |
+| organic-certified | Certified organic | `en:organic`, `en:eu-organic`, `en:usda-organic`, `en:ab-agriculture-biologique`, prefix `en:organic-` |
+| cruelty-free | Cruelty-free | `en:cruelty-free`, `en:leaping-bunny`, `en:not-tested-on-animals`, `en:cruelty-free-international` |
+| rainforest-alliance | Rainforest Alliance | `en:rainforest-alliance` |
+| utz | UTZ certified | `en:utz-certified` |
+| b-corp | B Corp | `en:b-corp`, `en:certified-b-corporation` |
+
+**Order:** stable as listed above. **One badge per id.** Conservative matching only (no loose substring that could false-positive, e.g. `en:inorganic` ≠ organic).
+
+**UI (food and beauty):** badge with `style = "values"` (gold/amber outline + leading ★). Replaces the plain T-330 “Organic” chip.
+
 ### `Nutriments` (optional subset)
 | Field | Type |
 |-------|------|
@@ -226,7 +249,7 @@ Keep UI models immutable. ViewModels map domain → UI.
 | label | String |
 | style | String |
 
-Examples: `Nutri-Score C`, `NOVA 4`, `Organic`.
+Examples: `Nutri-Score C`, `NOVA 4`, values badges (`Certified organic`, `Fair-trade`, … with `style = "values"`).
 
 ---
 
