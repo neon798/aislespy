@@ -54,17 +54,29 @@ class KnowledgePackTest {
     @Test
     fun beautyPack_parsesFromRealAssetFile() {
         val beauty = KnowledgePackLoader.parse(readBeautyPackJson())
-        assertEquals("1.0.0", beauty.version)
+        assertEquals("1.1.0", beauty.version)
         assertEquals("beauty", beauty.domain)
         assertTrue(
-            "expected >= 30 beauty entries, got ${beauty.entries.size}",
-            beauty.entries.size >= 30,
+            "expected >= 85 beauty entries, got ${beauty.entries.size}",
+            beauty.entries.size >= 85,
         )
         assertTrue(beauty.entries.all { it.domain == "beauty" })
         assertTrue(beauty.entries.any { it.id == "fragrance" })
         assertTrue(beauty.entries.any { it.id == "methylisothiazolinone" })
         assertTrue(beauty.entries.any { it.categories.contains("restricted") })
         assertTrue(beauty.entries.any { it.categories.contains("allergen") })
+        assertTrue(beauty.entries.any { it.categories.contains("banned") })
+        // Integrity: unique ids, severity range, sources present
+        val beautyIds = beauty.entries.map { it.id }
+        assertEquals("beauty ids must be unique", beautyIds.size, beautyIds.toSet().size)
+        for (entry in beauty.entries) {
+            assertTrue(
+                "severity 1..5 for ${entry.id}, was ${entry.severity}",
+                entry.severity in 1..5,
+            )
+            assertTrue("empty sources for ${entry.id}", entry.sources.isNotEmpty())
+            assertTrue("why too short for ${entry.id}", entry.why.length >= 20)
+        }
     }
 
     @Test

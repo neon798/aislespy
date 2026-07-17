@@ -154,6 +154,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-016 — Beauty knowledge pack v1.1.0 (85+ entries) and not-found coverage copy
+
+- **Date:** 2026-07-16
+- **Status:** Accepted
+- **Context:** User testing showed that most cosmetics are not in Open Beauty Facts at all (~67k products vs Open Food Facts ~4.6M). Lookup misses dominate the beauty path. Expanding the INCI knowledge pack improves scoring quality only for products that *are* found; it cannot fix sparse OBF catalogue coverage.
+- **Decision:** (1) Expand `beauty_ingredients_v1.json` from 35 to **85+** entries and bump pack version to **1.1.0**, keeping all existing entries. Add remaining EU-labelled fragrance allergens, EU-banned substances (e.g. Lilial, Lyral/HICC, zinc pyrithione, hydroquinone, lead acetate, mercury compounds, DBP), restricted/scrutinized families (isothiazolinones, formaldehyde releasers, hair-dye intermediates, selected UV filters, cyclic siloxane D6), and lower-severity nuance ingredients with conservative severity and open citable sources only (SCCS, CosIng, EU 1223/2009, CMR/IARC/IFRA as applicable—no EWG). (2) On the Result **NotFound** state, under the contribute buttons, add one muted caption: “Beauty products are still sparse in open databases—adding one takes a minute and helps everyone.” Mitigations for lookup coverage remain OBF contribute links + this messaging, not offline databases or scraping.
+- **Consequences:** Beauty scoring can flag more ingredients when OBF returns a product with ingredient text/tags. Pack loaders/tests assert ≥85 beauty entries and version 1.1.0. Scoring engines, matcher logic, food pack, and methodology version are unchanged. Users still hit NotFound often for beauty barcodes until OBF coverage grows.
+
+---
+
 ## Template for new entries
 
 ```markdown

@@ -560,6 +560,13 @@ private fun NotFoundContent(
         ) {
             Text("Add on Open Beauty Facts")
         }
+        Text(
+            text = "Beauty products are still sparse in open databases—adding one takes a minute and helps everyone.",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp),
+        )
         Spacer(Modifier.height(16.dp))
         OutlinedButton(onClick = onScanAnother) {
             Text("Scan another")
