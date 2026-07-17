@@ -13,7 +13,7 @@ object ApiConfig {
      * Must stay in sync with API_CONTRACTS.md.
      */
     const val FIELDS =
-        "code,product_name,brands,image_front_url,image_front_small_url," +
+        "code,product_name,brands,brands_tags,image_front_url,image_front_small_url," +
             "nutriscore_grade,nutriscore_score,nova_group,additives_tags," +
             "ingredients_text,ingredients_tags,allergens_tags,labels_tags," +
             "categories_tags,nutriments,ingredients_analysis_tags"

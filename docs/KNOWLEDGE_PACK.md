@@ -11,6 +11,7 @@ Curated ingredient/additive metadata shipped with the app. Used to attach **seve
 | Now (docs) | `knowledge/schema/`, `knowledge/examples/` |
 | Runtime (Phase 3+) | `app/src/main/assets/knowledge/food_additives_v1.json` |
 | Runtime (Phase 4+) | `app/src/main/assets/knowledge/beauty_ingredients_v1.json` |
+| Runtime (ADR-019) | `app/src/main/assets/knowledge/brand_ownership_v1.json` |
 
 Pack files are JSON arrays or `{ "version": "1.0.0", "entries": [ ... ] }`. Prefer wrapped form:
 
@@ -39,6 +40,35 @@ Pack files are JSON arrays or `{ "version": "1.0.0", "entries": [ ... ] }`. Pref
 | sources | string[] | yes | Short citations |
 
 JSON Schema files: [knowledge/schema/](../knowledge/schema/).
+
+---
+
+## Brand ownership pack (no severity)
+
+Separate from food/beauty ingredient packs. **Does not participate in scoring** (ADR-019). Schema: [brand_ownership.schema.json](../knowledge/schema/brand_ownership.schema.json).
+
+Wrapped form:
+
+```json
+{
+  "version": "1.0.0",
+  "domain": "brand_ownership",
+  "entries": [ ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| id | string | yes | Unique slug |
+| ownership | `conglomerate` \| `independent` | yes | Entry kind |
+| brandAliases | string[] | yes | Exact match vs normalized OFF/OBF `brands_tags` |
+| parent | string | conglomerate | Parent company slug |
+| parentDisplay | string | conglomerate | UI name e.g. `Nestlé` |
+| display | string | independent | Brand display name |
+| note | string | no | Short note e.g. `Family-owned` |
+| sources | string[] | yes | ≥1 citation (portfolio / report / encyclopedic — no EWG) |
+
+**No severity field.** Conservative resolution: badge only on positive pack match; unmatched brands show nothing; dual-list conflict → no badge.
 
 ---
 

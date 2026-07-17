@@ -53,6 +53,8 @@ data class BadgeUi(
     val id: String,
     val label: String,
     val style: String,
+    /** Optional TalkBack override; when null, chip uses [label] (or style-specific default). */
+    val contentDescription: String? = null,
 )
 
 /**

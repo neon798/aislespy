@@ -10,6 +10,9 @@ import app.aislespy.data.knowledge.KnowledgePack
 import app.aislespy.data.local.HistoryWriter
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
+import app.aislespy.domain.BrandOwnership
+import app.aislespy.domain.BrandOwnershipPack
+import app.aislespy.domain.BrandOwnershipResolver
 import app.aislespy.domain.DietaryFlagsResolver
 import app.aislespy.domain.DietaryStatus
 import app.aislespy.domain.ValuesBadgesResolver
@@ -61,6 +64,7 @@ class ResultViewModel(
     private val source: String = SOURCE_AUTO,
     private val foodKnowledgePack: KnowledgePack? = null,
     private val beautyKnowledgePack: KnowledgePack? = null,
+    private val brandOwnershipPack: BrandOwnershipPack? = null,
     private val foodScoreEngine: ScoreEngine = FoodScoreEngine(),
     private val beautyScoreEngine: ScoreEngine = BeautyScoreEngine(),
     private val concernStore: ConcernDetailStore = ConcernDetailStore(),
@@ -190,7 +194,7 @@ class ResultViewModel(
                 breakdown = emptyList(),
                 omittedComponents = emptyList(),
                 concerns = emptyList(),
-                badges = emptyList(),
+                badges = buildBadges(this),
                 disclaimerVisible = true,
                 ingredientsText = ingredients,
                 beautyScoringPending = false,
@@ -290,6 +294,8 @@ class ResultViewModel(
                 style = "nova",
             )
         }
+        // Brand ownership (food + beauty): informational only — never scored (ADR-019).
+        ownershipBadge(product)?.let { badges += it }
         // Values badges (food + beauty): certification labels only — never scored (ADR-017).
         for (vb in ValuesBadgesResolver.from(product)) {
             badges += BadgeUi(
@@ -303,6 +309,29 @@ class ResultViewModel(
             badges += dietaryBadges(product)
         }
         return badges
+    }
+
+    /**
+     * Resolve ownership chip from pack + brands_tags.
+     * Corporate → neutral "Owned by X"; Independent → gold-star "Independent"; no match → null.
+     */
+    private fun ownershipBadge(product: Product): BadgeUi? {
+        val pack = brandOwnershipPack ?: return null
+        return when (val ownership = BrandOwnershipResolver.resolve(product, pack)) {
+            is BrandOwnership.Corporate -> BadgeUi(
+                id = "ownership-corporate",
+                label = "Owned by ${ownership.parentDisplay}",
+                style = STYLE_OWNERSHIP,
+                contentDescription = "Owned by ${ownership.parentDisplay}, ownership information",
+            )
+            is BrandOwnership.Independent -> BadgeUi(
+                id = "ownership-independent",
+                label = "Independent",
+                style = STYLE_VALUES,
+                contentDescription = "Independent brand",
+            )
+            null -> null
+        }
     }
 
     /**
@@ -361,6 +390,7 @@ class ResultViewModel(
                 source = source,
                 foodKnowledgePack = container.foodKnowledgePack,
                 beautyKnowledgePack = container.beautyKnowledgePack,
+                brandOwnershipPack = container.brandOwnershipPack,
                 foodScoreEngine = container.foodScoreEngine,
                 beautyScoreEngine = container.beautyScoreEngine,
                 concernStore = container.concernDetailStore,
@@ -395,6 +425,12 @@ class ResultViewModel(
 
         /** BadgeUi.style for certification / values labels (ADR-017). */
         const val STYLE_VALUES = "values"
+
+        /**
+         * BadgeUi.style for corporate ownership (ADR-019): neutral InfoChip, not alarm-red.
+         * Independent brands reuse [STYLE_VALUES].
+         */
+        const val STYLE_OWNERSHIP = "ownership"
 
         private const val DEFAULT_NETWORK_MESSAGE = "Lost contact—check your connection."
     }

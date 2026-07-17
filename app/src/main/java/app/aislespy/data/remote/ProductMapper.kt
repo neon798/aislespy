@@ -41,6 +41,7 @@ object ProductMapper {
             barcode = resolvedBarcode,
             name = productName?.trim()?.takeIf { it.isNotEmpty() } ?: "Unknown product",
             brands = brands?.trim()?.takeIf { it.isNotEmpty() },
+            brandsTags = brandsTags,
             imageUrl = upgradeToHttps(imageFrontUrl ?: imageFrontSmallUrl),
             category = category,
             sourceDb = sourceDb,

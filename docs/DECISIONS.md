@@ -184,6 +184,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-019 — Brand ownership flag (informational only)
+
+- **Date:** 2026-07-17
+- **Status:** Accepted
+- **Context:** Users want to know whether a product’s brand sits under a major corporate parent or is a verified independent. Unlike brand *political affiliation* (deferred in ADR-017), ownership is a factual, citable corporate relationship (parent brand portfolios, annual reports, reputable encyclopedic references). PRODUCT.md treats brand reputation as a scoring non-goal; this flag must stay display-only. No new network hosts—match against OFF/OBF `brands_tags` plus a shipped asset pack.
+- **Decision:** Ship a curated **brand ownership** knowledge pack (`brand_ownership_v1.json`, separate schema—**no severity**) with two entry kinds: (a) **conglomerate** — brand aliases → major corporate parent; (b) **independent** — verified-independent allowlist. **Definition of major corporate parent:** multinational CPG/beauty conglomerate or large multinational (public or large private such as Mars/Ferrero); adjustable and documented in the pack. **Conservative / no-guessing:** show **“Owned by \<Parent\>”** only on a sourced conglomerate match; show **“Independent”** only on the verified allowlist. A brand matching **neither** list shows **no ownership badge**—never infer independence from absence, never guess a parent. If a brand somehow matches **both** lists (pack bug), **fail safe to no badge**. Matching is exact token match on normalized (lowercase, trim) `brands_tags` vs entry `brandAliases`—no loose substring. **Informational only:** never affects `ScoreResult` or any score engine. UI: corporate → neutral factual chip (no fear-mongering); independent → gold-star values-style badge. Data ages with M&A: pack needs periodic review; on ambiguity omit rather than wrong badge. Sources required on every entry; no EWG.
+- **Consequences:** `brands_tags` added to API fields filter and `Product`; domain `BrandOwnership` resolver + pack models; loader wired via `AppContainer`; Result screen badges for food and beauty. Food/beauty ingredient packs and scoring engines untouched. Methodology version unchanged (not a scoring change).
+
+---
+
 ## Template for new entries
 
 ```markdown

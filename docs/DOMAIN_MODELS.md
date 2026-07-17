@@ -52,7 +52,8 @@ NetworkError(message: String, barcode: String)
 |-------|------|--------|
 | barcode | String | EAN/UPC digits |
 | name | String | display name; fallback “Unknown product” |
-| brands | String? | |
+| brands | String? | free-text brand string from OFF/OBF |
+| brandsTags | List\<String\> | OFF/OBF `brands_tags` (e.g. `en:alpro`); used for ownership matching |
 | imageUrl | String? | front image |
 | category | ProductCategory | |
 | sourceDb | SourceDb | |
@@ -110,6 +111,34 @@ Certification labels from OFF/OBF `labels_tags` only. Never factored into `Score
 **Order:** stable as listed above. **One badge per id.** Conservative matching only (no loose substring that could false-positive, e.g. `en:inorganic` ≠ organic).
 
 **UI (food and beauty):** badge with `style = "values"` (gold/amber outline + leading ★). Replaces the plain T-330 “Organic” chip.
+
+### Brand ownership (informational only — not scored)
+
+Curated ownership pack + OFF/OBF `brands_tags`. **Never** factored into `ScoreResult` (PRODUCT.md excludes brand reputation from scoring; ADR-019). Separate schema from food/beauty severity packs—**no severity**.
+
+### `BrandOwnership` (sealed; null = no badge)
+```text
+Corporate(parentDisplay, sources)   // sourced conglomerate match only
+Independent(display, note?, sources) // verified-independent allowlist only
+// null → no ownership badge (unlisted brand, ambiguity, or pack conflict)
+```
+
+### `BrandOwnershipEntry` / pack
+| Field | Type | Notes |
+|-------|------|--------|
+| id | String | Unique slug across the pack |
+| ownership | `conglomerate` \| `independent` | Entry kind |
+| brandAliases | List\<String\> | Lowercase; exact match vs normalized `brands_tags` |
+| parent / parentDisplay | String? | Conglomerate only (e.g. parentDisplay `"Danone"`) |
+| display / note | String? | Independent only |
+| sources | List\<String\> | ≥1 required; no EWG |
+
+**Matching (conservative):** normalize tags/aliases (lowercase, trim); **exact token** match only—no loose substring. Most-specific (longest alias) wins. Brand on **both** lists → **null** (fail safe). Never infer independence from absence; never guess a parent.
+
+**UI (food and beauty):**
+- Corporate → neutral chip `Owned by <parentDisplay>` (`style = "ownership"`); a11y “Owned by Nestlé, ownership information”
+- Independent → values-style gold-star chip `Independent` (`style = "values"`); a11y “Independent brand”
+- null → no badge
 
 ### `Nutriments` (optional subset)
 | Field | Type |

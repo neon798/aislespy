@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aislespy.app/schema/brand_ownership.schema.json",
+  "title": "AisleSpy brand ownership knowledge entry",
+  "description": "Informational brand ownership mapping (ADR-019). No severity — not used for scoring.",
+  "type": "object",
+  "required": ["id", "ownership", "brandAliases", "sources"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "Stable unique slug across the pack"
+    },
+    "ownership": {
+      "type": "string",
+      "enum": ["conglomerate", "independent"],
+      "description": "Entry kind: corporate parent mapping or verified-independent allowlist"
+    },
+    "brandAliases": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Lowercase aliases matched exactly against normalized OFF/OBF brands_tags"
+    },
+    "parent": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_-]*$",
+      "description": "Parent company slug (required when ownership=conglomerate)"
+    },
+    "parentDisplay": {
+      "type": "string",
+      "minLength": 1,
+      "description": "UI parent name e.g. Nestlé (required when ownership=conglomerate)"
+    },
+    "display": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Brand display name (required when ownership=independent)"
+    },
+    "note": {
+      "type": "string",
+      "description": "Short independent note e.g. Family-owned"
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Citable sources (parent portfolio, annual report, encyclopedic — no EWG)"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": { "ownership": { "const": "conglomerate" } }
+      },
+      "then": {
+        "required": ["parent", "parentDisplay"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "ownership": { "const": "independent" } }
+      },
+      "then": {
+        "required": ["display"]
+      }
+    }
+  ]
+}

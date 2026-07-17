@@ -19,6 +19,7 @@ data class ProductDto(
     val code: String? = null,
     @SerialName("product_name") val productName: String? = null,
     val brands: String? = null,
+    @SerialName("brands_tags") val brandsTags: List<String> = emptyList(),
     @SerialName("image_front_url") val imageFrontUrl: String? = null,
     @SerialName("image_front_small_url") val imageFrontSmallUrl: String? = null,
     @SerialName("nutriscore_grade") val nutriscoreGrade: String? = null,

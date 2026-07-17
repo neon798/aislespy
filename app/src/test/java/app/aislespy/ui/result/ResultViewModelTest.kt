@@ -5,6 +5,8 @@ import app.aislespy.data.knowledge.KnowledgePackEntry
 import app.aislespy.data.local.HistoryWriter
 import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ProductLookup
+import app.aislespy.domain.BrandOwnershipEntry
+import app.aislespy.domain.BrandOwnershipPack
 import app.aislespy.domain.model.Confidence
 import app.aislespy.domain.model.HistoryEntry
 import app.aislespy.domain.model.LookupOutcome
@@ -347,6 +349,106 @@ class ResultViewModelTest {
         assertEquals(1, values.size)
         assertEquals("cruelty-free", values.single().id)
         assertEquals("Cruelty-free", values.single().label)
+    }
+
+    @Test
+    fun conglomerateBrand_ownershipChip_scoreUnchanged() = runTest {
+        val food = sampleProduct(
+            name = "Alpro Oat Drink",
+            brands = "Alpro",
+            brandsTags = listOf("en:alpro"),
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Water, oats",
+            novaGroup = 3,
+        )
+        val ownershipPack = BrandOwnershipPack(
+            version = "1.0.0",
+            domain = "brand_ownership",
+            entries = listOf(
+                BrandOwnershipEntry(
+                    id = "alpro",
+                    ownership = BrandOwnershipEntry.OWNERSHIP_CONGLOMERATE,
+                    brandAliases = listOf("en:alpro", "alpro"),
+                    parent = "danone",
+                    parentDisplay = "Danone",
+                    sources = listOf("https://en.wikipedia.org/wiki/Alpro"),
+                ),
+            ),
+        )
+        val engine = FoodScoreEngine()
+        val engineResult = engine.score(food, emptyList())
+
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodKnowledgePack = null,
+            brandOwnershipPack = ownershipPack,
+            foodScoreEngine = engine,
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val ownership = success.badges.filter { it.id == "ownership-corporate" }
+        assertEquals(1, ownership.size)
+        assertEquals("Owned by Danone", ownership.single().label)
+        assertEquals(ResultViewModel.STYLE_OWNERSHIP, ownership.single().style)
+        assertEquals(
+            "Owned by Danone, ownership information",
+            ownership.single().contentDescription,
+        )
+
+        // ScoreResult identical — ownership never scored (ADR-019).
+        assertNotNull(success.score)
+        assertEquals(engineResult.total, success.score!!.value)
+        assertEquals(engineResult.band, success.score!!.band)
+        assertEquals(engineResult.summarySentence, success.score!!.summarySentence)
+        assertEquals(engineResult.confidence, success.score!!.confidence)
+    }
+
+    @Test
+    fun independentBrand_valuesStyleIndependentBadge() = runTest {
+        val food = sampleProduct(
+            name = "Pure Castile Soap",
+            brands = "Dr. Bronner's",
+            brandsTags = listOf("en:dr-bronner-s"),
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Organic oils",
+            novaGroup = 1,
+        )
+        val ownershipPack = BrandOwnershipPack(
+            version = "1.0.0",
+            domain = "brand_ownership",
+            entries = listOf(
+                BrandOwnershipEntry(
+                    id = "dr-bronners",
+                    ownership = BrandOwnershipEntry.OWNERSHIP_INDEPENDENT,
+                    brandAliases = listOf("en:dr-bronner-s"),
+                    display = "Dr. Bronner's",
+                    note = "Family-owned",
+                    sources = listOf("https://www.drbronner.com/pages/about-us"),
+                ),
+            ),
+        )
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            brandOwnershipPack = ownershipPack,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        val indie = success.badges.filter { it.id == "ownership-independent" }
+        assertEquals(1, indie.size)
+        assertEquals("Independent", indie.single().label)
+        assertEquals(ResultViewModel.STYLE_VALUES, indie.single().style)
+        assertEquals("Independent brand", indie.single().contentDescription)
     }
 
     @Test
@@ -779,6 +881,7 @@ class ResultViewModelTest {
     private fun sampleProduct(
         name: String,
         brands: String? = "Brand",
+        brandsTags: List<String> = emptyList(),
         category: ProductCategory,
         sourceDb: SourceDb,
         ingredientsText: String? = null,
@@ -794,6 +897,7 @@ class ResultViewModelTest {
         barcode = code,
         name = name,
         brands = brands,
+        brandsTags = brandsTags,
         imageUrl = null,
         category = category,
         sourceDb = sourceDb,

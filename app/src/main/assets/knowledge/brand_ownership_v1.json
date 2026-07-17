@@ -1,0 +1,1085 @@
+{
+  "version": "1.0.0",
+  "domain": "brand_ownership",
+  "definitionOfMajorParent": "Multinational CPG/beauty conglomerate or large multinational (public or large private such as Mars/Ferrero). Curated and adjustable; when ownership is ambiguous, omit the brand rather than guess.",
+  "entries": [
+    {
+      "id": "nestle",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nestle", "en:nestlé", "nestle", "nestlé"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/List_of_Nestl%C3%A9_brands"
+      ]
+    },
+    {
+      "id": "nesquik",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nesquik", "nesquik"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/Nesquik"
+      ]
+    },
+    {
+      "id": "kitkat",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:kitkat", "en:kit-kat", "kitkat", "kit-kat"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/Kit_Kat"
+      ]
+    },
+    {
+      "id": "maggi",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:maggi", "maggi"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/Maggi"
+      ]
+    },
+    {
+      "id": "purina",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:purina", "en:nestle-purina", "purina"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/Nestl%C3%A9_Purina_PetCare"
+      ]
+    },
+    {
+      "id": "gerber",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:gerber", "gerber"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://www.nestle.com/brands",
+        "https://en.wikipedia.org/wiki/Gerber_Products_Company"
+      ]
+    },
+    {
+      "id": "haagen-dazs",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:haagen-dazs", "en:häagen-dazs", "haagen-dazs"],
+      "parent": "nestle",
+      "parentDisplay": "Nestlé",
+      "sources": [
+        "https://en.wikipedia.org/wiki/H%C3%A4agen-Dazs",
+        "https://www.nestle.com/brands"
+      ]
+    },
+    {
+      "id": "pepsi",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:pepsi", "en:pepsico", "pepsi", "pepsico"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/List_of_PepsiCo_brands"
+      ]
+    },
+    {
+      "id": "lays",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:lays", "en:lay-s", "en:frito-lay", "lays"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/Lay%27s"
+      ]
+    },
+    {
+      "id": "doritos",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:doritos", "doritos"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/Doritos"
+      ]
+    },
+    {
+      "id": "quaker",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:quaker", "en:quaker-oats", "quaker"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/Quaker_Oats_Company"
+      ]
+    },
+    {
+      "id": "gatorade",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:gatorade", "gatorade"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/Gatorade"
+      ]
+    },
+    {
+      "id": "tropicana",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:tropicana", "tropicana"],
+      "parent": "pepsico",
+      "parentDisplay": "PepsiCo",
+      "sources": [
+        "https://www.pepsico.com/brands",
+        "https://en.wikipedia.org/wiki/Tropicana_Products"
+      ]
+    },
+    {
+      "id": "coca-cola",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:coca-cola", "en:the-coca-cola-company", "coca-cola", "cocacola"],
+      "parent": "coca-cola",
+      "parentDisplay": "The Coca-Cola Company",
+      "sources": [
+        "https://www.coca-colacompany.com/brands",
+        "https://en.wikipedia.org/wiki/List_of_Coca-Cola_brands"
+      ]
+    },
+    {
+      "id": "sprite",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:sprite", "sprite"],
+      "parent": "coca-cola",
+      "parentDisplay": "The Coca-Cola Company",
+      "sources": [
+        "https://www.coca-colacompany.com/brands",
+        "https://en.wikipedia.org/wiki/Sprite_(drink)"
+      ]
+    },
+    {
+      "id": "fanta",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:fanta", "fanta"],
+      "parent": "coca-cola",
+      "parentDisplay": "The Coca-Cola Company",
+      "sources": [
+        "https://www.coca-colacompany.com/brands",
+        "https://en.wikipedia.org/wiki/Fanta"
+      ]
+    },
+    {
+      "id": "minute-maid",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:minute-maid", "minute-maid"],
+      "parent": "coca-cola",
+      "parentDisplay": "The Coca-Cola Company",
+      "sources": [
+        "https://www.coca-colacompany.com/brands",
+        "https://en.wikipedia.org/wiki/Minute_Maid"
+      ]
+    },
+    {
+      "id": "unilever",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:unilever", "unilever"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/List_of_Unilever_brands"
+      ]
+    },
+    {
+      "id": "dove",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:dove", "dove"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Dove_(toiletries)"
+      ]
+    },
+    {
+      "id": "hellmanns",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:hellmanns", "en:hellmann-s", "hellmanns"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Hellmann%27s_and_Best_Foods"
+      ]
+    },
+    {
+      "id": "knorr",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:knorr", "knorr"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Knorr_(brand)"
+      ]
+    },
+    {
+      "id": "lipton",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:lipton", "lipton"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Lipton"
+      ]
+    },
+    {
+      "id": "ben-jerrys",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:ben-jerry-s", "en:ben-jerrys", "ben-jerrys"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Ben_%26_Jerry%27s"
+      ]
+    },
+    {
+      "id": "axe",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:axe", "en:lynx", "axe", "lynx"],
+      "parent": "unilever",
+      "parentDisplay": "Unilever",
+      "sources": [
+        "https://www.unilever.com/brands/",
+        "https://en.wikipedia.org/wiki/Axe_(brand)"
+      ]
+    },
+    {
+      "id": "mondelez",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:mondelez", "en:mondelez-international", "mondelez"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://www.mondelezinternational.com/our-brands/",
+        "https://en.wikipedia.org/wiki/List_of_Mondelez_International_brands"
+      ]
+    },
+    {
+      "id": "oreo",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:oreo", "oreo"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://www.mondelezinternational.com/our-brands/",
+        "https://en.wikipedia.org/wiki/Oreo"
+      ]
+    },
+    {
+      "id": "milka",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:milka", "milka"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://www.mondelezinternational.com/our-brands/",
+        "https://en.wikipedia.org/wiki/Milka"
+      ]
+    },
+    {
+      "id": "cadbury",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:cadbury", "cadbury"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://www.mondelezinternational.com/our-brands/",
+        "https://en.wikipedia.org/wiki/Cadbury"
+      ]
+    },
+    {
+      "id": "toblerone",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:toblerone", "toblerone"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://www.mondelezinternational.com/our-brands/",
+        "https://en.wikipedia.org/wiki/Toblerone"
+      ]
+    },
+    {
+      "id": "mars",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:mars", "en:mars-incorporated", "mars"],
+      "parent": "mars",
+      "parentDisplay": "Mars",
+      "sources": [
+        "https://www.mars.com/our-brands",
+        "https://en.wikipedia.org/wiki/List_of_Mars,_Incorporated_brands"
+      ]
+    },
+    {
+      "id": "snickers",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:snickers", "snickers"],
+      "parent": "mars",
+      "parentDisplay": "Mars",
+      "sources": [
+        "https://www.mars.com/our-brands",
+        "https://en.wikipedia.org/wiki/Snickers"
+      ]
+    },
+    {
+      "id": "m-ms",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:m-ms", "en:m-m-s", "m-ms"],
+      "parent": "mars",
+      "parentDisplay": "Mars",
+      "sources": [
+        "https://www.mars.com/our-brands",
+        "https://en.wikipedia.org/wiki/M%26M%27s"
+      ]
+    },
+    {
+      "id": "twix",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:twix", "twix"],
+      "parent": "mars",
+      "parentDisplay": "Mars",
+      "sources": [
+        "https://www.mars.com/our-brands",
+        "https://en.wikipedia.org/wiki/Twix"
+      ]
+    },
+    {
+      "id": "pedigree",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:pedigree", "pedigree"],
+      "parent": "mars",
+      "parentDisplay": "Mars",
+      "sources": [
+        "https://www.mars.com/our-brands",
+        "https://en.wikipedia.org/wiki/Pedigree_Petfoods"
+      ]
+    },
+    {
+      "id": "ferrero",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:ferrero", "ferrero"],
+      "parent": "ferrero",
+      "parentDisplay": "Ferrero",
+      "sources": [
+        "https://www.ferrero.com/our-brands",
+        "https://en.wikipedia.org/wiki/Ferrero_SpA"
+      ]
+    },
+    {
+      "id": "nutella",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nutella", "nutella"],
+      "parent": "ferrero",
+      "parentDisplay": "Ferrero",
+      "sources": [
+        "https://www.ferrero.com/our-brands",
+        "https://en.wikipedia.org/wiki/Nutella"
+      ]
+    },
+    {
+      "id": "kinder",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:kinder", "kinder"],
+      "parent": "ferrero",
+      "parentDisplay": "Ferrero",
+      "sources": [
+        "https://www.ferrero.com/our-brands",
+        "https://en.wikipedia.org/wiki/Kinder_(brand)"
+      ]
+    },
+    {
+      "id": "tic-tac",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:tic-tac", "en:tic-tac", "tic-tac"],
+      "parent": "ferrero",
+      "parentDisplay": "Ferrero",
+      "sources": [
+        "https://www.ferrero.com/our-brands",
+        "https://en.wikipedia.org/wiki/Tic_Tac"
+      ]
+    },
+    {
+      "id": "danone",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:danone", "danone"],
+      "parent": "danone",
+      "parentDisplay": "Danone",
+      "sources": [
+        "https://www.danone.com/brands.html",
+        "https://en.wikipedia.org/wiki/List_of_Danone_brands"
+      ]
+    },
+    {
+      "id": "alpro",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:alpro", "alpro"],
+      "parent": "danone",
+      "parentDisplay": "Danone",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Alpro",
+        "https://www.danone.com/brands.html"
+      ]
+    },
+    {
+      "id": "activia",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:activia", "activia"],
+      "parent": "danone",
+      "parentDisplay": "Danone",
+      "sources": [
+        "https://www.danone.com/brands.html",
+        "https://en.wikipedia.org/wiki/Activia"
+      ]
+    },
+    {
+      "id": "evian",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:evian", "evian"],
+      "parent": "danone",
+      "parentDisplay": "Danone",
+      "sources": [
+        "https://www.danone.com/brands.html",
+        "https://en.wikipedia.org/wiki/Evian"
+      ]
+    },
+    {
+      "id": "kraft",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:kraft", "en:kraft-heinz", "kraft"],
+      "parent": "kraft-heinz",
+      "parentDisplay": "Kraft Heinz",
+      "sources": [
+        "https://www.kraftheinzcompany.com/brands.html",
+        "https://en.wikipedia.org/wiki/Kraft_Heinz"
+      ]
+    },
+    {
+      "id": "heinz",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:heinz", "heinz"],
+      "parent": "kraft-heinz",
+      "parentDisplay": "Kraft Heinz",
+      "sources": [
+        "https://www.kraftheinzcompany.com/brands.html",
+        "https://en.wikipedia.org/wiki/Heinz"
+      ]
+    },
+    {
+      "id": "philadelphia",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:philadelphia", "en:philadelphia-cream-cheese", "philadelphia"],
+      "parent": "kraft-heinz",
+      "parentDisplay": "Kraft Heinz",
+      "sources": [
+        "https://www.kraftheinzcompany.com/brands.html",
+        "https://en.wikipedia.org/wiki/Philadelphia_cream_cheese"
+      ]
+    },
+    {
+      "id": "general-mills",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:general-mills", "general-mills"],
+      "parent": "general-mills",
+      "parentDisplay": "General Mills",
+      "sources": [
+        "https://www.generalmills.com/food-we-make/brands",
+        "https://en.wikipedia.org/wiki/List_of_General_Mills_brands"
+      ]
+    },
+    {
+      "id": "cheerios",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:cheerios", "cheerios"],
+      "parent": "general-mills",
+      "parentDisplay": "General Mills",
+      "sources": [
+        "https://www.generalmills.com/food-we-make/brands",
+        "https://en.wikipedia.org/wiki/Cheerios"
+      ]
+    },
+    {
+      "id": "nature-valley",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nature-valley", "nature-valley"],
+      "parent": "general-mills",
+      "parentDisplay": "General Mills",
+      "sources": [
+        "https://www.generalmills.com/food-we-make/brands",
+        "https://en.wikipedia.org/wiki/Nature_Valley"
+      ]
+    },
+    {
+      "id": "betty-crocker",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:betty-crocker", "betty-crocker"],
+      "parent": "general-mills",
+      "parentDisplay": "General Mills",
+      "sources": [
+        "https://www.generalmills.com/food-we-make/brands",
+        "https://en.wikipedia.org/wiki/Betty_Crocker"
+      ]
+    },
+    {
+      "id": "kellanova",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:kellanova", "en:kellogg-s", "en:kelloggs", "kelloggs", "kellogg-s"],
+      "parent": "kellanova",
+      "parentDisplay": "Kellanova",
+      "sources": [
+        "https://www.kellanova.com/our-brands.html",
+        "https://en.wikipedia.org/wiki/Kellanova"
+      ]
+    },
+    {
+      "id": "pringles",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:pringles", "pringles"],
+      "parent": "kellanova",
+      "parentDisplay": "Kellanova",
+      "sources": [
+        "https://www.kellanova.com/our-brands.html",
+        "https://en.wikipedia.org/wiki/Pringles"
+      ]
+    },
+    {
+      "id": "san-pellegrino",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:san-pellegrino", "en:s-pellegrino", "san-pellegrino"],
+      "parent": "nestle-waters",
+      "parentDisplay": "Nestlé Waters",
+      "sources": [
+        "https://www.nestle-waters.com/brands",
+        "https://en.wikipedia.org/wiki/S.Pellegrino"
+      ]
+    },
+    {
+      "id": "perrier",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:perrier", "perrier"],
+      "parent": "nestle-waters",
+      "parentDisplay": "Nestlé Waters",
+      "sources": [
+        "https://www.nestle-waters.com/brands",
+        "https://en.wikipedia.org/wiki/Perrier"
+      ]
+    },
+    {
+      "id": "twinings",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:twinings", "twinings"],
+      "parent": "abf",
+      "parentDisplay": "Associated British Foods",
+      "sources": [
+        "https://www.abf.co.uk/our-businesses",
+        "https://en.wikipedia.org/wiki/Twinings"
+      ]
+    },
+    {
+      "id": "ovaltine",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:ovaltine", "en:ovomaltine", "ovaltine", "ovomaltine"],
+      "parent": "abf",
+      "parentDisplay": "Associated British Foods",
+      "sources": [
+        "https://www.abf.co.uk/our-businesses",
+        "https://en.wikipedia.org/wiki/Ovaltine"
+      ]
+    },
+    {
+      "id": "conagra",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:conagra", "en:conagra-brands", "conagra"],
+      "parent": "conagra",
+      "parentDisplay": "Conagra",
+      "sources": [
+        "https://www.conagrabrands.com/brands",
+        "https://en.wikipedia.org/wiki/Conagra_Brands"
+      ]
+    },
+    {
+      "id": "hunts",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:hunt-s", "en:hunts", "hunts"],
+      "parent": "conagra",
+      "parentDisplay": "Conagra",
+      "sources": [
+        "https://www.conagrabrands.com/brands",
+        "https://en.wikipedia.org/wiki/Hunt%27s"
+      ]
+    },
+    {
+      "id": "post",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:post", "en:post-consumer-brands", "post"],
+      "parent": "post",
+      "parentDisplay": "Post",
+      "sources": [
+        "https://www.postconsumerbrands.com/brands/",
+        "https://en.wikipedia.org/wiki/Post_Consumer_Brands"
+      ]
+    },
+    {
+      "id": "loreal",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:l-oreal", "en:loreal", "en:l-oréal", "loreal", "l-oreal"],
+      "parent": "loreal",
+      "parentDisplay": "L'Oréal",
+      "sources": [
+        "https://www.loreal.com/en/brands/",
+        "https://en.wikipedia.org/wiki/List_of_L%27Or%C3%A9al_brands"
+      ]
+    },
+    {
+      "id": "maybelline",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:maybelline", "maybelline"],
+      "parent": "loreal",
+      "parentDisplay": "L'Oréal",
+      "sources": [
+        "https://www.loreal.com/en/brands/",
+        "https://en.wikipedia.org/wiki/Maybelline"
+      ]
+    },
+    {
+      "id": "garnier",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:garnier", "garnier"],
+      "parent": "loreal",
+      "parentDisplay": "L'Oréal",
+      "sources": [
+        "https://www.loreal.com/en/brands/",
+        "https://en.wikipedia.org/wiki/Garnier"
+      ]
+    },
+    {
+      "id": "cerave",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:cerave", "cerave"],
+      "parent": "loreal",
+      "parentDisplay": "L'Oréal",
+      "sources": [
+        "https://www.loreal.com/en/brands/",
+        "https://en.wikipedia.org/wiki/CeraVe"
+      ]
+    },
+    {
+      "id": "nyx",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nyx", "en:nyx-professional-makeup", "nyx"],
+      "parent": "loreal",
+      "parentDisplay": "L'Oréal",
+      "sources": [
+        "https://www.loreal.com/en/brands/",
+        "https://en.wikipedia.org/wiki/NYX_Cosmetics"
+      ]
+    },
+    {
+      "id": "estee-lauder",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:estee-lauder", "en:esté-lauder", "estee-lauder"],
+      "parent": "estee-lauder",
+      "parentDisplay": "Estée Lauder",
+      "sources": [
+        "https://www.elcompanies.com/en/our-brands",
+        "https://en.wikipedia.org/wiki/The_Est%C3%A9e_Lauder_Companies"
+      ]
+    },
+    {
+      "id": "clinique",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:clinique", "clinique"],
+      "parent": "estee-lauder",
+      "parentDisplay": "Estée Lauder",
+      "sources": [
+        "https://www.elcompanies.com/en/our-brands",
+        "https://en.wikipedia.org/wiki/Clinique"
+      ]
+    },
+    {
+      "id": "mac",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:mac", "en:mac-cosmetics", "mac-cosmetics"],
+      "parent": "estee-lauder",
+      "parentDisplay": "Estée Lauder",
+      "sources": [
+        "https://www.elcompanies.com/en/our-brands",
+        "https://en.wikipedia.org/wiki/MAC_Cosmetics"
+      ]
+    },
+    {
+      "id": "procter-gamble",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:procter-gamble", "en:p-g", "en:pg", "procter-gamble"],
+      "parent": "procter-gamble",
+      "parentDisplay": "Procter & Gamble",
+      "sources": [
+        "https://us.pg.com/brands/",
+        "https://en.wikipedia.org/wiki/List_of_Procter_%26_Gamble_brands"
+      ]
+    },
+    {
+      "id": "pantene",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:pantene", "pantene"],
+      "parent": "procter-gamble",
+      "parentDisplay": "Procter & Gamble",
+      "sources": [
+        "https://us.pg.com/brands/",
+        "https://en.wikipedia.org/wiki/Pantene"
+      ]
+    },
+    {
+      "id": "olay",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:olay", "olay"],
+      "parent": "procter-gamble",
+      "parentDisplay": "Procter & Gamble",
+      "sources": [
+        "https://us.pg.com/brands/",
+        "https://en.wikipedia.org/wiki/Olay"
+      ]
+    },
+    {
+      "id": "gillette",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:gillette", "gillette"],
+      "parent": "procter-gamble",
+      "parentDisplay": "Procter & Gamble",
+      "sources": [
+        "https://us.pg.com/brands/",
+        "https://en.wikipedia.org/wiki/Gillette"
+      ]
+    },
+    {
+      "id": "head-shoulders",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:head-shoulders", "en:head-and-shoulders", "head-shoulders"],
+      "parent": "procter-gamble",
+      "parentDisplay": "Procter & Gamble",
+      "sources": [
+        "https://us.pg.com/brands/",
+        "https://en.wikipedia.org/wiki/Head_%26_Shoulders"
+      ]
+    },
+    {
+      "id": "nivea",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nivea", "nivea"],
+      "parent": "beiersdorf",
+      "parentDisplay": "Beiersdorf",
+      "sources": [
+        "https://www.beiersdorf.com/brands",
+        "https://en.wikipedia.org/wiki/Nivea"
+      ]
+    },
+    {
+      "id": "eucerin",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:eucerin", "eucerin"],
+      "parent": "beiersdorf",
+      "parentDisplay": "Beiersdorf",
+      "sources": [
+        "https://www.beiersdorf.com/brands",
+        "https://en.wikipedia.org/wiki/Eucerin"
+      ]
+    },
+    {
+      "id": "schwarzkopf",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:schwarzkopf", "schwarzkopf"],
+      "parent": "henkel",
+      "parentDisplay": "Henkel",
+      "sources": [
+        "https://www.henkel.com/brands-and-businesses",
+        "https://en.wikipedia.org/wiki/Schwarzkopf_(haircare)"
+      ]
+    },
+    {
+      "id": "coty",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:coty", "coty"],
+      "parent": "coty",
+      "parentDisplay": "Coty",
+      "sources": [
+        "https://www.coty.com/brands",
+        "https://en.wikipedia.org/wiki/Coty"
+      ]
+    },
+    {
+      "id": "rimmel",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:rimmel", "rimmel"],
+      "parent": "coty",
+      "parentDisplay": "Coty",
+      "sources": [
+        "https://www.coty.com/brands",
+        "https://en.wikipedia.org/wiki/Rimmel"
+      ]
+    },
+    {
+      "id": "covergirl",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:covergirl", "covergirl"],
+      "parent": "coty",
+      "parentDisplay": "Coty",
+      "sources": [
+        "https://www.coty.com/brands",
+        "https://en.wikipedia.org/wiki/CoverGirl"
+      ]
+    },
+    {
+      "id": "shiseido",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:shiseido", "shiseido"],
+      "parent": "shiseido",
+      "parentDisplay": "Shiseido",
+      "sources": [
+        "https://corp.shiseido.com/en/brands/",
+        "https://en.wikipedia.org/wiki/Shiseido"
+      ]
+    },
+    {
+      "id": "nars",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:nars", "nars"],
+      "parent": "shiseido",
+      "parentDisplay": "Shiseido",
+      "sources": [
+        "https://corp.shiseido.com/en/brands/",
+        "https://en.wikipedia.org/wiki/NARS_Cosmetics"
+      ]
+    },
+    {
+      "id": "neutrogena",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:neutrogena", "neutrogena"],
+      "parent": "johnson-johnson",
+      "parentDisplay": "Johnson & Johnson",
+      "sources": [
+        "https://www.jnj.com/brands",
+        "https://en.wikipedia.org/wiki/Neutrogena"
+      ]
+    },
+    {
+      "id": "aveeno",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:aveeno", "aveeno"],
+      "parent": "johnson-johnson",
+      "parentDisplay": "Johnson & Johnson",
+      "sources": [
+        "https://www.jnj.com/brands",
+        "https://en.wikipedia.org/wiki/Aveeno"
+      ]
+    },
+    {
+      "id": "colgate",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:colgate", "en:colgate-palmolive", "colgate"],
+      "parent": "colgate-palmolive",
+      "parentDisplay": "Colgate-Palmolive",
+      "sources": [
+        "https://www.colgatepalmolive.com/en-us/brands",
+        "https://en.wikipedia.org/wiki/Colgate-Palmolive"
+      ]
+    },
+    {
+      "id": "palmolive",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:palmolive", "palmolive"],
+      "parent": "colgate-palmolive",
+      "parentDisplay": "Colgate-Palmolive",
+      "sources": [
+        "https://www.colgatepalmolive.com/en-us/brands",
+        "https://en.wikipedia.org/wiki/Palmolive_(brand)"
+      ]
+    },
+    {
+      "id": "dettol",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:dettol", "dettol"],
+      "parent": "reckitt",
+      "parentDisplay": "Reckitt",
+      "sources": [
+        "https://www.reckitt.com/brands/",
+        "https://en.wikipedia.org/wiki/Dettol"
+      ]
+    },
+    {
+      "id": "lysol",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:lysol", "lysol"],
+      "parent": "reckitt",
+      "parentDisplay": "Reckitt",
+      "sources": [
+        "https://www.reckitt.com/brands/",
+        "https://en.wikipedia.org/wiki/Lysol"
+      ]
+    },
+    {
+      "id": "dr-bronners",
+      "ownership": "independent",
+      "brandAliases": ["en:dr-bronner-s", "en:dr-bronners", "en:dr-bronner", "dr-bronners", "dr-bronner-s"],
+      "display": "Dr. Bronner's",
+      "note": "Family-owned",
+      "sources": [
+        "https://www.drbronner.com/pages/about-us",
+        "https://en.wikipedia.org/wiki/Dr._Bronner%27s"
+      ]
+    },
+    {
+      "id": "tonys-chocolonely",
+      "ownership": "independent",
+      "brandAliases": ["en:tony-s-chocolonely", "en:tonys-chocolonely", "en:tony-s", "tonys-chocolonely"],
+      "display": "Tony's Chocolonely",
+      "note": "Mission-driven independent",
+      "sources": [
+        "https://tonyschocolonely.com/us/en/our-mission",
+        "https://en.wikipedia.org/wiki/Tony%27s_Chocolonely"
+      ]
+    },
+    {
+      "id": "lush",
+      "ownership": "independent",
+      "brandAliases": ["en:lush", "en:lush-fresh-handmade-cosmetics", "lush"],
+      "display": "Lush",
+      "note": "Privately owned",
+      "sources": [
+        "https://www.lush.com/uk/en/a/about-lush",
+        "https://en.wikipedia.org/wiki/Lush_(company)"
+      ]
+    },
+    {
+      "id": "equal-exchange",
+      "ownership": "independent",
+      "brandAliases": ["en:equal-exchange", "equal-exchange"],
+      "display": "Equal Exchange",
+      "note": "Worker cooperative",
+      "sources": [
+        "https://equalexchange.coop/about",
+        "https://en.wikipedia.org/wiki/Equal_Exchange"
+      ]
+    },
+    {
+      "id": "alter-eco",
+      "ownership": "independent",
+      "brandAliases": ["en:alter-eco", "alter-eco"],
+      "display": "Alter Eco",
+      "note": "Independent fair-trade brand",
+      "sources": [
+        "https://www.alterecofoods.com/pages/our-story",
+        "https://en.wikipedia.org/wiki/Alter_Eco"
+      ]
+    },
+    {
+      "id": "patagonia-provisions",
+      "ownership": "independent",
+      "brandAliases": ["en:patagonia-provisions", "en:patagonia", "patagonia-provisions"],
+      "display": "Patagonia Provisions",
+      "note": "Privately held",
+      "sources": [
+        "https://www.patagoniaprovisions.com/pages/about-us",
+        "https://en.wikipedia.org/wiki/Patagonia,_Inc."
+      ]
+    },
+    {
+      "id": "dr-hauschka",
+      "ownership": "independent",
+      "brandAliases": ["en:dr-hauschka", "en:dr-hauschka", "dr-hauschka"],
+      "display": "Dr. Hauschka",
+      "note": "Wala Heilmittel",
+      "sources": [
+        "https://www.drhauschka.com/about-us/",
+        "https://en.wikipedia.org/wiki/Dr._Hauschka"
+      ]
+    },
+    {
+      "id": "weleda",
+      "ownership": "independent",
+      "brandAliases": ["en:weleda", "weleda"],
+      "display": "Weleda",
+      "note": "Independent natural cosmetics",
+      "sources": [
+        "https://www.weleda.com/about-us",
+        "https://en.wikipedia.org/wiki/Weleda"
+      ]
+    },
+    {
+      "id": "amys-kitchen",
+      "ownership": "independent",
+      "brandAliases": ["en:amy-s", "en:amys", "en:amy-s-kitchen", "amys-kitchen", "amy-s"],
+      "display": "Amy's Kitchen",
+      "note": "Family-owned",
+      "sources": [
+        "https://www.amys.com/about-amys",
+        "https://en.wikipedia.org/wiki/Amy%27s_Kitchen"
+      ]
+    },
+    {
+      "id": "bobs-red-mill",
+      "ownership": "independent",
+      "brandAliases": ["en:bob-s-red-mill", "en:bobs-red-mill", "bobs-red-mill"],
+      "display": "Bob's Red Mill",
+      "note": "Employee-owned",
+      "sources": [
+        "https://www.bobsredmill.com/about",
+        "https://en.wikipedia.org/wiki/Bob%27s_Red_Mill"
+      ]
+    },
+    {
+      "id": "king-arthur",
+      "ownership": "independent",
+      "brandAliases": ["en:king-arthur", "en:king-arthur-baking", "en:king-arthur-flour", "king-arthur"],
+      "display": "King Arthur Baking",
+      "note": "Employee-owned",
+      "sources": [
+        "https://www.kingarthurbaking.com/about",
+        "https://en.wikipedia.org/wiki/King_Arthur_Baking"
+      ]
+    },
+    {
+      "id": "natures-path",
+      "ownership": "independent",
+      "brandAliases": ["en:nature-s-path", "en:natures-path", "natures-path"],
+      "display": "Nature's Path",
+      "note": "Family-owned",
+      "sources": [
+        "https://www.naturespath.com/en-us/about-us/",
+        "https://en.wikipedia.org/wiki/Nature%27s_Path"
+      ]
+    },
+    {
+      "id": "clif-bar-note",
+      "ownership": "conglomerate",
+      "brandAliases": ["en:clif", "en:clif-bar", "clif-bar", "clif"],
+      "parent": "mondelez",
+      "parentDisplay": "Mondelez",
+      "sources": [
+        "https://en.wikipedia.org/wiki/Clif_Bar",
+        "https://www.mondelezinternational.com/newsroom/"
+      ]
+    }
+  ]
+}

@@ -1,19 +1,22 @@
 package app.aislespy.data.knowledge
 
 import android.content.Context
+import app.aislespy.domain.BrandOwnershipPack
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 /**
- * Loads and parses ingredient/additive knowledge packs.
+ * Loads and parses ingredient/additive knowledge packs (and brand ownership, ADR-019).
  *
- * [parse] is pure (String → [KnowledgePack]) so it can be unit-tested on the JVM
- * without Android assets. [loadFromAssets] is the runtime path used by [app.aislespy.di.AppContainer].
+ * [parse] / [parseBrandOwnership] are pure (String → model) so they can be unit-tested
+ * on the JVM without Android assets. [loadFromAssets] is the runtime path used by
+ * [app.aislespy.di.AppContainer].
  */
 object KnowledgePackLoader {
 
     const val FOOD_PACK_ASSET: String = "knowledge/food_additives_v1.json"
     const val BEAUTY_PACK_ASSET: String = "knowledge/beauty_ingredients_v1.json"
+    const val BRAND_OWNERSHIP_PACK_ASSET: String = "knowledge/brand_ownership_v1.json"
 
     private val defaultJson: Json = Json {
         ignoreUnknownKeys = true
@@ -46,6 +49,31 @@ object KnowledgePackLoader {
     }
 
     /**
+     * Parse brand ownership pack JSON (ADR-019). Separate model — no severity.
+     * Pure for JVM unit tests.
+     */
+    fun parseBrandOwnership(jsonString: String, json: Json = defaultJson): BrandOwnershipPack {
+        if (jsonString.isBlank()) {
+            throw IllegalArgumentException("Invalid brand ownership pack JSON: empty input")
+        }
+        return try {
+            json.decodeFromString(BrandOwnershipPack.serializer(), jsonString)
+        } catch (e: SerializationException) {
+            throw IllegalArgumentException(
+                "Invalid brand ownership pack JSON: ${e.message ?: e::class.simpleName}",
+                e,
+            )
+        } catch (e: IllegalArgumentException) {
+            throw e
+        } catch (e: Exception) {
+            throw IllegalArgumentException(
+                "Invalid brand ownership pack JSON: ${e.message ?: e::class.simpleName}",
+                e,
+            )
+        }
+    }
+
+    /**
      * Load a pack from Android assets (e.g. [FOOD_PACK_ASSET]).
      */
     fun loadFromAssets(
@@ -53,7 +81,22 @@ object KnowledgePackLoader {
         assetPath: String = FOOD_PACK_ASSET,
         json: Json = defaultJson,
     ): KnowledgePack {
-        val text = try {
+        return parse(readAssetText(context, assetPath), json)
+    }
+
+    /**
+     * Load brand ownership pack from Android assets (ADR-019).
+     */
+    fun loadBrandOwnershipFromAssets(
+        context: Context,
+        assetPath: String = BRAND_OWNERSHIP_PACK_ASSET,
+        json: Json = defaultJson,
+    ): BrandOwnershipPack {
+        return parseBrandOwnership(readAssetText(context, assetPath), json)
+    }
+
+    private fun readAssetText(context: Context, assetPath: String): String {
+        return try {
             context.assets.open(assetPath).bufferedReader().use { it.readText() }
         } catch (e: Exception) {
             throw IllegalArgumentException(
@@ -61,6 +104,5 @@ object KnowledgePackLoader {
                 e,
             )
         }
-        return parse(text, json)
     }
 }

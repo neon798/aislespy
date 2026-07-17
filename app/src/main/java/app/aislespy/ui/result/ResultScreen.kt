@@ -245,7 +245,11 @@ private fun SuccessContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 state.badges.forEach { badge ->
-                    ResultBadgeChip(label = badge.label, style = badge.style)
+                    ResultBadgeChip(
+                        label = badge.label,
+                        style = badge.style,
+                        contentDescription = badge.contentDescription,
+                    )
                 }
             }
         }

@@ -14,6 +14,7 @@ import app.aislespy.data.remote.ApiConfig
 import app.aislespy.data.remote.ObfApi
 import app.aislespy.data.remote.OffApi
 import app.aislespy.data.remote.ProductRepository
+import app.aislespy.domain.BrandOwnershipPack
 import app.aislespy.domain.scoring.BeautyScoreEngine
 import app.aislespy.domain.scoring.CategoryResolver
 import app.aislespy.domain.scoring.FoodScoreEngine
@@ -131,6 +132,18 @@ class AppContainer(
         KnowledgePackLoader.loadFromAssets(
             context = appContext,
             assetPath = KnowledgePackLoader.BEAUTY_PACK_ASSET,
+            json = json,
+        )
+    }
+
+    /**
+     * Brand ownership pack (ADR-019). Informational only — never scored.
+     * Loaded lazily from assets; pure parse is unit-tested on the JVM.
+     */
+    val brandOwnershipPack: BrandOwnershipPack by lazy {
+        KnowledgePackLoader.loadBrandOwnershipFromAssets(
+            context = appContext,
+            assetPath = KnowledgePackLoader.BRAND_OWNERSHIP_PACK_ASSET,
             json = json,
         )
     }

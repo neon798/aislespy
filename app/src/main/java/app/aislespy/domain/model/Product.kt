@@ -14,6 +14,7 @@ data class Product(
     val barcode: String,
     val name: String,
     val brands: String?,
+    val brandsTags: List<String> = emptyList(),
     val imageUrl: String?,
     val category: ProductCategory,
     val sourceDb: SourceDb,

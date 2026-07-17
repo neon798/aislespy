@@ -76,23 +76,31 @@ fun ValuesInfoChip(
 
 /**
  * Result-screen badge row entry: routes [style] to the right chip treatment.
+ *
+ * Styles: `values` (gold-star), `ownership` (neutral corporate chip), others → [InfoChip].
  */
 @Composable
 fun ResultBadgeChip(
     label: String,
     style: String,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
 ) {
     when (style) {
         "values" -> ValuesInfoChip(
             label = label,
             modifier = modifier,
-            contentDescription = "$label, values badge",
+            contentDescription = contentDescription ?: "$label, values badge",
+        )
+        "ownership" -> InfoChip(
+            label = label,
+            modifier = modifier,
+            contentDescription = contentDescription ?: "$label, ownership information",
         )
         else -> InfoChip(
             label = label,
             modifier = modifier,
-            contentDescription = label,
+            contentDescription = contentDescription ?: label,
         )
     }
 }
