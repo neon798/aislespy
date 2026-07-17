@@ -8,7 +8,9 @@ import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.ScoreBand
 import app.aislespy.domain.model.SourceDb
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -254,6 +256,34 @@ class BeautyScoreEngineTest {
         assertEquals(Confidence.High, result.confidence)
         assertTrue(result.concerns.isEmpty())
         assertEquals(ScoringConfig.METHODOLOGY_VERSION, result.methodologyVersion)
+        // ADR-015: empty matches must not imply flags exist
+        assertEquals("Formula looks gentle—nothing flagged in our pack.", result.summarySentence)
+        assertFalse(result.summarySentence.contains("red flags", ignoreCase = true))
+        assertFalse(result.summarySentence.contains("flags below", ignoreCase = true))
+        assertNull(result.driverSentence)
+        assertTrue(result.omittedComponents.isEmpty())
+    }
+
+    @Test
+    fun summary_withConcerns_doesNotUseEmptyMatchCopy() {
+        val product = baseProduct(ingredientsText = "Aqua, HazardX, Glycerin")
+        val result = engine.score(
+            product,
+            listOf(
+                match(
+                    id = "hazardx",
+                    name = "HazardX",
+                    severity = 4,
+                    listIndex = 1,
+                    categories = listOf("preservative"),
+                ),
+            ),
+        )
+        assertTrue(result.concerns.isNotEmpty())
+        assertTrue(result.total >= 75) // still high with one mid-list sev4
+        assertEquals("Formula looks gentle—only minor flags below.", result.summarySentence)
+        val driver = requireNotNull(result.driverSentence)
+        assertTrue(driver.contains("flagged ingredients (hazards)"))
     }
 
     @Test

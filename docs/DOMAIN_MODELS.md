@@ -134,20 +134,25 @@ User-facing problem ingredient (after scoring pipeline).
 | detail | String? | e.g. “Nutri-Score D” |
 
 ### `ScoreResult`
-| Field | Type |
-|-------|------|
-| total | Int |
-| band | ScoreBand |
-| confidence | Confidence |
-| components | List\<ScoreComponent\> |
-| concerns | List\<Concern\> |
-| methodologyVersion | String |
-| summarySentence | String |
+| Field | Type | Notes |
+|-------|------|--------|
+| total | Int | |
+| band | ScoreBand | |
+| confidence | Confidence | |
+| components | List\<ScoreComponent\> | |
+| concerns | List\<Concern\> | |
+| methodologyVersion | String | |
+| summarySentence | String | Band × concern-count matrix (SCORING.md); never implies flags when concerns empty |
+| driverSentence | String? | Optional “Main drags: …” for largest weighted losses; null if none > 5 pts |
+| omittedComponents | List\<String\> | Human labels of components dropped for missing data, e.g. `NOVA (no data)` |
 
-`summarySentence` examples:
-- “Solid pick—few flags in our pack.”
-- “Mixed—watch the additives.”
-- “Lots of suspect ingredients—read carefully.”
+`summarySentence` examples (food):
+- “Looking good—nothing flagged in our pack.” (high score, 0 concerns)
+- “Middling score—mostly nutrition and processing, not flagged ingredients.”
+- “Several concerns—read carefully.”
+
+`driverSentence` example:
+- “Main drags: nutrition (Nutri-Score D), ultra-processing (NOVA 4).”
 
 ### `HistoryEntry`
 | Field | Type |
@@ -194,14 +199,16 @@ Keep UI models immutable. ViewModels map domain → UI.
 | confidence | Confidence |
 | confidenceLabel | String |
 | summarySentence | String |
+| driverSentence | String? |
 
 ### `ScoreComponentUi`
-| Field | Type |
-|-------|------|
-| id | String |
-| label | String |
-| score | Int |
-| detail | String? |
+| Field | Type | Notes |
+|-------|------|--------|
+| id | String | |
+| label | String | |
+| score | Int | |
+| detail | String? | |
+| weight | Float | Normalized weight after reweight; UI shows e.g. “45% of score” |
 
 ### `ConcernUi`
 | Field | Type |
@@ -240,6 +247,7 @@ Success(
   product: ProductHeaderUi,
   score: ScoreUi,
   breakdown: List<ScoreComponentUi>,
+  omittedComponents: List<String>,  // e.g. "NOVA (no data)" → muted reweight rows
   concerns: List<ConcernUi>,
   badges: List<BadgeUi>,
   disclaimerVisible: Boolean = true

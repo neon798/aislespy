@@ -12,4 +12,8 @@ data class ScoreResult(
     val concerns: List<Concern>,
     val methodologyVersion: String,
     val summarySentence: String,
+    /** One-liner naming the biggest weighted drags; null when none exceed the threshold. */
+    val driverSentence: String? = null,
+    /** Human labels of components dropped for missing data (e.g. "NOVA (no data)"). */
+    val omittedComponents: List<String> = emptyList(),
 )

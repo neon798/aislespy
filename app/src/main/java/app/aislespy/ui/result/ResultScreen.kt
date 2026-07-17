@@ -213,6 +213,15 @@ private fun SuccessContent(
                         style = MaterialTheme.typography.bodyLarge,
                         textAlign = TextAlign.Center,
                     )
+                    if (!score.driverSentence.isNullOrBlank()) {
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = score.driverSentence,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                     Spacer(Modifier.height(4.dp))
                     // Adjacent readable confidence (also in ScoreRing TalkBack).
                     InfoChip(
@@ -238,13 +247,16 @@ private fun SuccessContent(
         }
 
         // Breakdown
-        if (state.breakdown.isNotEmpty()) {
+        if (state.breakdown.isNotEmpty() || state.omittedComponents.isNotEmpty()) {
             SectionHeader(
                 text = "Score breakdown",
                 modifier = Modifier.padding(top = 4.dp),
             )
             state.breakdown.forEach { component ->
                 BreakdownRow(component)
+            }
+            state.omittedComponents.forEach { label ->
+                OmittedComponentRow(label)
             }
         }
 
@@ -360,6 +372,7 @@ private fun PartialScorePlaceholder(message: String) {
 
 @Composable
 private fun BreakdownRow(component: ScoreComponentUi) {
+    val weightPercent = kotlin.math.round(component.weight * 100f).toInt()
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -380,6 +393,13 @@ private fun BreakdownRow(component: ScoreComponentUi) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
+            if (component.weight > 0f) {
+                Text(
+                    text = "$weightPercent% of score",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
         Text(
             text = component.score.toString(),
@@ -387,6 +407,32 @@ private fun BreakdownRow(component: ScoreComponentUi) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 8.dp),
         )
+    }
+}
+
+/**
+ * Muted row for a component dropped for missing data.
+ * Domain label form: "NOVA (no data)" → "NOVA — no data (score reweighted)".
+ */
+@Composable
+private fun OmittedComponentRow(label: String) {
+    val display = formatOmittedComponentLabel(label)
+    Text(
+        text = display,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.75f),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+    )
+}
+
+internal fun formatOmittedComponentLabel(label: String): String {
+    val name = label.removeSuffix(" (no data)").trim()
+    return if (name.isNotEmpty() && name != label) {
+        "$name — no data (score reweighted)"
+    } else {
+        "$label — no data (score reweighted)"
     }
 }
 

@@ -144,6 +144,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-015 — Score explanation: concern-aware copy, drivers, omitted components
+
+- **Date:** 2026-07-16
+- **Status:** Accepted
+- **Context:** User testing showed two explanation failures: (a) summary sentences said “red flags” / “notes below” even when the concerns list was empty; (b) a ~50 score on a 100% organic product did not explain that nutrition/processing drove the total, that organic is only a 5% positives bonus, or that missing components were silently dropped and reweighted.
+- **Decision:** Explanation-only improvements (no weight or subscore formula changes). Bump methodologyVersion to **1.0.2** (copy only). (1) **Summary sentences** are conditioned on score band × concern count (see SCORING.md matrix): with zero concerns, copy must not imply flagged ingredients exist. Beauty keeps its tone under the same principle. (2) **`ScoreResult.driverSentence`**: optional one-liner naming the biggest weighted drags, computed as `(100 - subscore) * normalizedWeight` per component; list contributors whose weighted loss exceeds 5 points (e.g. “Main drags: nutrition (Nutri-Score D), ultra-processing (NOVA 4).”). Null when nothing exceeds the threshold. (3) **`ScoreResult.omittedComponents`**: human labels for components dropped for missing data (e.g. “NOVA (no data)”), shown in the breakdown as muted “no data (score reweighted)” rows. (4) Breakdown UI shows each component’s normalized weight as “N% of score” so the organic +20 at 5% weight is visibly small; positives detail appends “Organic +20” when organic is detected.
+- **Consequences:** `ScoreResult` / `ScoreUi` / `ScoreComponentUi` gain explanation fields; `FoodScoreEngine` and `BeautyScoreEngine` populate them; Result screen renders driver line, weight captions, and omitted rows. Golden tests updated only where they assert sentences or version; numeric totals and component scores remain identical.
+
+---
+
 ## Template for new entries
 
 ```markdown

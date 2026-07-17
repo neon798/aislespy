@@ -35,6 +35,12 @@ class FoodScoreEngine : ScoreEngine {
             hasNova = raw.any { it.id == ID_NOVA },
             strongAdditiveList = hasStrongAdditiveList(product, uniqueMatches),
         )
+        val omitted = omittedFoodComponents(
+            hasNutri = raw.any { it.id == ID_NUTRISCORE },
+            hasNova = raw.any { it.id == ID_NOVA },
+            hasAdditives = raw.any { it.id == ID_ADDITIVES },
+            hasPositives = raw.any { it.id == ID_POSITIVES },
+        )
 
         return ScoreResult(
             total = total,
@@ -43,7 +49,12 @@ class FoodScoreEngine : ScoreEngine {
             components = components,
             concerns = concerns,
             methodologyVersion = ScoringConfig.METHODOLOGY_VERSION,
-            summarySentence = summarySentence(total),
+            summarySentence = summarySentence(total, concerns.size),
+            driverSentence = ScoreExplanation.driverSentence(
+                components,
+                ScoreExplanation::foodDriverLabel,
+            ),
+            omittedComponents = omitted,
         )
     }
 
@@ -144,7 +155,7 @@ class FoodScoreEngine : ScoreEngine {
 
         if (hasOrganicLabel(product.labelsTags)) {
             sub += 20
-            notes += "Organic"
+            notes += "Organic +20"
         }
         if (hasFairTradeLabel(product.labelsTags)) {
             sub += 10
@@ -205,11 +216,44 @@ class FoodScoreEngine : ScoreEngine {
         else -> Confidence.Low
     }
 
-    private fun summarySentence(total: Int): String = when {
-        total >= 75 -> "Looking good—few red flags."
-        total >= 50 -> "Mixed bag—check the notes below."
-        total >= 25 -> "Several concerns—read carefully."
-        else -> "Lots of flags—you may want to skip."
+    /**
+     * Band × concern-count matrix (docs/SCORING.md, ADR-015).
+     * Zero concerns must not imply flagged ingredients exist.
+     */
+    private fun summarySentence(total: Int, concernCount: Int): String {
+        val hasConcerns = concernCount > 0
+        return when {
+            total >= 75 && !hasConcerns ->
+                "Looking good—nothing flagged in our pack."
+            total >= 75 ->
+                "Looking good—only minor flags below."
+            total >= 50 && !hasConcerns ->
+                "Middling score—mostly nutrition and processing, not flagged ingredients."
+            total >= 50 ->
+                "Mixed bag—check the notes below."
+            total >= 25 && !hasConcerns ->
+                "Low score—driven by nutrition or processing; see the breakdown."
+            total >= 25 ->
+                "Several concerns—read carefully."
+            !hasConcerns ->
+                "Very low score—nutrition and processing look rough."
+            else ->
+                "Lots of flags—you may want to skip."
+        }
+    }
+
+    private fun omittedFoodComponents(
+        hasNutri: Boolean,
+        hasNova: Boolean,
+        hasAdditives: Boolean,
+        hasPositives: Boolean,
+    ): List<String> {
+        val out = mutableListOf<String>()
+        if (!hasNutri) out += "Nutri-Score (no data)"
+        if (!hasNova) out += "NOVA (no data)"
+        if (!hasAdditives) out += "Additives (no data)"
+        if (!hasPositives) out += "Positives (no data)"
+        return out
     }
 
     // --- concerns ---

@@ -1,6 +1,6 @@
 # Scoring methodology — AisleSpy
 
-**methodologyVersion:** `1.0.1`  
+**methodologyVersion:** `1.0.2`  
 **Convention:** **100 = best** (healthier / fewer concerns), **1 = worst**.
 
 This document is the source of truth. Code must implement these rules; formula changes require a version bump and an entry in [DECISIONS.md](DECISIONS.md).
@@ -180,14 +180,30 @@ If no ingredient data: do not invent a mid score; prefer `NotFound`-style partia
 
 ## Summary sentences (food)
 
-| Score range | Example |
-|-------------|---------|
-| ≥ 75 | “Looking good—few red flags.” |
-| 50–74 | “Mixed bag—check the notes below.” |
-| 25–49 | “Several concerns—read carefully.” |
-| ≤ 24 | “Lots of flags—you may want to skip.” |
+Band × concern-count matrix. **Zero concerns must not imply flagged ingredients exist.**
 
-Beauty: similar tone (“formula looks gentle” / “several suspect ingredients”).
+| Score range | 0 concerns | ≥ 1 concern |
+|-------------|------------|-------------|
+| ≥ 75 | “Looking good—nothing flagged in our pack.” | “Looking good—only minor flags below.” |
+| 50–74 | “Middling score—mostly nutrition and processing, not flagged ingredients.” | “Mixed bag—check the notes below.” |
+| 25–49 | “Low score—driven by nutrition or processing; see the breakdown.” | “Several concerns—read carefully.” |
+| ≤ 24 | “Very low score—nutrition and processing look rough.” | “Lots of flags—you may want to skip.” |
+
+### Summary sentences (beauty)
+
+Same principle (0 matches → do not imply flags). Beauty tone retained:
+
+| Score range | 0 concerns | ≥ 1 concern |
+|-------------|------------|-------------|
+| ≥ 75 | “Formula looks gentle—nothing flagged in our pack.” | “Formula looks gentle—only minor flags below.” |
+| 50–74 | “Middling score—mostly formula signals, not flagged ingredients.” | “Mixed bag—check the notes below.” |
+| 25–49 | “Low score—driven by hazards or other formula signals; see the breakdown.” | “Several suspect ingredients—read carefully.” |
+| ≤ 24 | “Very low score—formula signals look rough.” | “Lots of flags—you may want to skip.” |
+
+### Score drivers and omitted components (explanation only)
+
+- **`driverSentence`:** optional one-liner of the largest weighted drags: for each component, loss = `(100 - subscore) * normalizedWeight`. List contributors with loss **> 5** points, highest first (e.g. “Main drags: nutrition (Nutri-Score D), ultra-processing (NOVA 4).”). Null when none exceed the threshold. Does not change the total.
+- **`omittedComponents`:** human labels of components dropped for missing data (e.g. “NOVA (no data)”). UI shows them as muted breakdown rows (“NOVA — no data (score reweighted)”). Weights of remaining components are already renormalized per missing-data reweight above.
 
 ---
 
@@ -217,6 +233,7 @@ See API_CONTRACTS for lookup. Scoring uses:
 |---------|------|-------|
 | 1.0.0 | 2026-07-16 | Initial methodology |
 | 1.0.1 | 2026-07-16 | Dietary flags shown, not scored — copy/version bump only, no formula change |
+| 1.0.2 | 2026-07-16 | Explanation copy only, no formula change (ADR-015: concern-aware summaries, driverSentence, omittedComponents) |
 
 Any weight or mapping change → bump semver (patch for copy, minor for weight tweaks, major for reinterpretation of scale).
 

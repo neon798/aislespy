@@ -9,6 +9,8 @@ import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.ScoreBand
 import app.aislespy.domain.model.SourceDb
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.math.abs
@@ -47,11 +49,13 @@ class FoodScoreEngineTest {
         assertEquals(ScoreBand.Excellent, result.band)
         assertEquals(Confidence.High, result.confidence)
         assertTrue(result.total >= 75)
-        assertEquals("Looking good—few red flags.", result.summarySentence)
+        assertEquals("Looking good—nothing flagged in our pack.", result.summarySentence)
+        assertNull(result.driverSentence)
         assertEquals(ScoringConfig.METHODOLOGY_VERSION, result.methodologyVersion)
         assertTrue(result.concerns.isEmpty())
         assertEquals(3, result.components.size)
         assertWeightsSumToOne(result.components.map { it.weight })
+        assertTrue(result.omittedComponents.any { it.startsWith("Positives") })
     }
 
     // -------------------------------------------------------------------------
@@ -83,6 +87,11 @@ class FoodScoreEngineTest {
         assertEquals(ScoreBand.Poor, result.band)
         assertEquals(Confidence.High, result.confidence)
         assertEquals("Several concerns—read carefully.", result.summarySentence)
+        // Nutri E + NOVA 4 are both major weighted drags
+        val driver = requireNotNull(result.driverSentence)
+        assertTrue(driver.startsWith("Main drags:"))
+        assertTrue(driver.contains("nutrition (Nutri-Score E)"))
+        assertTrue(driver.contains("ultra-processing (NOVA 4)"))
 
         // Severity desc, then name asc
         assertEquals(3, result.concerns.size)
@@ -147,7 +156,12 @@ class FoodScoreEngineTest {
         assertEquals(ScoringConfig.SCORE_MIN, result.total)
         assertTrue(result.components.isEmpty())
         assertEquals(ScoreBand.Bad, result.band)
-        assertEquals("Lots of flags—you may want to skip.", result.summarySentence)
+        // 0 concerns → do not imply flags exist
+        assertEquals("Very low score—nutrition and processing look rough.", result.summarySentence)
+        assertTrue(result.omittedComponents.contains("Nutri-Score (no data)"))
+        assertTrue(result.omittedComponents.contains("NOVA (no data)"))
+        assertTrue(result.omittedComponents.contains("Additives (no data)"))
+        assertTrue(result.omittedComponents.contains("Positives (no data)"))
     }
 
     // -------------------------------------------------------------------------
@@ -280,10 +294,204 @@ class FoodScoreEngineTest {
         assertEquals(a.band, b.band)
         assertEquals(a.confidence, b.confidence)
         assertEquals(a.summarySentence, b.summarySentence)
+        assertEquals(a.driverSentence, b.driverSentence)
+        assertEquals(a.omittedComponents, b.omittedComponents)
         assertEquals(a.methodologyVersion, b.methodologyVersion)
         assertEquals(a.components, b.components)
         assertEquals(a.concerns, b.concerns)
         assertEquals(ScoringConfig.METHODOLOGY_VERSION, a.methodologyVersion)
+    }
+
+    // -------------------------------------------------------------------------
+    // ADR-015 — summary sentence matrix (all 8 band × concern cells)
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun summaryMatrix_excellent_zeroConcerns() {
+        val result = engine.score(
+            baseProduct(nutriscoreGrade = 'a', novaGroup = 1, ingredientsText = "Water"),
+            emptyList(),
+        )
+        assertTrue(result.total >= 75)
+        assertTrue(result.concerns.isEmpty())
+        assertEquals("Looking good—nothing flagged in our pack.", result.summarySentence)
+    }
+
+    @Test
+    fun summaryMatrix_excellent_withConcerns() {
+        // Mild flag keeps total ≥ 75; copy acknowledges minor flags.
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'a',
+                novaGroup = 1,
+                ingredientsText = "Water, E322",
+                additivesTags = listOf("en:e322"),
+            ),
+            listOf(match("e322", "Lecithins", severity = 1)),
+        )
+        assertTrue(result.total >= 75)
+        assertTrue(result.concerns.isNotEmpty())
+        assertEquals("Looking good—only minor flags below.", result.summarySentence)
+    }
+
+    @Test
+    fun summaryMatrix_ok_zeroConcerns() {
+        // Nutri C + NOVA 3 + clean additives ≈ 68
+        val result = engine.score(
+            baseProduct(nutriscoreGrade = 'c', novaGroup = 3, ingredientsText = "Oats, water"),
+            emptyList(),
+        )
+        assertTrue(result.total in 50..74)
+        assertTrue(result.concerns.isEmpty())
+        assertEquals(
+            "Middling score—mostly nutrition and processing, not flagged ingredients.",
+            result.summarySentence,
+        )
+    }
+
+    @Test
+    fun summaryMatrix_ok_withConcerns() {
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'c',
+                novaGroup = 3,
+                ingredientsText = "Oats, E621",
+                additivesTags = listOf("en:e621"),
+            ),
+            listOf(match("e621", "MSG", severity = 3)),
+        )
+        assertTrue(result.total in 50..74)
+        assertTrue(result.concerns.isNotEmpty())
+        assertEquals("Mixed bag—check the notes below.", result.summarySentence)
+    }
+
+    @Test
+    fun summaryMatrix_poor_zeroConcerns() {
+        // Nutri E + NOVA 4 + clean additives ≈ 41
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'e',
+                novaGroup = 4,
+                ingredientsText = "Sugar, palm oil",
+            ),
+            emptyList(),
+        )
+        assertTrue(result.total in 25..49)
+        assertTrue(result.concerns.isEmpty())
+        assertEquals(
+            "Low score—driven by nutrition or processing; see the breakdown.",
+            result.summarySentence,
+        )
+    }
+
+    @Test
+    fun summaryMatrix_poor_withConcerns() {
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'e',
+                novaGroup = 4,
+                ingredientsText = "Sugar, E250",
+                additivesTags = listOf("en:e250"),
+            ),
+            listOf(match("e250", "Sodium nitrite", severity = 4)),
+        )
+        assertTrue(result.total in 25..49)
+        assertTrue(result.concerns.isNotEmpty())
+        assertEquals("Several concerns—read carefully.", result.summarySentence)
+    }
+
+    @Test
+    fun summaryMatrix_bad_zeroConcerns() {
+        // Nutri E + NOVA 4 only (no additive input) → reweight ≈ 20
+        val result = engine.score(
+            baseProduct(nutriscoreGrade = 'e', novaGroup = 4),
+            emptyList(),
+        )
+        assertTrue(result.total <= 24)
+        assertTrue(result.concerns.isEmpty())
+        assertEquals("Very low score—nutrition and processing look rough.", result.summarySentence)
+    }
+
+    @Test
+    fun summaryMatrix_bad_withConcerns() {
+        val matches = (1..5).map { i ->
+            match("sev5-$i", "Bad additive $i", severity = 5)
+        }
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'e',
+                novaGroup = 4,
+                ingredientsText = "Many bad additives",
+                additivesTags = matches.map { "en:${it.entryId}" },
+            ),
+            matches,
+        )
+        assertTrue(result.total <= 24)
+        assertTrue(result.concerns.isNotEmpty())
+        assertEquals("Lots of flags—you may want to skip.", result.summarySentence)
+    }
+
+    // -------------------------------------------------------------------------
+    // ADR-015 — driverSentence + omittedComponents
+    // -------------------------------------------------------------------------
+
+    @Test
+    fun driverSentence_nutriE_nova4_namesBoth() {
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'e',
+                novaGroup = 4,
+                ingredientsText = "Sugar",
+            ),
+            emptyList(),
+        )
+        val driver = requireNotNull(result.driverSentence)
+        assertTrue(driver.contains("nutrition (Nutri-Score E)"))
+        assertTrue(driver.contains("ultra-processing (NOVA 4)"))
+        // Nutrition loss is larger than NOVA at base weights → nutrition first
+        assertTrue(
+            driver.indexOf("nutrition") < driver.indexOf("ultra-processing"),
+        )
+    }
+
+    @Test
+    fun driverSentence_highScorer_isNull() {
+        val result = engine.score(
+            baseProduct(nutriscoreGrade = 'a', novaGroup = 1, ingredientsText = "Water"),
+            emptyList(),
+        )
+        assertNull(result.driverSentence)
+    }
+
+    @Test
+    fun omittedComponents_missingNova_listsIt() {
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'a',
+                novaGroup = null,
+                ingredientsText = "Water",
+            ),
+            emptyList(),
+        )
+        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_NOVA })
+        assertTrue(result.omittedComponents.contains("NOVA (no data)"))
+        assertFalse(result.omittedComponents.any { it.startsWith("Nutri-Score") })
+    }
+
+    @Test
+    fun positivesDetail_organicAppendsBonusExplicitly() {
+        val result = engine.score(
+            baseProduct(
+                nutriscoreGrade = 'c',
+                novaGroup = 2,
+                ingredientsText = "Oats",
+                labelsTags = listOf("en:organic"),
+            ),
+            emptyList(),
+        )
+        val positives = result.components.first { it.id == FoodScoreEngine.ID_POSITIVES }
+        assertEquals(70, positives.score)
+        assertTrue(positives.detail!!.contains("Organic +20"))
     }
 
     // --- fixtures ---

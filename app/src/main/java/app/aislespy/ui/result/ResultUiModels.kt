@@ -25,6 +25,7 @@ data class ScoreUi(
     val confidence: Confidence,
     val confidenceLabel: String,
     val summarySentence: String,
+    val driverSentence: String? = null,
 )
 
 /** DOMAIN_MODELS.md [ScoreComponentUi]. */
@@ -33,6 +34,8 @@ data class ScoreComponentUi(
     val label: String,
     val score: Int,
     val detail: String?,
+    /** Normalized weight after reweight (0..1); UI shows e.g. "45% of score". */
+    val weight: Float = 0f,
 )
 
 /** DOMAIN_MODELS.md [ConcernUi]. */
@@ -74,6 +77,8 @@ sealed class ResultUiState {
         val product: ProductHeaderUi,
         val score: ScoreUi?,
         val breakdown: List<ScoreComponentUi>,
+        /** Human labels of missing components, e.g. "NOVA (no data)". */
+        val omittedComponents: List<String> = emptyList(),
         val concerns: List<ConcernUi>,
         val badges: List<BadgeUi>,
         val disclaimerVisible: Boolean = true,

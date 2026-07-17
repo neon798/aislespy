@@ -57,7 +57,13 @@ class BeautyScoreEngine : ScoreEngine {
             components = components,
             concerns = concerns,
             methodologyVersion = ScoringConfig.METHODOLOGY_VERSION,
-            summarySentence = summarySentence(total),
+            summarySentence = summarySentence(total, concerns.size),
+            driverSentence = ScoreExplanation.driverSentence(
+                components,
+                ScoreExplanation::beautyDriverLabel,
+            ),
+            // All three beauty components are always included once we score (see class KDoc).
+            omittedComponents = emptyList(),
         )
     }
 
@@ -244,11 +250,30 @@ class BeautyScoreEngine : ScoreEngine {
         return if (!orderKnown && base == Confidence.High) Confidence.Medium else base
     }
 
-    private fun summarySentence(total: Int): String = when {
-        total >= 75 -> "Formula looks gentle—few red flags."
-        total >= 50 -> "Mixed bag—check the notes below."
-        total >= 25 -> "Several suspect ingredients—read carefully."
-        else -> "Lots of flags—you may want to skip."
+    /**
+     * Band × concern-count matrix (docs/SCORING.md, ADR-015).
+     * Beauty tone retained; zero concerns must not imply flagged ingredients exist.
+     */
+    private fun summarySentence(total: Int, concernCount: Int): String {
+        val hasConcerns = concernCount > 0
+        return when {
+            total >= 75 && !hasConcerns ->
+                "Formula looks gentle—nothing flagged in our pack."
+            total >= 75 ->
+                "Formula looks gentle—only minor flags below."
+            total >= 50 && !hasConcerns ->
+                "Middling score—mostly formula signals, not flagged ingredients."
+            total >= 50 ->
+                "Mixed bag—check the notes below."
+            total >= 25 && !hasConcerns ->
+                "Low score—driven by hazards or other formula signals; see the breakdown."
+            total >= 25 ->
+                "Several suspect ingredients—read carefully."
+            !hasConcerns ->
+                "Very low score—formula signals look rough."
+            else ->
+                "Lots of flags—you may want to skip."
+        }
     }
 
     // --- concerns ---

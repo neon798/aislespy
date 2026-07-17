@@ -173,6 +173,7 @@ class ResultViewModel(
                 product = header,
                 score = null,
                 breakdown = emptyList(),
+                omittedComponents = emptyList(),
                 concerns = emptyList(),
                 badges = emptyList(),
                 disclaimerVisible = true,
@@ -211,6 +212,7 @@ class ResultViewModel(
             product = header,
             score = scoreResult.toScoreUi(),
             breakdown = scoreResult.components.map { it.toUi() },
+            omittedComponents = scoreResult.omittedComponents,
             concerns = scoreResult.concerns.map { it.toUi() },
             badges = buildBadges(this),
             disclaimerVisible = true,
@@ -227,6 +229,7 @@ class ResultViewModel(
         confidence = confidence,
         confidenceLabel = confidence.toLabel(),
         summarySentence = summarySentence,
+        driverSentence = driverSentence,
     )
 
     private fun ScoreComponent.toUi(): ScoreComponentUi = ScoreComponentUi(
@@ -234,6 +237,7 @@ class ResultViewModel(
         label = label,
         score = score,
         detail = detail,
+        weight = weight,
     )
 
     private fun Concern.toUi(): ConcernUi = ConcernUi(

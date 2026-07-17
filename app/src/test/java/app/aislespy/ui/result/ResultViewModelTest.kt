@@ -312,8 +312,10 @@ class ResultViewModelTest {
                         matchedOn = "name:palm oil",
                     ),
                 ),
-                methodologyVersion = "1.0.0",
-                summarySentence = "Looking good—few red flags.",
+                methodologyVersion = "1.0.2",
+                summarySentence = "Looking good—only minor flags below.",
+                driverSentence = "Main drags: nutrition (Nutri-Score A).",
+                omittedComponents = listOf("Positives (no data)"),
             )
         }
         val store = ConcernDetailStore()
@@ -330,7 +332,9 @@ class ResultViewModelTest {
         val success = vm.uiState.value as ResultUiState.Success
         assertEquals(90, success.score!!.value)
         assertEquals(ScoreBand.Excellent, success.score!!.band)
-        assertEquals("Looking good—few red flags.", success.score!!.summarySentence)
+        assertEquals("Looking good—only minor flags below.", success.score!!.summarySentence)
+        assertEquals("Main drags: nutrition (Nutri-Score A).", success.score!!.driverSentence)
+        assertEquals(listOf("Positives (no data)"), success.omittedComponents)
         assertEquals("High confidence", success.score!!.confidenceLabel)
         assertEquals(1, success.concerns.size)
         assertEquals("palm", success.concerns[0].id)
