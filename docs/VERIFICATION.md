@@ -17,7 +17,7 @@ How to prove changes are correct. Link tasks in ROADMAP to sections below.
 
 | Area | Cases |
 |------|--------|
-| FoodScoreEngine | High Nutri+NOVA1; Nutri E + NOVA4 + bad additives; missing Nutri reweight; clamp 1–100 |
+| FoodScoreEngine | Clean NOVA1 high; NOVA4 + sev4 additives low; missing NOVA reweight; no ingredient data → partial; fiber ignored; nutriscore ignored |
 | BeautyScoreEngine | Hazard at index 0 vs end; fragrance penalty; no ingredients → partial/no score |
 | KnowledgePack.match | alias hit; name hit; no false positive on short token |
 | CategoryResolver | food only; beauty only; both; neither; one error |

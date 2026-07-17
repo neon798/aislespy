@@ -5,7 +5,7 @@ package app.aislespy.domain
  * Keep in sync with docs/SCORING.md (methodologyVersion).
  */
 object ScoringConfig {
-    const val METHODOLOGY_VERSION: String = "1.0.2"
+    const val METHODOLOGY_VERSION: String = "2.0.0"
 
     const val SCORE_MIN: Int = 1
     const val SCORE_MAX: Int = 100
@@ -13,11 +13,13 @@ object ScoringConfig {
     /** Soft floor for food additives subscore (SCORING.md). */
     const val ADDITIVES_SOFT_FLOOR: Int = 5
 
-    /** Food component base weights before missing-data reweight. */
+    /**
+     * Food component base weights before missing-data reweight (methodology 2.0.0).
+     * Ingredient quality only — no Nutri-Score (ADR-018).
+     */
     object FoodWeights {
-        const val NUTRISCORE: Double = 0.45
-        const val NOVA: Double = 0.25
-        const val ADDITIVES: Double = 0.25
+        const val ADDITIVES: Double = 0.65
+        const val NOVA: Double = 0.30
         const val POSITIVES: Double = 0.05
     }
 

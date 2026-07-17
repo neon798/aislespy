@@ -1,6 +1,6 @@
 # Scoring methodology — AisleSpy
 
-**methodologyVersion:** `1.0.2`  
+**methodologyVersion:** `2.0.0`  
 **Convention:** **100 = best** (healthier / fewer concerns), **1 = worst**.
 
 This document is the source of truth. Code must implement these rules; formula changes require a version bump and an entry in [DECISIONS.md](DECISIONS.md).
@@ -40,36 +40,33 @@ Deductions are applied inside component subscores, then weighted into the total.
 
 ## Food score (`FoodScoreEngine`)
 
+**Owner decision (ADR-018):** the primary food score reflects **ingredient quality only**. Nutrition (Nutri-Score, nutriments, fiber) is **not scored** and is shown only on a dedicated nutrition screen.
+
 ### Components and base weights
 
 | Component ID | Weight | Description |
 |--------------|--------|-------------|
-| `nutriscore` | 0.45 | Nutritional quality |
-| `nova` | 0.25 | Ultra-processing |
-| `additives` | 0.25 | Flagged additives from knowledge pack |
-| `positives` | 0.05 | Small bonuses (capped) |
+| `additives` | 0.65 | Flagged ingredients from the knowledge pack |
+| `nova` | 0.30 | Ultra-processing (ingredient-derived / NOVA group) |
+| `positives` | 0.05 | Organic +20, fair-trade +10 from base 50 (fiber bonus **removed** — it is nutrition) |
 
 ### Missing-data reweight
 
 If a component’s inputs are missing, **remove its weight** and renormalize remaining weights to sum to 1.0.
 
 Examples:
-- No Nutri-Score, has NOVA + additives → weights on nova/additives/positives only.
-- No additives matched and no additives tags at all → still compute additives subscore as 100 only if ingredients were analyzed; if no ingredient/additive data, drop `additives` component and lower confidence.
+- No NOVA, has additives + positives → weights on additives/positives only.
+- No additives matched and no additives tags / ingredients at all → drop `additives` component and lower confidence (or take the no-data path below).
 
-### Nutri-Score subscore (`nutriscore`) → 1–100
+### No ingredient-quality data → partial (no number)
 
-| Grade | Subscore |
-|-------|----------|
-| A | 95 |
-| B | 80 |
-| C | 60 |
-| D | 40 |
-| E | 20 |
-| missing | component omitted |
+If **no ingredient-quality inputs exist at all** — no ingredients text/tags, no additives tags, and no NOVA — do **not** invent a score. Emit the partial path (same pattern as beauty no-ingredients):
 
-If grade missing but `nutriscoreScore` (OFF numeric) present: map roughly  
-`subscore = clamp(100 - (score + 15) * 3, 1, 100)` as a **best-effort** fallback (document in code comments; prefer grade). Tune only with DECISIONS entry.
+- `ResultUiState.Success` with `score == null`
+- Message: **“Found product, but not enough ingredient data to score”**
+- Hide numeric score (show “—”)
+
+Callers must not invent a mid score from labels or Nutri-Score alone.
 
 ### NOVA subscore (`nova`) → 1–100
 
@@ -89,6 +86,8 @@ If grade missing but `nutriscoreScore` (OFF numeric) present: map roughly
 4. Soft floor: `max(subscore, 5)` before weight (avoid total collapse from many mild flags alone—severity 5 can still drag overall score down via weight).
 5. Emit a `Concern` per match (severity ≥ 1).
 
+Present when ingredients/additives data was analyzed; omitted when no such data.
+
 ### Positives subscore (`positives`) → 1–100
 
 Start at **50** (neutral), then:
@@ -97,11 +96,14 @@ Start at **50** (neutral), then:
 |--------|------------|
 | Organic label tag (e.g. `en:organic`) | +20 |
 | Fair-trade label | +10 |
-| High fiber (≥ 6 g/100g if nutriments present) | +10 |
 | Otherwise | 0 |
 
+**Fiber is not a positives signal** (nutrition-only; shown on the nutrition screen).
+
 Clamp to 1–100.  
-**Cap influence:** This component is only 5% weight so junk food cannot “bonus” into Excellent from labels alone.
+**Cap influence:** This component is only 5% weight so processing-heavy products cannot “bonus” into Excellent from labels alone.
+
+Included only when `labelsTags` are present (else omit at 5% weight).
 
 ### Total
 
@@ -114,9 +116,17 @@ total = clamp(total, 1, 100)
 
 | Condition | Confidence |
 |-----------|------------|
-| Nutri-Score + NOVA present | High |
-| Exactly one of Nutri-Score / NOVA present, or strong additive list | Medium |
-| Mostly missing nutrition processing signals | Low |
+| Ingredient data analyzed **and** `novaGroup` present | High |
+| Ingredient data **or** NOVA (exactly one of them) | Medium |
+| Sparse / weak remaining signals | Low |
+
+“Ingredient data analyzed” means non-blank ingredients text/tags and/or additives tags were available for the additives component.
+
+### Nutrition information (not scored)
+
+Nutri-Score grade and nutriments (energy, sugars, salt, saturated fat, fiber, protein per 100 g) are **displayed on the nutrition screen only**. They **do not affect** the primary AisleSpy total, any component subscore, or confidence.
+
+There is **no** `nutriscore` scoring component in methodology 2.0.0. Numeric Nutri-Score fallback is removed.
 
 ---
 
@@ -185,9 +195,9 @@ Band × concern-count matrix. **Zero concerns must not imply flagged ingredients
 | Score range | 0 concerns | ≥ 1 concern |
 |-------------|------------|-------------|
 | ≥ 75 | “Looking good—nothing flagged in our pack.” | “Looking good—only minor flags below.” |
-| 50–74 | “Middling score—mostly nutrition and processing, not flagged ingredients.” | “Mixed bag—check the notes below.” |
-| 25–49 | “Low score—driven by nutrition or processing; see the breakdown.” | “Several concerns—read carefully.” |
-| ≤ 24 | “Very low score—nutrition and processing look rough.” | “Lots of flags—you may want to skip.” |
+| 50–74 | “Middling score—mostly processing signals, not flagged ingredients.” | “Mixed bag—check the notes below.” |
+| 25–49 | “Low score—driven by heavy processing; see the breakdown.” | “Several concerns—read carefully.” |
+| ≤ 24 | “Very low score—heavily processed formulation.” | “Lots of flags—you may want to skip.” |
 
 ### Summary sentences (beauty)
 
@@ -202,8 +212,10 @@ Same principle (0 matches → do not imply flags). Beauty tone retained:
 
 ### Score drivers and omitted components (explanation only)
 
-- **`driverSentence`:** optional one-liner of the largest weighted drags: for each component, loss = `(100 - subscore) * normalizedWeight`. List contributors with loss **> 5** points, highest first (e.g. “Main drags: nutrition (Nutri-Score D), ultra-processing (NOVA 4).”). Null when none exceed the threshold. Does not change the total.
+- **`driverSentence`:** optional one-liner of the largest weighted drags: for each component, loss = `(100 - subscore) * normalizedWeight`. List contributors with loss **> 5** points, highest first (e.g. “Main drags: ultra-processing (NOVA 4), flagged ingredients (2 flagged additives).”). Null when none exceed the threshold. Does not change the total.
 - **`omittedComponents`:** human labels of components dropped for missing data (e.g. “NOVA (no data)”). UI shows them as muted breakdown rows (“NOVA — no data (score reweighted)”). Weights of remaining components are already renormalized per missing-data reweight above.
+
+Food driver labels: `additives` → “flagged ingredients”; `nova` → “ultra-processing”.
 
 ---
 
@@ -224,6 +236,7 @@ See API_CONTRACTS for lookup. Scoring uses:
 - Dose / daily intake calculations
 - Brand reputation
 - Dietary flags (vegan / vegetarian / dairy-free) — shown as informational badges only; never factored into totals or components
+- **Nutrition (Nutri-Score grade, nutriments, fiber)** — display-only on the nutrition screen; never factored into the primary food score (ADR-018)
 
 ---
 
@@ -234,6 +247,7 @@ See API_CONTRACTS for lookup. Scoring uses:
 | 1.0.0 | 2026-07-16 | Initial methodology |
 | 1.0.1 | 2026-07-16 | Dietary flags shown, not scored — copy/version bump only, no formula change |
 | 1.0.2 | 2026-07-16 | Explanation copy only, no formula change (ADR-015: concern-aware summaries, driverSentence, omittedComponents) |
+| 2.0.0 | 2026-07-17 | Primary food score reinterpreted as ingredient quality only; Nutri-Score and fiber bonus removed from scoring, relocated to nutrition screen (owner decision, ADR-018) |
 
 Any weight or mapping change → bump semver (patch for copy, minor for weight tweaks, major for reinterpretation of scale).
 

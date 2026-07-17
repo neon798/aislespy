@@ -29,12 +29,10 @@ internal object ScoreExplanation {
     }
 
     fun foodDriverLabel(component: ScoreComponent): String = when (component.id) {
-        FoodScoreEngine.ID_NUTRISCORE ->
-            "nutrition (${component.detail ?: "Nutri-Score"})"
         FoodScoreEngine.ID_NOVA ->
             "ultra-processing (${component.detail ?: "NOVA"})"
         FoodScoreEngine.ID_ADDITIVES ->
-            "additives" + (component.detail?.let { " ($it)" } ?: "")
+            "flagged ingredients" + (component.detail?.let { " ($it)" } ?: "")
         FoodScoreEngine.ID_POSITIVES ->
             "positives" + (component.detail?.let { " ($it)" } ?: "")
         else -> component.label.lowercase()

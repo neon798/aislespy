@@ -17,7 +17,7 @@ import kotlin.math.abs
 
 /**
  * Golden tests for [FoodScoreEngine] per docs/VERIFICATION.md § Food scoring
- * and docs/SCORING.md v1.0.0.
+ * and docs/SCORING.md methodologyVersion 2.0.0 (ingredient quality only).
  *
  * Expected totals are hand-computed in comments; assert within ±1 of those values.
  */
@@ -26,51 +26,50 @@ class FoodScoreEngineTest {
     private val engine = FoodScoreEngine()
 
     // -------------------------------------------------------------------------
-    // (a) Nutri A + NOVA 1 + no matches → high score, Excellent, High confidence
+    // (a) Clean product: no matches, NOVA 1 → high / Excellent / High confidence
     // -------------------------------------------------------------------------
     //
-    // Components present: nutriscore, nova, additives (ingredientsText analyzed).
-    // Positives omitted (no labelsTags / nutriments).
-    // Base weights: 0.45 + 0.25 + 0.25 = 0.95
-    // Normalized: n=0.45/0.95≈0.473684, v=0.25/0.95≈0.263158, a=0.263158
-    // Subscores: Nutri A=95, NOVA1=100, additives (no flags)=100
-    // total = round(95*0.473684 + 100*0.263158 + 100*0.263158)
-    //       = round(45.0 + 26.3158 + 26.3158) = round(97.6316) = 98
+    // Components: additives (ingredientsText analyzed → 100), nova (1 → 100).
+    // Positives omitted (no labelsTags).
+    // Base weights: 0.65 + 0.30 = 0.95
+    // Norm: a=0.65/0.95≈0.684211, n=0.30/0.95≈0.315789
+    // total = round(100*0.684211 + 100*0.315789) = round(100) = 100
     @Test
-    fun highQuality_nutriA_nova1_noMatches_excellentHigh() {
+    fun cleanProduct_nova1_noMatches_excellentHigh() {
         val product = baseProduct(
-            nutriscoreGrade = 'a',
             novaGroup = 1,
             ingredientsText = "Water, apple juice",
         )
         val result = engine.score(product, matches = emptyList())
 
-        assertEquals(98, result.total)
+        assertEquals(100, result.total)
         assertEquals(ScoreBand.Excellent, result.band)
         assertEquals(Confidence.High, result.confidence)
         assertTrue(result.total >= 75)
         assertEquals("Looking good—nothing flagged in our pack.", result.summarySentence)
         assertNull(result.driverSentence)
         assertEquals(ScoringConfig.METHODOLOGY_VERSION, result.methodologyVersion)
+        assertEquals("2.0.0", result.methodologyVersion)
         assertTrue(result.concerns.isEmpty())
-        assertEquals(3, result.components.size)
+        assertEquals(2, result.components.size)
         assertWeightsSumToOne(result.components.map { it.weight })
         assertTrue(result.omittedComponents.any { it.startsWith("Positives") })
+        assertTrue(result.components.none { it.id == "nutriscore" })
     }
 
     // -------------------------------------------------------------------------
-    // (b) Nutri E + NOVA 4 + several severity 3–4 additives → low score, sorted
+    // (b) NOVA 4 + severity-4 additives → lower total, concerns sorted
     // -------------------------------------------------------------------------
     //
     // Matches: sev4 (−12), sev4 (−12), sev3 (−7) → additives sub = 100−31 = 69
-    // Weights same as (a): 0.45/0.95, 0.25/0.95, 0.25/0.95
-    // Subscores: Nutri E=20, NOVA4=20, additives=69
-    // total = round(20*0.473684 + 20*0.263158 + 69*0.263158)
-    //       = round(9.4737 + 5.2632 + 18.1579) = round(32.8947) = 33
+    // NOVA4 = 20
+    // Weights: a=0.65/0.95≈0.684211, n=0.30/0.95≈0.315789
+    // total = round(69*0.684211 + 20*0.315789)
+    //       = round(47.2105 + 6.3158) = round(53.5263) = 54
     @Test
-    fun lowQuality_nutriE_nova4_flaggedAdditives_sortedConcerns() {
+    fun nova4_severity4Additives_lowish_sortedConcerns() {
         val product = baseProduct(
-            nutriscoreGrade = 'e',
+            nutriscoreGrade = 'e', // must be ignored
             novaGroup = 4,
             ingredientsText = "Sugar, palm oil, E150d, E250, E621",
             additivesTags = listOf("en:e150d", "en:e250", "en:e621"),
@@ -82,23 +81,21 @@ class FoodScoreEngineTest {
         )
         val result = engine.score(product, matches)
 
-        assertEquals(33, result.total)
-        assertTrue(result.total <= 35)
-        assertEquals(ScoreBand.Poor, result.band)
+        assertEquals(54, result.total)
+        assertEquals(ScoreBand.Ok, result.band)
         assertEquals(Confidence.High, result.confidence)
-        assertEquals("Several concerns—read carefully.", result.summarySentence)
-        // Nutri E + NOVA 4 are both major weighted drags
+        assertEquals("Mixed bag—check the notes below.", result.summarySentence)
+
         val driver = requireNotNull(result.driverSentence)
         assertTrue(driver.startsWith("Main drags:"))
-        assertTrue(driver.contains("nutrition (Nutri-Score E)"))
         assertTrue(driver.contains("ultra-processing (NOVA 4)"))
+        assertTrue(driver.contains("flagged ingredients"))
 
         // Severity desc, then name asc
         assertEquals(3, result.concerns.size)
         assertEquals(4, result.concerns[0].severity)
         assertEquals(4, result.concerns[1].severity)
         assertEquals(3, result.concerns[2].severity)
-        // Two severity-4: Caramel colour before Sodium nitrite alphabetically
         assertEquals("Caramel colour", result.concerns[0].displayName)
         assertEquals("Sodium nitrite", result.concerns[1].displayName)
         assertEquals("Monosodium glutamate", result.concerns[2].displayName)
@@ -108,77 +105,153 @@ class FoodScoreEngineTest {
     }
 
     // -------------------------------------------------------------------------
-    // (c) Missing Nutri-Score → reweight; hand-computed total within ±1
+    // (c) Missing NOVA → additives + positives reweight (hand-computed)
     // -------------------------------------------------------------------------
     //
-    // Present: nova (3→50), additives (no matches→100), positives (organic→70)
-    // Base: 0.25 + 0.25 + 0.05 = 0.55
-    // Norm: n=0.25/0.55≈0.454545, a=0.454545, p=0.05/0.55≈0.090909
-    // total = round(50*0.454545 + 100*0.454545 + 70*0.090909)
-    //       = round(22.727 + 45.455 + 6.364) = round(74.545) = 75
+    // Present: additives (no matches → 100), positives (organic → 70)
+    // Base: 0.65 + 0.05 = 0.70
+    // Norm: a=0.65/0.70≈0.928571, p=0.05/0.70≈0.071429
+    // total = round(100*0.928571 + 70*0.071429)
+    //       = round(92.8571 + 5.0) = round(97.8571) = 98
     @Test
-    fun missingNutriScore_reweightsRemainingComponents() {
+    fun missingNova_reweightsAdditivesAndPositives() {
         val product = baseProduct(
-            nutriscoreGrade = null,
-            nutriscoreScore = null,
-            novaGroup = 3,
+            novaGroup = null,
             ingredientsText = "Oats, water",
             labelsTags = listOf("en:organic"),
         )
         val result = engine.score(product, matches = emptyList())
 
-        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_NUTRISCORE })
+        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_NOVA })
         assertWeightsSumToOne(result.components.map { it.weight })
 
-        val expected = 75
+        val expected = 98
         assertTrue(
             "total=${result.total} expected ~$expected ±1",
             abs(result.total - expected) <= 1,
         )
-        assertEquals(Confidence.Medium, result.confidence) // only NOVA of the core pair
+        assertEquals(98, result.total)
+        assertEquals(Confidence.Medium, result.confidence) // ingredient data only
 
         val weights = result.components.associate { it.id to it.weight }
-        assertNear(0.25f / 0.55f, weights.getValue(FoodScoreEngine.ID_NOVA))
-        assertNear(0.25f / 0.55f, weights.getValue(FoodScoreEngine.ID_ADDITIVES))
-        assertNear(0.05f / 0.55f, weights.getValue(FoodScoreEngine.ID_POSITIVES))
+        assertNear(0.65f / 0.70f, weights.getValue(FoodScoreEngine.ID_ADDITIVES))
+        assertNear(0.05f / 0.70f, weights.getValue(FoodScoreEngine.ID_POSITIVES))
+        assertTrue(result.omittedComponents.contains("NOVA (no data)"))
     }
 
     // -------------------------------------------------------------------------
-    // (d) No data at all → Low confidence, total clamped ≥ 1
+    // (d) No ingredient-quality data at all → hasIngredientQualityData false
+    //     (ViewModel uses partial path; engine companion gates scoring)
     // -------------------------------------------------------------------------
     @Test
-    fun noData_lowConfidence_clampedAtLeastOne() {
-        val product = baseProduct()
-        val result = engine.score(product, matches = emptyList())
+    fun noIngredientQualityData_companionReturnsFalse() {
+        val product = baseProduct(
+            nutriscoreGrade = 'a',
+            nutriments = Nutriments(energyKcal100g = 100.0),
+            labelsTags = listOf("en:organic"),
+        )
+        assertFalse(FoodScoreEngine.hasIngredientQualityData(product))
+    }
 
+    @Test
+    fun noIngredientQualityData_engineWouldBeEmptyComponentsIfCalled() {
+        // Engine should not invent a useful score from labels/nutri alone.
+        val product = baseProduct(
+            nutriscoreGrade = 'a',
+            labelsTags = listOf("en:organic"),
+        )
+        // Only positives present → still a number if score() is called, but
+        // callers must gate via hasIngredientQualityData (partial path).
+        // Companion is the contract; assert gate and that NOVA/additives absent.
+        assertFalse(FoodScoreEngine.hasIngredientQualityData(product))
+        val result = engine.score(product, emptyList())
+        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_NOVA })
+        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_ADDITIVES })
+        // Positives alone is not enough ingredient-quality input for the gate.
+        assertTrue(result.components.any { it.id == FoodScoreEngine.ID_POSITIVES })
         assertEquals(Confidence.Low, result.confidence)
-        assertTrue(result.total >= 1)
-        assertEquals(ScoringConfig.SCORE_MIN, result.total)
-        assertTrue(result.components.isEmpty())
-        assertEquals(ScoreBand.Bad, result.band)
-        // 0 concerns → do not imply flags exist
-        assertEquals("Very low score—nutrition and processing look rough.", result.summarySentence)
-        assertTrue(result.omittedComponents.contains("Nutri-Score (no data)"))
-        assertTrue(result.omittedComponents.contains("NOVA (no data)"))
-        assertTrue(result.omittedComponents.contains("Additives (no data)"))
-        assertTrue(result.omittedComponents.contains("Positives (no data)"))
     }
 
     // -------------------------------------------------------------------------
-    // (e) Additives soft floor: many mild flags cannot push subscore below 5
+    // (e) Fiber ≥ 6 no longer changes positives (nutrition-only)
     // -------------------------------------------------------------------------
     //
-    // 50 × severity 1 → raw deduction 50*2 = 100 → would be 0, soft floor → 5
-    // Nutri C=60, NOVA 2=80, additives=5
-    // Weights 0.95; total = round(60*0.473684 + 80*0.263158 + 5*0.263158)
-    //                     = round(28.421 + 21.053 + 1.316) = round(50.789) = 51
+    // Organic only → 50+20 = 70. High fiber must not add +10.
+    // Full weights with NOVA1 + clean additives:
+    // total = round(100*0.65 + 100*0.30 + 70*0.05) = round(65+30+3.5) = 99
+    @Test
+    fun fiberBonus_noLongerChangesPositives() {
+        val withFiber = baseProduct(
+            novaGroup = 1,
+            ingredientsText = "Oats, bran",
+            labelsTags = listOf("en:organic"),
+            nutriments = Nutriments(fiber100g = 8.0),
+        )
+        val withoutFiber = withFiber.copy(nutriments = null)
+        val a = engine.score(withFiber, emptyList())
+        val b = engine.score(withoutFiber, emptyList())
+
+        val positivesA = a.components.first { it.id == FoodScoreEngine.ID_POSITIVES }
+        val positivesB = b.components.first { it.id == FoodScoreEngine.ID_POSITIVES }
+        assertEquals(70, positivesA.score) // 50 + 20 organic only
+        assertEquals(70, positivesB.score)
+        assertEquals(a.total, b.total)
+        assertEquals(99, a.total)
+        assertFalse(positivesA.detail!!.contains("fiber", ignoreCase = true))
+    }
+
+    @Test
+    fun fiberAlone_doesNotCreatePositivesComponent() {
+        // No labels — only fiber nutriment: positives omitted (labels required).
+        val product = baseProduct(
+            novaGroup = 1,
+            ingredientsText = "Bran",
+            nutriments = Nutriments(fiber100g = 10.0),
+        )
+        val result = engine.score(product, emptyList())
+        assertTrue(result.components.none { it.id == FoodScoreEngine.ID_POSITIVES })
+        assertEquals(100, result.total)
+    }
+
+    // -------------------------------------------------------------------------
+    // (f) Nutri-Score fields present but IGNORED
+    // -------------------------------------------------------------------------
+    @Test
+    fun nutriscoreFields_ignored_identicalWithOrWithoutGrade() {
+        val with = baseProduct(
+            nutriscoreGrade = 'e',
+            nutriscoreScore = 26,
+            novaGroup = 2,
+            ingredientsText = "Water, sugar",
+        )
+        val without = with.copy(nutriscoreGrade = null, nutriscoreScore = null)
+        val a = engine.score(with, emptyList())
+        val b = engine.score(without, emptyList())
+
+        assertEquals(a.total, b.total)
+        assertEquals(a.band, b.band)
+        assertEquals(a.confidence, b.confidence)
+        assertEquals(a.summarySentence, b.summarySentence)
+        assertEquals(a.driverSentence, b.driverSentence)
+        assertEquals(a.components, b.components)
+        assertTrue(a.components.none { it.id == "nutriscore" })
+        // NOVA2=80, additives=100; weights 0.65+0.30=0.95
+        // total = round(100*0.684211 + 80*0.315789) = round(68.421 + 25.263) = 94
+        assertEquals(94, a.total)
+    }
+
+    // -------------------------------------------------------------------------
+    // Soft floor still applies
+    // -------------------------------------------------------------------------
+    //
+    // 50 × severity 1 → soft floor 5; NOVA2=80
+    // total = round(5*0.684211 + 80*0.315789) = round(3.421 + 25.263) = 29
     @Test
     fun additivesSoftFloor_manyMildFlagsStayAtFive() {
         val mild = (1..50).map { i ->
             match("mild-$i", "Mild flag $i", severity = 1)
         }
         val product = baseProduct(
-            nutriscoreGrade = 'c',
             novaGroup = 2,
             ingredientsText = "Many additives",
             additivesTags = mild.map { "en:${it.entryId}" },
@@ -188,53 +261,40 @@ class FoodScoreEngineTest {
         val additives = result.components.first { it.id == FoodScoreEngine.ID_ADDITIVES }
         assertEquals(ScoringConfig.ADDITIVES_SOFT_FLOOR, additives.score)
         assertEquals(50, result.concerns.size)
-        assertEquals(51, result.total)
+        assertEquals(29, result.total)
     }
 
     // -------------------------------------------------------------------------
-    // (f) Positives capped: junk + organic cannot reach Excellent
+    // Positives capped: NOVA4 junk + organic cannot reach Excellent
     // -------------------------------------------------------------------------
     //
-    // Nutri E=20, NOVA4=20, additives clean=100, organic positives=70
-    // Full weights: 0.45+0.25+0.25+0.05 = 1.0
-    // total = round(20*0.45 + 20*0.25 + 100*0.25 + 70*0.05)
-    //       = round(9 + 5 + 25 + 3.5) = round(42.5) = 43
+    // additives clean=100, NOVA4=20, organic positives=70
+    // total = round(100*0.65 + 20*0.30 + 70*0.05) = round(65+6+3.5) = 75
+    // Borderline Excellent — organic alone cannot push pure junk much higher.
+    // With a mild flag (sev1 −2): additives=98
+    // total = round(98*0.65 + 20*0.30 + 70*0.05) = round(63.7+6+3.5) = 73 → Ok
     @Test
-    fun positivesCapped_junkWithOrganic_notExcellent() {
+    fun positivesCapped_junkWithOrganic_limitedInfluence() {
         val product = baseProduct(
-            nutriscoreGrade = 'e',
             novaGroup = 4,
             ingredientsText = "Sugar, palm oil",
             labelsTags = listOf("en:organic"),
         )
         val result = engine.score(product, matches = emptyList())
 
-        assertEquals(43, result.total)
-        assertTrue(result.total < 75)
-        assertTrue(result.band != ScoreBand.Excellent)
-        assertEquals(ScoreBand.Poor, result.band)
-
+        assertEquals(75, result.total)
         val positives = result.components.first { it.id == FoodScoreEngine.ID_POSITIVES }
         assertEquals(70, positives.score) // 50 + 20 organic
-    }
+        assertTrue(positives.detail!!.contains("Organic +20"))
 
-    // -------------------------------------------------------------------------
-    // Extra: numeric Nutri-Score fallback + position hints
-    // -------------------------------------------------------------------------
-
-    @Test
-    fun nutriscoreNumericFallback_whenGradeMissing() {
-        // score=0 → clamp(100 - (0+15)*3, 1, 100) = 100-45 = 55
-        val product = baseProduct(
-            nutriscoreGrade = null,
-            nutriscoreScore = 0,
-            novaGroup = 1,
-            ingredientsText = "Water",
+        // One mild flag keeps organic junk out of pure Excellent narrative:
+        val flagged = engine.score(
+            product,
+            listOf(match("e322", "Lecithins", severity = 1)),
         )
-        val result = engine.score(product, emptyList())
-        val nutri = result.components.first { it.id == FoodScoreEngine.ID_NUTRISCORE }
-        assertEquals(55, nutri.score)
-        assertTrue(nutri.detail!!.contains("numeric"))
+        assertEquals(73, flagged.total)
+        assertTrue(flagged.total < 75)
+        assertEquals(ScoreBand.Ok, flagged.band)
     }
 
     @Test
@@ -256,9 +316,7 @@ class FoodScoreEngineTest {
 
     @Test
     fun concernsIncludePositionHintFromListIndex() {
-        // 3 ingredients → thirds of size 1; index 0 = top
         val product = baseProduct(
-            nutriscoreGrade = 'c',
             novaGroup = 3,
             ingredientsText = "Sugar, Salt, Water",
         )
@@ -270,14 +328,12 @@ class FoodScoreEngineTest {
     }
 
     // -------------------------------------------------------------------------
-    // Dietary flags must never change ScoreResult (ADR-014 / methodology 1.0.1)
+    // Dietary flags must never change ScoreResult (ADR-014)
     // -------------------------------------------------------------------------
 
     @Test
     fun analysisTags_doNotChangeScoreResult() {
-        // Only ingredientsAnalysisTags differ — dietary flags must not affect scoring.
         val without = baseProduct(
-            nutriscoreGrade = 'e',
             novaGroup = 4,
             ingredientsText = "Sugar, palm oil, milk",
             additivesTags = listOf("en:e322"),
@@ -303,13 +359,13 @@ class FoodScoreEngineTest {
     }
 
     // -------------------------------------------------------------------------
-    // ADR-015 — summary sentence matrix (all 8 band × concern cells)
+    // Summary sentence matrix (band × concern cells) — 2.0.0 copy
     // -------------------------------------------------------------------------
 
     @Test
     fun summaryMatrix_excellent_zeroConcerns() {
         val result = engine.score(
-            baseProduct(nutriscoreGrade = 'a', novaGroup = 1, ingredientsText = "Water"),
+            baseProduct(novaGroup = 1, ingredientsText = "Water"),
             emptyList(),
         )
         assertTrue(result.total >= 75)
@@ -319,10 +375,10 @@ class FoodScoreEngineTest {
 
     @Test
     fun summaryMatrix_excellent_withConcerns() {
-        // Mild flag keeps total ≥ 75; copy acknowledges minor flags.
+        // Mild flag on clean base still ≥ 75.
+        // additives=98, NOVA1=100 → round(98*0.684211 + 100*0.315789) = round(67.053+31.579)=99
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'a',
                 novaGroup = 1,
                 ingredientsText = "Water, E322",
                 additivesTags = listOf("en:e322"),
@@ -336,25 +392,30 @@ class FoodScoreEngineTest {
 
     @Test
     fun summaryMatrix_ok_zeroConcerns() {
-        // Nutri C + NOVA 3 + clean additives ≈ 68
+        // NOVA4 clean = round(100*0.684211 + 20*0.315789) = round(68.421+6.316)=75 → Excellent
+        // Use NOVA4 + one sev3 (−7): additives=93
+        // total = round(93*0.684211 + 20*0.315789) = round(63.632+6.316)=70 Ok
+        // But that has a concern. For zero concerns mid band, use only-NOVA2 path?
+        // Only NOVA3 (no ingredient data): weight 1.0 → 50 Ok, 0 concerns.
+        // Wait: only NOVA means hasIngredientQualityData true via nova.
         val result = engine.score(
-            baseProduct(nutriscoreGrade = 'c', novaGroup = 3, ingredientsText = "Oats, water"),
+            baseProduct(novaGroup = 3),
             emptyList(),
         )
         assertTrue(result.total in 50..74)
         assertTrue(result.concerns.isEmpty())
         assertEquals(
-            "Middling score—mostly nutrition and processing, not flagged ingredients.",
+            "Middling score—mostly processing signals, not flagged ingredients.",
             result.summarySentence,
         )
     }
 
     @Test
     fun summaryMatrix_ok_withConcerns() {
+        // NOVA4 + sev3: 93/20 → 70
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'c',
-                novaGroup = 3,
+                novaGroup = 4,
                 ingredientsText = "Oats, E621",
                 additivesTags = listOf("en:e621"),
             ),
@@ -367,33 +428,52 @@ class FoodScoreEngineTest {
 
     @Test
     fun summaryMatrix_poor_zeroConcerns() {
-        // Nutri E + NOVA 4 + clean additives ≈ 41
+        // Only NOVA4, no ingredients → subscore 20, Bad band actually.
+        // For Poor (25–49) zero concerns: only NOVA is either 20/50/80/100.
+        // NOVA alone can't hit 25–49. Use NOVA4 + clean additives without flags:
+        // Wait that's 75. Need partial flags without concerns? Impossible (flags=concerns).
+        //
+        // Use soft-floor path without counting as "with concerns" — no, those have concerns.
+        // Zero concerns + Poor: only possible if somehow components give 25–49 without matches.
+        // NOVA3 alone = 50 (Ok). NOVA4 alone = 20 (Bad).
+        // There's no pure-processing mid-Poor without flags under 2.0.0 weights when
+        // additives are clean (100). When additives omitted and NOVA only:
+        // only 20, 50, 80, 100.
+        //
+        // Practical approach for 25–49 zero concerns: not reachable with current components
+        // unless we force-test the sentence helper via a product that scores that band.
+        // NOVA4 + positives organic only (no additives component):
+        // base 0.30+0.05=0.35; total = round(20*0.30/0.35 + 70*0.05/0.35)
+        // = round(17.143 + 10.0) = 27 Poor, 0 concerns.
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'e',
                 novaGroup = 4,
-                ingredientsText = "Sugar, palm oil",
+                labelsTags = listOf("en:organic"),
             ),
             emptyList(),
         )
         assertTrue(result.total in 25..49)
         assertTrue(result.concerns.isEmpty())
         assertEquals(
-            "Low score—driven by nutrition or processing; see the breakdown.",
+            "Low score—driven by heavy processing; see the breakdown.",
             result.summarySentence,
         )
     }
 
     @Test
     fun summaryMatrix_poor_withConcerns() {
+        // NOVA4 + 4×sev4: additives=52
+        // total = round(52*0.684211 + 20*0.315789) = round(35.579+6.316)=42
+        val matches = (1..4).map { i ->
+            match("sev4-$i", "Additive $i", severity = 4)
+        }
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'e',
                 novaGroup = 4,
-                ingredientsText = "Sugar, E250",
-                additivesTags = listOf("en:e250"),
+                ingredientsText = "Many additives",
+                additivesTags = matches.map { "en:${it.entryId}" },
             ),
-            listOf(match("e250", "Sodium nitrite", severity = 4)),
+            matches,
         )
         assertTrue(result.total in 25..49)
         assertTrue(result.concerns.isNotEmpty())
@@ -402,14 +482,14 @@ class FoodScoreEngineTest {
 
     @Test
     fun summaryMatrix_bad_zeroConcerns() {
-        // Nutri E + NOVA 4 only (no additive input) → reweight ≈ 20
+        // Only NOVA4 (no ingredient/additive data) → 20
         val result = engine.score(
-            baseProduct(nutriscoreGrade = 'e', novaGroup = 4),
+            baseProduct(novaGroup = 4),
             emptyList(),
         )
         assertTrue(result.total <= 24)
         assertTrue(result.concerns.isEmpty())
-        assertEquals("Very low score—nutrition and processing look rough.", result.summarySentence)
+        assertEquals("Very low score—heavily processed formulation.", result.summarySentence)
     }
 
     @Test
@@ -417,9 +497,9 @@ class FoodScoreEngineTest {
         val matches = (1..5).map { i ->
             match("sev5-$i", "Bad additive $i", severity = 5)
         }
+        // soft floor 5 + NOVA4 20 → round(5*0.684211 + 20*0.315789) = round(3.421+6.316)=10
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'e',
                 novaGroup = 4,
                 ingredientsText = "Many bad additives",
                 additivesTags = matches.map { "en:${it.entryId}" },
@@ -432,32 +512,28 @@ class FoodScoreEngineTest {
     }
 
     // -------------------------------------------------------------------------
-    // ADR-015 — driverSentence + omittedComponents
+    // driverSentence + omittedComponents
     // -------------------------------------------------------------------------
 
     @Test
-    fun driverSentence_nutriE_nova4_namesBoth() {
+    fun driverSentence_nova4_namesUltraProcessing() {
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'e',
                 novaGroup = 4,
                 ingredientsText = "Sugar",
             ),
             emptyList(),
         )
         val driver = requireNotNull(result.driverSentence)
-        assertTrue(driver.contains("nutrition (Nutri-Score E)"))
         assertTrue(driver.contains("ultra-processing (NOVA 4)"))
-        // Nutrition loss is larger than NOVA at base weights → nutrition first
-        assertTrue(
-            driver.indexOf("nutrition") < driver.indexOf("ultra-processing"),
-        )
+        assertFalse(driver.contains("nutrition"))
+        assertFalse(driver.contains("Nutri-Score"))
     }
 
     @Test
     fun driverSentence_highScorer_isNull() {
         val result = engine.score(
-            baseProduct(nutriscoreGrade = 'a', novaGroup = 1, ingredientsText = "Water"),
+            baseProduct(novaGroup = 1, ingredientsText = "Water"),
             emptyList(),
         )
         assertNull(result.driverSentence)
@@ -467,7 +543,6 @@ class FoodScoreEngineTest {
     fun omittedComponents_missingNova_listsIt() {
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'a',
                 novaGroup = null,
                 ingredientsText = "Water",
             ),
@@ -482,7 +557,6 @@ class FoodScoreEngineTest {
     fun positivesDetail_organicAppendsBonusExplicitly() {
         val result = engine.score(
             baseProduct(
-                nutriscoreGrade = 'c',
                 novaGroup = 2,
                 ingredientsText = "Oats",
                 labelsTags = listOf("en:organic"),
@@ -492,6 +566,28 @@ class FoodScoreEngineTest {
         val positives = result.components.first { it.id == FoodScoreEngine.ID_POSITIVES }
         assertEquals(70, positives.score)
         assertTrue(positives.detail!!.contains("Organic +20"))
+    }
+
+    @Test
+    fun hasIngredientQualityData_trueWhenNovaOrIngredients() {
+        assertTrue(
+            FoodScoreEngine.hasIngredientQualityData(
+                baseProduct(novaGroup = 2),
+            ),
+        )
+        assertTrue(
+            FoodScoreEngine.hasIngredientQualityData(
+                baseProduct(ingredientsText = "Water"),
+            ),
+        )
+        assertTrue(
+            FoodScoreEngine.hasIngredientQualityData(
+                baseProduct(additivesTags = listOf("en:e322")),
+            ),
+        )
+        assertFalse(
+            FoodScoreEngine.hasIngredientQualityData(baseProduct()),
+        )
     }
 
     // --- fixtures ---

@@ -60,6 +60,7 @@ scan                          (start destination)
 │     └── result/{barcode}?source=auto
 ├── result/{barcode}?source=auto|food|beauty
 │     ├── ingredient_detail/{concernId}
+│     ├── nutrition/{barcode}          // food: Nutri-Score + nutriments (not scored)
 │     └── category_chooser/{barcode}   // when both DBs hit
 ├── history
 │     └── result/{barcode}?source=auto
@@ -78,6 +79,7 @@ scan                          (start destination)
 | `result` | `result/{barcode}?source={source}` | barcode: String; source: auto\|food\|beauty |
 | `category_chooser` | `choose/{barcode}` | barcode |
 | `ingredient_detail` | `ingredient/{concernId}` | concernId |
+| `nutrition` | `nutrition/{barcode}` | barcode — Nutri-Score + nutriments (informational only; not scored) |
 | `history` | `history` | — |
 | `settings` | `settings` | — |
 | `methodology` | `settings/methodology` | — |

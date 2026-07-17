@@ -35,7 +35,9 @@ import kotlinx.coroutines.withContext
 /**
  * Loads product data, runs knowledge matcher + score engine by category, maps to UI state.
  *
- * Food → [foodKnowledgePack] + [FoodScoreEngine].
+ * Food → [foodKnowledgePack] + [FoodScoreEngine]; products with no ingredient-quality data
+ * take the Partial path (score hidden, message shown). Nutri-Score is display-only via
+ * [nutritionStore] (ADR-018).
  * Beauty → [beautyKnowledgePack] + [BeautyScoreEngine]; products with no ingredient data
  * take the Partial path (score hidden, message shown).
  *
@@ -49,8 +51,8 @@ import kotlinx.coroutines.withContext
  * After a [ResultUiState.Success] emission that includes a **numeric** score, upserts a
  * [HistoryEntry] via [historyWriter] on [ioDispatcher] (fire-and-forget).
  *
- * **MVP policy:** partial results (beauty without ingredients → `score == null`) are
- * **not** history-worthy. Only Success states with a non-null [ScoreUi] are recorded.
+ * **MVP policy:** partial results (`score == null`) are **not** history-worthy.
+ * Only Success states with a non-null [ScoreUi] are recorded.
  * Do not invent score 0 for partials.
  */
 class ResultViewModel(
@@ -62,6 +64,7 @@ class ResultViewModel(
     private val foodScoreEngine: ScoreEngine = FoodScoreEngine(),
     private val beautyScoreEngine: ScoreEngine = BeautyScoreEngine(),
     private val concernStore: ConcernDetailStore = ConcernDetailStore(),
+    private val nutritionStore: NutritionStore = NutritionStore(),
     private val choicePairStore: ChoicePairStore = ChoicePairStore(),
     private val historyWriter: HistoryWriter? = null,
     private val clock: () -> Long = { System.currentTimeMillis() },
@@ -85,8 +88,12 @@ class ResultViewModel(
     /** Resolve ingredient detail from the last scored product (for nav tests / screen). */
     fun concernDetail(concernId: String): IngredientDetailUi? = concernStore.get(concernId)
 
+    /** Resolve nutrition display data for the current product (tests / screen). */
+    fun nutritionFor(barcode: String): NutritionUi? = nutritionStore.get(barcode)
+
     private fun load() {
         concernStore.publishEmpty()
+        nutritionStore.publishEmpty()
         _uiState.value = ResultUiState.Loading(barcode)
         viewModelScope.launch {
             // Explicit source + pair still in memory → score without network.
@@ -168,6 +175,13 @@ class ResultViewModel(
         )
         val ingredients = ingredientsText?.takeIf { it.isNotBlank() }
 
+        // Publish nutrition for food products even on partial score paths (display-only).
+        if (category == ProductCategory.Food) {
+            nutritionStore.publish(this)
+        } else {
+            nutritionStore.publishEmpty()
+        }
+
         if (category == ProductCategory.Beauty && !BeautyScoreEngine.hasIngredientData(this)) {
             concernStore.publishEmpty()
             return ResultUiState.Success(
@@ -181,6 +195,23 @@ class ResultViewModel(
                 ingredientsText = ingredients,
                 beautyScoringPending = false,
                 partialMessage = PARTIAL_NO_INGREDIENTS,
+            )
+        }
+
+        // Food with no ingredient-quality inputs → partial (no invented score). ADR-018.
+        if (category == ProductCategory.Food && !FoodScoreEngine.hasIngredientQualityData(this)) {
+            concernStore.publishEmpty()
+            return ResultUiState.Success(
+                product = header,
+                score = null,
+                breakdown = emptyList(),
+                omittedComponents = emptyList(),
+                concerns = emptyList(),
+                badges = buildBadges(this),
+                disclaimerVisible = true,
+                ingredientsText = ingredients,
+                beautyScoringPending = false,
+                partialMessage = PARTIAL_NO_INGREDIENT_DATA,
             )
         }
 
@@ -251,13 +282,7 @@ class ResultViewModel(
 
     private fun buildBadges(product: Product): List<BadgeUi> {
         val badges = mutableListOf<BadgeUi>()
-        product.nutriscoreGrade?.lowercaseChar()?.takeIf { it in 'a'..'e' }?.let { g ->
-            badges += BadgeUi(
-                id = "nutriscore",
-                label = "Nutri-Score ${g.uppercaseChar()}",
-                style = "nutriscore",
-            )
-        }
+        // Nutri-Score removed from primary badges row (ADR-018) — lives on nutrition screen.
         product.novaGroup?.takeIf { it in 1..4 }?.let { n ->
             badges += BadgeUi(
                 id = "nova",
@@ -266,7 +291,6 @@ class ResultViewModel(
             )
         }
         // Values badges (food + beauty): certification labels only — never scored (ADR-017).
-        // Replaces the plain T-330 "Organic" chip with values-style "Certified organic".
         for (vb in ValuesBadgesResolver.from(product)) {
             badges += BadgeUi(
                 id = vb.id,
@@ -340,6 +364,7 @@ class ResultViewModel(
                 foodScoreEngine = container.foodScoreEngine,
                 beautyScoreEngine = container.beautyScoreEngine,
                 concernStore = container.concernDetailStore,
+                nutritionStore = container.nutritionStore,
                 choicePairStore = container.choicePairStore,
                 historyWriter = HistoryWriter { entry ->
                     container.historyRepository.upsert(entry)
@@ -354,9 +379,13 @@ class ResultViewModel(
         const val SOURCE_FOOD = "food"
         const val SOURCE_BEAUTY = "beauty"
 
-        /** Partial path copy per docs/SCORING.md preferred MVP behaviour. */
+        /** Partial path copy for beauty without ingredients (docs/SCORING.md). */
         const val PARTIAL_NO_INGREDIENTS =
             "Found product, but no ingredients to score"
+
+        /** Partial path for food without ingredient-quality data (ADR-018). */
+        const val PARTIAL_NO_INGREDIENT_DATA =
+            "Found product, but not enough ingredient data to score"
 
         /** Mandatory disclaimer from docs/SCORING.md (also shown in UI footer). */
         const val DISCLAIMER_TEXT =

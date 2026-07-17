@@ -81,12 +81,14 @@ class ResultViewModelTest {
             ),
         )
         val store = ConcernDetailStore()
+        val nutritionStore = NutritionStore()
         val vm = ResultViewModel(
             repository = FakeProductLookup(LookupOutcome.Found(food)),
             barcode = barcode,
             foodKnowledgePack = pack,
             foodScoreEngine = FoodScoreEngine(),
             concernStore = store,
+            nutritionStore = nutritionStore,
             defaultDispatcher = testDispatcher,
         )
         advanceUntilIdle()
@@ -114,9 +116,16 @@ class ResultViewModelTest {
         val concern = success.concerns.first { it.id == "e322" }
         assertEquals(2, concern.severity)
 
-        // Badges for Nutri-Score + NOVA
-        assertTrue(success.badges.any { it.label.contains("Nutri-Score") })
+        // NOVA chip stays; Nutri-Score chip removed from badges (ADR-018)
+        assertFalse(success.badges.any { it.label.contains("Nutri-Score") })
+        assertFalse(success.badges.any { it.id == "nutriscore" })
         assertTrue(success.badges.any { it.label.contains("NOVA") })
+
+        // Nutrition store populated on food success
+        val nutrition = vm.nutritionFor(barcode)
+        assertNotNull(nutrition)
+        assertEquals('e', nutrition!!.nutriScoreGrade)
+        assertTrue(nutrition.hasData)
 
         // Ingredient detail store receives the concern
         val detail = vm.concernDetail("e322")
@@ -124,6 +133,81 @@ class ResultViewModelTest {
         assertEquals("e322", detail!!.id)
         assertTrue(detail.fullWhy.isNotBlank())
         assertEquals(listOf("https://example.com/e322"), detail.sources)
+    }
+
+    @Test
+    fun foodSuccess_nutritionStorePopulated_nutriScoreNotInBadges() = runTest {
+        val food = sampleProduct(
+            name = "Yogurt",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = "Milk, cultures",
+            nutriscoreGrade = 'b',
+            novaGroup = 1,
+            nutriments = Nutriments(
+                energyKcal100g = 60.0,
+                sugars100g = 4.0,
+                fiber100g = 0.0,
+                proteins100g = 3.5,
+            ),
+        )
+        val nutritionStore = NutritionStore()
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            nutritionStore = nutritionStore,
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val success = vm.uiState.value as ResultUiState.Success
+        assertNotNull(success.score)
+        assertFalse(success.badges.any { it.id == "nutriscore" || it.label.contains("Nutri-Score") })
+        assertTrue(success.badges.any { it.id == "nova" })
+
+        val n = nutritionStore.get(barcode)
+        assertNotNull(n)
+        assertEquals('b', n!!.nutriScoreGrade)
+        assertEquals(60.0, n.energyKcal100g)
+        assertEquals(4.0, n.sugars100g)
+        assertEquals(3.5, n.proteins100g)
+        assertTrue(n.hasData)
+    }
+
+    @Test
+    fun foodNoIngredientData_producesPartialState() = runTest {
+        val food = sampleProduct(
+            name = "Sparse record",
+            category = ProductCategory.Food,
+            sourceDb = SourceDb.OpenFoodFacts,
+            ingredientsText = null,
+            nutriscoreGrade = 'a',
+            novaGroup = null,
+            nutriments = Nutriments(energyKcal100g = 200.0),
+        )
+        val nutritionStore = NutritionStore()
+        val vm = ResultViewModel(
+            repository = FakeProductLookup(LookupOutcome.Found(food)),
+            barcode = barcode,
+            foodScoreEngine = FoodScoreEngine(),
+            concernStore = ConcernDetailStore(),
+            nutritionStore = nutritionStore,
+            defaultDispatcher = testDispatcher,
+        )
+        advanceUntilIdle()
+
+        val state = vm.uiState.value as ResultUiState.Success
+        assertNull(state.score)
+        assertEquals(ResultViewModel.PARTIAL_NO_INGREDIENT_DATA, state.partialMessage)
+        assertTrue(state.concerns.isEmpty())
+        assertTrue(state.breakdown.isEmpty())
+        // Nutrition still available for the sub-screen
+        val n = nutritionStore.get(barcode)
+        assertNotNull(n)
+        assertEquals('a', n!!.nutriScoreGrade)
+        assertTrue(n.hasData)
     }
 
     @Test
@@ -371,8 +455,8 @@ class ResultViewModelTest {
                 band = ScoreBand.Excellent,
                 confidence = Confidence.High,
                 components = listOf(
-                    ScoreComponent("nutriscore", "Nutri-Score", 95, 0.5f, "Nutri-Score A"),
-                    ScoreComponent("nova", "NOVA", 100, 0.5f, "NOVA 1"),
+                    ScoreComponent("additives", "Additives", 100, 0.68f, "No flagged additives"),
+                    ScoreComponent("nova", "NOVA", 100, 0.32f, "NOVA 1"),
                 ),
                 concerns = listOf(
                     app.aislespy.domain.model.Concern(
@@ -385,9 +469,9 @@ class ResultViewModelTest {
                         matchedOn = "name:palm oil",
                     ),
                 ),
-                methodologyVersion = "1.0.2",
+                methodologyVersion = "2.0.0",
                 summarySentence = "Looking good—only minor flags below.",
-                driverSentence = "Main drags: nutrition (Nutri-Score A).",
+                driverSentence = null,
                 omittedComponents = listOf("Positives (no data)"),
             )
         }
@@ -398,6 +482,7 @@ class ResultViewModelTest {
             foodKnowledgePack = null,
             foodScoreEngine = fakeEngine,
             concernStore = store,
+            nutritionStore = NutritionStore(),
             defaultDispatcher = testDispatcher,
         )
         advanceUntilIdle()
@@ -406,7 +491,7 @@ class ResultViewModelTest {
         assertEquals(90, success.score!!.value)
         assertEquals(ScoreBand.Excellent, success.score!!.band)
         assertEquals("Looking good—only minor flags below.", success.score!!.summarySentence)
-        assertEquals("Main drags: nutrition (Nutri-Score A).", success.score!!.driverSentence)
+        assertNull(success.score!!.driverSentence)
         assertEquals(listOf("Positives (no data)"), success.omittedComponents)
         assertEquals("High confidence", success.score!!.confidenceLabel)
         assertEquals(1, success.concerns.size)
@@ -704,6 +789,7 @@ class ResultViewModelTest {
         allergensTags: List<String> = emptyList(),
         labelsTags: List<String> = emptyList(),
         ingredientsAnalysisTags: List<String> = emptyList(),
+        nutriments: Nutriments? = null,
     ): Product = Product(
         barcode = code,
         name = name,
@@ -721,6 +807,7 @@ class ResultViewModelTest {
         nutriscoreGrade = nutriscoreGrade,
         nutriscoreScore = null,
         novaGroup = novaGroup,
-        nutriments = null as Nutriments?,
+        nutriments = nutriments,
     )
 }
+

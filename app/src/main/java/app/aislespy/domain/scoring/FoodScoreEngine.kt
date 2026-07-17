@@ -8,8 +8,18 @@ import app.aislespy.domain.model.Product
 import app.aislespy.domain.model.ScoreBand
 import app.aislespy.domain.model.ScoreComponent
 import app.aislespy.domain.model.ScoreResult
+
 /**
  * Food scoring per docs/SCORING.md methodologyVersion [ScoringConfig.METHODOLOGY_VERSION].
+ *
+ * **Methodology 2.0.0 (ADR-018):** primary score is **ingredient quality only**.
+ * Components (base weights): additives 0.65 / nova 0.30 / positives 0.05.
+ * Nutri-Score and nutriments are not scored (display-only on the nutrition screen).
+ *
+ * ## No ingredient-quality data
+ * If the product has no ingredients text/tags, no additives tags, and no NOVA,
+ * callers should **not** invent a score — use the Partial UI path instead
+ * (see [hasIngredientQualityData]), same pattern as [BeautyScoreEngine.hasIngredientData].
  *
  * Pure, side-effect free, JVM-testable. No Android imports.
  */
@@ -21,23 +31,22 @@ class FoodScoreEngine : ScoreEngine {
 
         val raw = mutableListOf<RawComponent>()
 
-        nutriscoreComponent(product)?.let { raw += it }
-        novaComponent(product)?.let { raw += it }
         additivesComponent(product, uniqueMatches)?.let { raw += it }
+        novaComponent(product)?.let { raw += it }
         positivesComponent(product)?.let { raw += it }
 
         val components = reweight(raw)
-        // Total from Double base weights (avoids float round-trip error on 0.45/0.05).
+        // Total from Double base weights (avoids float round-trip error).
         val total = computeTotalFromRaw(raw)
         val band = ScoreBand.fromTotal(total)
+        val hasIngredientData = hasAdditiveInputData(product)
+        val hasNova = raw.any { it.id == ID_NOVA }
         val confidence = foodConfidence(
-            hasNutri = raw.any { it.id == ID_NUTRISCORE },
-            hasNova = raw.any { it.id == ID_NOVA },
-            strongAdditiveList = hasStrongAdditiveList(product, uniqueMatches),
+            hasIngredientData = hasIngredientData,
+            hasNova = hasNova,
         )
         val omitted = omittedFoodComponents(
-            hasNutri = raw.any { it.id == ID_NUTRISCORE },
-            hasNova = raw.any { it.id == ID_NOVA },
+            hasNova = hasNova,
             hasAdditives = raw.any { it.id == ID_ADDITIVES },
             hasPositives = raw.any { it.id == ID_POSITIVES },
         )
@@ -59,38 +68,6 @@ class FoodScoreEngine : ScoreEngine {
     }
 
     // --- components ---
-
-    private fun nutriscoreComponent(product: Product): RawComponent? {
-        val grade = product.nutriscoreGrade?.lowercaseChar()
-        if (grade != null && grade in 'a'..'e') {
-            val sub = when (grade) {
-                'a' -> 95
-                'b' -> 80
-                'c' -> 60
-                'd' -> 40
-                'e' -> 20
-                else -> return null
-            }
-            return RawComponent(
-                id = ID_NUTRISCORE,
-                label = "Nutri-Score",
-                score = sub,
-                baseWeight = ScoringConfig.FoodWeights.NUTRISCORE,
-                detail = "Nutri-Score ${grade.uppercaseChar()}",
-            )
-        }
-        // Best-effort fallback when grade missing but OFF numeric score present.
-        // Prefer grade when available. Formula: clamp(100 - (score + 15) * 3, 1, 100).
-        val numeric = product.nutriscoreScore ?: return null
-        val sub = clampScore(100 - (numeric + 15) * 3)
-        return RawComponent(
-            id = ID_NUTRISCORE,
-            label = "Nutri-Score",
-            score = sub,
-            baseWeight = ScoringConfig.FoodWeights.NUTRISCORE,
-            detail = "Nutri-Score numeric $numeric",
-        )
-    }
 
     private fun novaComponent(product: Product): RawComponent? {
         val group = product.novaGroup ?: return null
@@ -142,13 +119,12 @@ class FoodScoreEngine : ScoreEngine {
     }
 
     /**
-     * Included only when labelsTags or nutriments are present (else omit at 5% weight).
-     * Start 50; organic +20; fair-trade +10; fiber ≥6 g/100g +10; clamp 1..100.
+     * Included only when labelsTags are present (else omit at 5% weight).
+     * Start 50; organic +20; fair-trade +10; clamp 1..100.
+     * Fiber is nutrition-only and does not affect this component (ADR-018).
      */
     private fun positivesComponent(product: Product): RawComponent? {
-        val hasLabels = product.labelsTags.isNotEmpty()
-        val hasNutriments = product.nutriments != null
-        if (!hasLabels && !hasNutriments) return null
+        if (product.labelsTags.isEmpty()) return null
 
         var sub = 50
         val notes = mutableListOf<String>()
@@ -160,11 +136,6 @@ class FoodScoreEngine : ScoreEngine {
         if (hasFairTradeLabel(product.labelsTags)) {
             sub += 10
             notes += "Fair-trade"
-        }
-        val fiber = product.nutriments?.fiber100g
-        if (fiber != null && fiber >= 6.0) {
-            sub += 10
-            notes += "High fiber"
         }
 
         sub = clampScore(sub)
@@ -205,19 +176,22 @@ class FoodScoreEngine : ScoreEngine {
 
     // --- confidence / copy ---
 
+    /**
+     * High: ingredient data analyzed AND nova present.
+     * Medium: ingredient data OR nova (exactly one).
+     * Low: sparse.
+     */
     private fun foodConfidence(
-        hasNutri: Boolean,
+        hasIngredientData: Boolean,
         hasNova: Boolean,
-        strongAdditiveList: Boolean,
     ): Confidence = when {
-        hasNutri && hasNova -> Confidence.High
-        hasNutri || hasNova -> Confidence.Medium
-        strongAdditiveList -> Confidence.Medium
+        hasIngredientData && hasNova -> Confidence.High
+        hasIngredientData || hasNova -> Confidence.Medium
         else -> Confidence.Low
     }
 
     /**
-     * Band × concern-count matrix (docs/SCORING.md, ADR-015).
+     * Band × concern-count matrix (docs/SCORING.md, ADR-015 / 2.0.0 copy).
      * Zero concerns must not imply flagged ingredients exist.
      */
     private fun summarySentence(total: Int, concernCount: Int): String {
@@ -228,28 +202,26 @@ class FoodScoreEngine : ScoreEngine {
             total >= 75 ->
                 "Looking good—only minor flags below."
             total >= 50 && !hasConcerns ->
-                "Middling score—mostly nutrition and processing, not flagged ingredients."
+                "Middling score—mostly processing signals, not flagged ingredients."
             total >= 50 ->
                 "Mixed bag—check the notes below."
             total >= 25 && !hasConcerns ->
-                "Low score—driven by nutrition or processing; see the breakdown."
+                "Low score—driven by heavy processing; see the breakdown."
             total >= 25 ->
                 "Several concerns—read carefully."
             !hasConcerns ->
-                "Very low score—nutrition and processing look rough."
+                "Very low score—heavily processed formulation."
             else ->
                 "Lots of flags—you may want to skip."
         }
     }
 
     private fun omittedFoodComponents(
-        hasNutri: Boolean,
         hasNova: Boolean,
         hasAdditives: Boolean,
         hasPositives: Boolean,
     ): List<String> {
         val out = mutableListOf<String>()
-        if (!hasNutri) out += "Nutri-Score (no data)"
         if (!hasNova) out += "NOVA (no data)"
         if (!hasAdditives) out += "Additives (no data)"
         if (!hasPositives) out += "Positives (no data)"
@@ -311,12 +283,6 @@ class FoodScoreEngine : ScoreEngine {
             product.additivesTags.isNotEmpty() ||
             product.ingredientsTags.isNotEmpty()
 
-    private fun hasStrongAdditiveList(
-        product: Product,
-        matches: List<MatchedIngredient>,
-    ): Boolean =
-        product.additivesTags.size >= 3 || matches.size >= 2
-
     private fun hasOrganicLabel(labels: List<String>): Boolean =
         labels.any { tag ->
             val t = tag.lowercase()
@@ -349,9 +315,19 @@ class FoodScoreEngine : ScoreEngine {
     )
 
     companion object {
-        const val ID_NUTRISCORE = "nutriscore"
         const val ID_NOVA = "nova"
         const val ID_ADDITIVES = "additives"
         const val ID_POSITIVES = "positives"
+
+        /**
+         * True when the product has any ingredient-quality signal worth scoring
+         * (ingredients text/tags, additives tags, or NOVA group).
+         * When false, ViewModel should use the Partial “not enough ingredient data” path.
+         */
+        fun hasIngredientQualityData(product: Product): Boolean =
+            !product.ingredientsText.isNullOrBlank() ||
+                product.ingredientsTags.isNotEmpty() ||
+                product.additivesTags.isNotEmpty() ||
+                (product.novaGroup != null && product.novaGroup in 1..4)
     }
 }

@@ -174,6 +174,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-018 — Primary food score = ingredient quality only (methodology 2.0.0)
+
+- **Date:** 2026-07-17
+- **Status:** Accepted
+- **Context:** Owner decision: the glanceable 1–100 food score should reflect what is *in* the product (flagged ingredients / ultra-processing / small label positives), not Nutri-Score nutritional quality. Users still want nutrition transparency, but as a separate informational surface—not mixed into the primary number. Beauty scoring is unchanged.
+- **Decision:** Reinterpret the primary food score as **ingredient quality only** and bump `methodologyVersion` to **2.0.0**. Components and base weights: **additives 0.65**, **nova 0.30**, **positives 0.05** (organic +20, fair-trade +10 from base 50). **Remove** the `nutriscore` component and its numeric fallback; **remove** the fiber bonus from positives (fiber is nutrition). Nutri-Score grade and nutriments are **display-only** on a dedicated nutrition sub-screen (`nutrition/{barcode}`) and must never affect total, components, or confidence. Confidence: High = ingredient data analyzed **and** NOVA present; Medium = exactly one of those; Low = sparse. If no ingredient-quality inputs exist at all (no ingredients text/tags, no additives tags, no NOVA), do **not** invent a score—use the partial path (“Found product, but not enough ingredient data to score”), same pattern as beauty no-ingredients. Nutri-Score chip is **removed** from the primary badges row (NOVA stays). Summary sentences for zero-concern mid/low bands reworded to drop nutrition wording (see SCORING.md).
+- **Consequences:** Products with sparse OFF records (no flagged additives, no NOVA) can score high on the additives-alone path with reduced confidence; products with no ingredient-quality data get **no number at all**. Golden food tests rewritten for 2.0.0 hand-computed totals. Methodology screen copy and result UI gain a Nutrition navigation row + screen. Beauty engine, knowledge packs, and beauty formula unchanged.
+
+---
+
 ## Template for new entries
 
 ```markdown

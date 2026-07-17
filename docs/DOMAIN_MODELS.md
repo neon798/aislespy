@@ -150,11 +150,11 @@ User-facing problem ingredient (after scoring pipeline).
 ### `ScoreComponent`
 | Field | Type | Notes |
 |-------|------|--------|
-| id | String | `nutriscore`, `nova`, `additives`, `hazards`, … |
+| id | String | food: `additives`, `nova`, `positives`; beauty: `hazards`, … |
 | label | String | UI label |
 | score | Int | 1–100 contribution subscore |
 | weight | Float | weight used after reweight |
-| detail | String? | e.g. “Nutri-Score D” |
+| detail | String? | e.g. “NOVA 4”, “2 flagged additives” |
 
 ### `ScoreResult`
 | Field | Type | Notes |
@@ -169,14 +169,14 @@ User-facing problem ingredient (after scoring pipeline).
 | driverSentence | String? | Optional “Main drags: …” for largest weighted losses; null if none > 5 pts |
 | omittedComponents | List\<String\> | Human labels of components dropped for missing data, e.g. `NOVA (no data)` |
 
-`summarySentence` examples (food):
+`summarySentence` examples (food, methodology 2.0.0):
 - “Looking good—nothing flagged in our pack.” (high score, 0 concerns)
-- “Middling score—mostly nutrition and processing, not flagged ingredients.”
+- “Middling score—mostly processing signals, not flagged ingredients.”
+- “Low score—driven by heavy processing; see the breakdown.”
 - “Several concerns—read carefully.”
 
 `driverSentence` example:
-- “Main drags: nutrition (Nutri-Score D), ultra-processing (NOVA 4).”
-
+- “Main drags: ultra-processing (NOVA 4), flagged ingredients (2 flagged additives).”
 ### `HistoryEntry`
 | Field | Type |
 |-------|------|
@@ -249,7 +249,25 @@ Keep UI models immutable. ViewModels map domain → UI.
 | label | String |
 | style | String |
 
-Examples: `Nutri-Score C`, `NOVA 4`, values badges (`Certified organic`, `Fair-trade`, … with `style = "values"`).
+Examples: `NOVA 4`, values badges (`Certified organic`, `Fair-trade`, … with `style = "values"`).
+
+**Note (ADR-018 / methodology 2.0.0):** Nutri-Score is **not** a primary result badge. The Nutri-Score grade lives on the nutrition screen via [NutritionUi], not on the badges row. NOVA remains a primary badge when present.
+
+### `NutritionUi`
+Display-only nutrition payload for the `nutrition/{barcode}` screen. **Never** fed into score engines (ADR-018).
+
+| Field | Type | Notes |
+|-------|------|--------|
+| nutriScoreGrade | Char? | `a`–`e` when present |
+| energyKcal100g | Double? | per 100 g |
+| sugars100g | Double? | |
+| salt100g | Double? | |
+| saturatedFat100g | Double? | |
+| fiber100g | Double? | |
+| proteins100g | Double? | |
+| hasData | Boolean | true if grade or any nutriment field is present |
+
+Held in an activity-scoped `NutritionStore` (same pattern as `ConcernDetailStore`) after a food success load.
 
 ---
 

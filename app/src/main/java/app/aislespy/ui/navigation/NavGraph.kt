@@ -21,6 +21,7 @@ import app.aislespy.ui.history.HistoryScreen
 import app.aislespy.ui.ingredient.IngredientDetailScreen
 import app.aislespy.ui.onboarding.OnboardingScreen
 import app.aislespy.ui.result.CategoryChooserScreen
+import app.aislespy.ui.result.NutritionScreen
 import app.aislespy.ui.result.ResultScreen
 import app.aislespy.ui.result.ResultViewModel
 import app.aislespy.ui.scan.ManualEntryScreen
@@ -41,6 +42,7 @@ object Routes {
     const val RESULT = "result/{barcode}?source={source}"
     const val CHOOSE = "choose/{barcode}"
     const val INGREDIENT = "ingredient/{concernId}"
+    const val NUTRITION = "nutrition/{barcode}"
     const val HISTORY = "history"
     const val SETTINGS = "settings"
     const val METHODOLOGY = "settings/methodology"
@@ -59,6 +61,8 @@ object Routes {
     fun choose(barcode: String): String = "choose/$barcode"
 
     fun ingredient(concernId: String): String = "ingredient/$concernId"
+
+    fun nutrition(barcode: String): String = "nutrition/$barcode"
 }
 
 private data class TopLevelDestination(
@@ -195,6 +199,9 @@ fun AisleSpyNavGraph(
                     onConcernClick = { concernId ->
                         navController.navigate(Routes.ingredient(concernId))
                     },
+                    onNutrition = { nutritionBarcode ->
+                        navController.navigate(Routes.nutrition(nutritionBarcode))
+                    },
                     onMethodology = {
                         navController.navigate(Routes.METHODOLOGY)
                     },
@@ -206,6 +213,18 @@ fun AisleSpyNavGraph(
                             launchSingleTop = true
                         }
                     },
+                )
+            }
+            composable(
+                route = Routes.NUTRITION,
+                arguments = listOf(
+                    navArgument(Routes.ARG_BARCODE) { type = NavType.StringType },
+                ),
+            ) { entry ->
+                val nutritionBarcode = entry.arguments?.getString(Routes.ARG_BARCODE).orEmpty()
+                NutritionScreen(
+                    barcode = nutritionBarcode,
+                    onBack = { navController.popBackStack() },
                 )
             }
             composable(

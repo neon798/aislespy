@@ -146,23 +146,20 @@ fun MethodologyScreen(
 
         SectionHeading("Food score")
         BodyText(
-            "Food uses weighted components (weights renormalized if data is missing):",
+            "Food scores ingredient quality only (weights renormalized if data is missing). " +
+                "Nutrition is shown separately and does not affect the total.",
         )
         BodyText(
-            "• Nutri-Score — ${pct(ScoringConfig.FoodWeights.NUTRISCORE)} " +
-                "(nutritional quality grades A–E)",
+            "• Additives — ${pct(ScoringConfig.FoodWeights.ADDITIVES)} " +
+                "(flagged ingredients from the knowledge pack)",
         )
         BodyText(
             "• NOVA — ${pct(ScoringConfig.FoodWeights.NOVA)} " +
                 "(ultra-processing groups 1–4)",
         )
         BodyText(
-            "• Additives — ${pct(ScoringConfig.FoodWeights.ADDITIVES)} " +
-                "(flagged additives from the knowledge pack)",
-        )
-        BodyText(
             "• Positives — ${pct(ScoringConfig.FoodWeights.POSITIVES)} " +
-                "(small bonuses, e.g. organic; capped influence)",
+                "(small bonuses, e.g. organic / fair-trade; capped influence)",
         )
         BodyText(
             "Total = round(sum of subscore × normalized weight), clamped to 1–100.",
@@ -189,15 +186,16 @@ fun MethodologyScreen(
 
         SectionHeading("Confidence")
         BodyText(
-            "High — strong inputs (e.g. Nutri-Score + NOVA for food, " +
-                "or a structured beauty ingredient list).",
+            "High — ingredient data analyzed and NOVA present for food, " +
+                "or a structured beauty ingredient list.",
         )
         BodyText(
-            "Medium — partial data (one of Nutri-Score/NOVA, free-text ingredients only).",
+            "Medium — partial data (ingredient data or NOVA alone; free-text beauty ingredients).",
         )
         BodyText(
             "Low — mostly missing signals. Scores stay transparent about weak data.",
         )
+
 
         SectionHeading("Disclaimer")
         BodyText(ResultViewModel.DISCLAIMER_TEXT)

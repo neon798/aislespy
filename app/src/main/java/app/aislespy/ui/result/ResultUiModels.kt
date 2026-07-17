@@ -1,6 +1,7 @@
 package app.aislespy.ui.result
 
 import app.aislespy.domain.model.Confidence
+import app.aislespy.domain.model.Product
 import app.aislespy.domain.model.ProductCategory
 import app.aislespy.domain.model.ScoreBand
 import app.aislespy.domain.model.SourceDb
@@ -53,6 +54,46 @@ data class BadgeUi(
     val label: String,
     val style: String,
 )
+
+/**
+ * Display-only nutrition payload (DOMAIN_MODELS.md [NutritionUi]).
+ * Never factored into scores (ADR-018). Held in [NutritionStore].
+ */
+data class NutritionUi(
+    val nutriScoreGrade: Char?,
+    val energyKcal100g: Double?,
+    val sugars100g: Double?,
+    val salt100g: Double?,
+    val saturatedFat100g: Double?,
+    val fiber100g: Double?,
+    val proteins100g: Double?,
+    val hasData: Boolean,
+) {
+    companion object {
+        fun from(product: Product): NutritionUi {
+            val grade = product.nutriscoreGrade?.lowercaseChar()?.takeIf { it in 'a'..'e' }
+            val n = product.nutriments
+            val hasNutriments = n != null && (
+                n.energyKcal100g != null ||
+                    n.sugars100g != null ||
+                    n.salt100g != null ||
+                    n.saturatedFat100g != null ||
+                    n.fiber100g != null ||
+                    n.proteins100g != null
+                )
+            return NutritionUi(
+                nutriScoreGrade = grade,
+                energyKcal100g = n?.energyKcal100g,
+                sugars100g = n?.sugars100g,
+                salt100g = n?.salt100g,
+                saturatedFat100g = n?.saturatedFat100g,
+                fiber100g = n?.fiber100g,
+                proteins100g = n?.proteins100g,
+                hasData = grade != null || hasNutriments,
+            )
+        }
+    }
+}
 
 /**
  * Ingredient detail payload (DOMAIN_MODELS.md [IngredientDetailUiState]).

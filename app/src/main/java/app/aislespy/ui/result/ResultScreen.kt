@@ -70,6 +70,7 @@ fun ResultScreen(
     onBack: () -> Unit,
     onScanAnother: () -> Unit = onBack,
     onConcernClick: (concernId: String) -> Unit = {},
+    onNutrition: (barcode: String) -> Unit = {},
     onMethodology: () -> Unit = {},
     onNavigateToCategoryChooser: (barcode: String) -> Unit = {},
     modifier: Modifier = Modifier,
@@ -120,6 +121,7 @@ fun ResultScreen(
                 is ResultUiState.Success -> SuccessContent(
                     state = s,
                     onConcernClick = onConcernClick,
+                    onNutrition = onNutrition,
                     onMethodology = onMethodology,
                 )
                 is ResultUiState.NotFound -> NotFoundContent(
@@ -144,6 +146,7 @@ fun ResultScreen(
 private fun SuccessContent(
     state: ResultUiState.Success,
     onConcernClick: (String) -> Unit,
+    onNutrition: (barcode: String) -> Unit,
     onMethodology: () -> Unit,
 ) {
     val product = state.product
@@ -259,6 +262,13 @@ private fun SuccessContent(
             state.omittedComponents.forEach { label ->
                 OmittedComponentRow(label)
             }
+        }
+
+        // Nutrition sub-screen (food only; informational — does not affect score).
+        if (product.category == ProductCategory.Food) {
+            NutritionNavRow(
+                onClick = { onNutrition(product.barcode) },
+            )
         }
 
         // Suspect ingredients (microcopy bank)
@@ -408,6 +418,40 @@ private fun BreakdownRow(component: ScoreComponentUi) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(start = 8.dp),
         )
+    }
+}
+
+/** List-item style row with chevron; opens the nutrition sub-screen. */
+@Composable
+private fun NutritionNavRow(onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .semantics {
+                contentDescription = "Nutrition information"
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        ),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = "Nutrition",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Medium,
+            )
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                contentDescription = null,
+            )
+        }
     }
 }
 
