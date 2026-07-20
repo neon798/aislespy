@@ -31,6 +31,15 @@ class ConcernDetailStore {
 
     fun get(concernId: String): IngredientDetailUi? = byId[concernId]
 
+    /**
+     * Merge a single detail (ingredient lookup tab) without wiping scored concerns.
+     * Same id overwrites; used when navigating from the Ingredients search list.
+     */
+    @Synchronized
+    fun put(detail: IngredientDetailUi) {
+        byId = byId + (detail.id to detail)
+    }
+
     private fun Concern.toDetailUi(): IngredientDetailUi = IngredientDetailUi(
         id = id,
         name = displayName,

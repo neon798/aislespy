@@ -62,6 +62,8 @@ scan                          (start destination)
 │     ├── ingredient_detail/{concernId}
 │     ├── nutrition/{barcode}          // food: Nutri-Score + nutriments (not scored)
 │     └── category_chooser/{barcode}   // when both DBs hit
+├── ingredients                   // knowledge-pack lookup (ADR-023)
+│     └── ingredient_detail/{concernId}
 ├── history
 │     └── result/{barcode}?source=auto
 └── settings
@@ -78,6 +80,7 @@ scan                          (start destination)
 | `manual_entry` | `manual` | — |
 | `result` | `result/{barcode}?source={source}` | barcode: String; source: auto\|food\|beauty |
 | `category_chooser` | `choose/{barcode}` | barcode |
+| `ingredients` | `ingredients` | — — search food + beauty knowledge packs by name / E-number (ADR-023) |
 | `ingredient_detail` | `ingredient/{concernId}` | concernId |
 | `nutrition` | `nutrition/{barcode}` | barcode — Nutri-Score + nutriments (informational only; not scored) |
 | `history` | `history` | — |
@@ -86,7 +89,7 @@ scan                          (start destination)
 | `privacy` | `settings/privacy` | — |
 | `licenses` | `settings/licenses` | — |
 
-Use a bottom bar or top actions on `scan` for History + Settings. Result is a stack push.
+Bottom bar (top-level): **Scan · Ingredients · History · Settings**. Result and ingredient detail are stack pushes.
 
 ---
 
@@ -203,10 +206,16 @@ Navigate `result/{barcode}?source=food` or `source=beauty`.
 
 ---
 
+## Screen: `ingredients` (ADR-023)
+
+**Purpose:** Look up curated food additives and beauty ingredients by name or E-number without scanning a product. Search field + example chips; result cards open the existing `ingredient_detail` screen (informational only).
+
+---
+
 ## Screen: `ingredient_detail`
 
 ### Purpose
-Full explanation of one concern.
+Full explanation of one concern (from a product score **or** the Ingredients lookup tab).
 
 ### Layout
 - Title: display name

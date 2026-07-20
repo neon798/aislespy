@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CropFree
 import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Science
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -28,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import app.aislespy.ui.history.HistoryScreen
 import app.aislespy.ui.ingredient.IngredientDetailScreen
+import app.aislespy.ui.ingredient.IngredientLookupScreen
 import app.aislespy.ui.onboarding.OnboardingScreen
 import app.aislespy.ui.result.CategoryChooserScreen
 import app.aislespy.ui.result.NutritionScreen
@@ -52,6 +54,7 @@ object Routes {
     const val MANUAL = "manual"
     const val RESULT = "result/{barcode}?source={source}"
     const val CHOOSE = "choose/{barcode}"
+    const val INGREDIENTS = "ingredients"
     const val INGREDIENT = "ingredient/{concernId}"
     const val NUTRITION = "nutrition/{barcode}"
     const val HISTORY = "history"
@@ -83,11 +86,12 @@ private data class TopLevelDestination(
 )
 
 /**
- * Bottom nav: Scan (viewfinder), History (clock), Settings (sliders).
+ * Bottom nav: Scan, Ingredients, History, Settings (ADR-023).
  * 22px stroke icons; active = olive, inactive = ink@0.45; labels 10.5/700.
  */
 private val topLevelDestinations = listOf(
     TopLevelDestination(Routes.SCAN, "Scan", Icons.Outlined.CropFree),
+    TopLevelDestination(Routes.INGREDIENTS, "Ingredients", Icons.Outlined.Science),
     TopLevelDestination(Routes.HISTORY, "History", Icons.Outlined.Schedule),
     TopLevelDestination(Routes.SETTINGS, "Settings", Icons.Outlined.Tune),
 )
@@ -289,6 +293,13 @@ fun AisleSpyNavGraph(
                         }
                     },
                     onCancel = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.INGREDIENTS) {
+                IngredientLookupScreen(
+                    onOpenIngredient = { concernId ->
+                        navController.navigate(Routes.ingredient(concernId))
+                    },
                 )
             }
             composable(

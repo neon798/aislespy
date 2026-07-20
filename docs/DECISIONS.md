@@ -235,6 +235,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-023 — Ingredients lookup tab (knowledge-pack search)
+
+- **Date:** 2026-07-20
+- **Status:** Accepted
+- **Context:** Users often want to look up a single additive or cosmetic ingredient (by common name or E-number) without scanning a product barcode. The food and beauty knowledge packs already ship curated severity, plain-language why, and sources. Adding a dedicated tab reuses that data for direct search without new network hosts or pack content changes.
+- **Decision:** Add a top-level **Ingredients** bottom-nav tab (`ingredients`) between Scan and History. Pure JVM search across `foodKnowledgePack` + `beautyKnowledgePack` (normalize like `KnowledgeMatcher`; match title/names/aliases/id/E-number forms; rank exact → prefix → contains; cap ~60). Tapping a hit populates the existing `ConcernDetailStore` / `IngredientDetailUi` and navigates to the existing `ingredient/{concernId}` detail screen (position hint null). Informational only — not medical advice; no new data sources; scoring and pack contents unchanged.
+- **Consequences:** Bottom bar order is Scan · Ingredients · History · Settings. Route table and UI_UX gain `ingredients` + lookup screen note. Unit tests cover pure search ranking and edge cases. Detail UI is not duplicated.
+
+---
+
 ## Template for new entries
 
 ```markdown
