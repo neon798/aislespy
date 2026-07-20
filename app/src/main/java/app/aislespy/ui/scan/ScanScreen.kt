@@ -76,11 +76,9 @@ import app.aislespy.ui.components.AisleSecondaryButton
 import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.IbmPlexMono
 import app.aislespy.ui.theme.PaleLime
 import app.aislespy.ui.theme.PublicSans
 import app.aislespy.ui.theme.ScanBackground
-import app.aislespy.ui.theme.ScanCream
 import app.aislespy.ui.util.rememberReducedMotion
 import java.util.concurrent.Executors
 
@@ -148,11 +146,7 @@ fun ScanScreen(
     val aisleColors = AisleColors.current
     Scaffold(
         modifier = modifier,
-        containerColor = if (uiState.permission == CameraPermission.Granted) {
-            ScanBackground
-        } else {
-            aisleColors.surface
-        },
+        containerColor = aisleColors.surface,
     ) { innerPadding ->
         when (uiState.permission) {
             CameraPermission.Granted -> {
@@ -160,7 +154,7 @@ fun ScanScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(innerPadding)
-                        .background(ScanBackground),
+                        .background(aisleColors.surface),
                 ) {
                     ScanGrantedContent(
                         torchEnabled = uiState.torchEnabled,
@@ -231,19 +225,6 @@ private fun ScanGrantedContent(
                 modifier = Modifier.fillMaxSize(),
             )
 
-            Text(
-                text = "camera preview",
-                fontFamily = IbmPlexMono,
-                fontSize = 10.sp,
-                color = ScanCream.copy(alpha = 0.35f),
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 10.dp),
-            )
-
-            // Decorative barcode card hint (non-interactive)
-            BarcodeCardHint(modifier = Modifier.align(Alignment.Center))
-
             ViewfinderCorners(modifier = Modifier.fillMaxSize().padding(36.dp, 26.dp))
 
             if (runningRecon) {
@@ -261,6 +242,7 @@ private fun ScanGrantedContent(
         }
 
         // Bottom controls
+        val colors = AisleColors.current
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -272,7 +254,7 @@ private fun ScanGrantedContent(
                 text = if (runningRecon) SCAN_RUNNING else SCAN_HINT,
                 fontFamily = PublicSans,
                 fontSize = 12.5.sp,
-                color = ScanCream.copy(alpha = 0.55f),
+                color = colors.muted55,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.semantics {
                     contentDescription = if (runningRecon) SCAN_RUNNING else SCAN_HINT
@@ -305,7 +287,7 @@ private fun ScanGrantedContent(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                color = PaleLime,
+                color = colors.primary,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
                     .clickable(onClick = onManualEntry)
@@ -321,6 +303,7 @@ private fun RowHeader(
     torchEnabled: Boolean,
     onToggleTorch: () -> Unit,
 ) {
+    val colors = AisleColors.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -331,7 +314,7 @@ private fun RowHeader(
         Text(
             text = "AisleSpy",
             style = AisleSpyTextStyles.wordmark.copy(fontSize = 18.sp),
-            color = ScanCream,
+            color = colors.ink,
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -342,9 +325,9 @@ private fun RowHeader(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 10.5.sp,
-                color = PaleLime,
+                color = colors.primary,
                 modifier = Modifier
-                    .border(1.dp, PaleLime.copy(alpha = 0.4f), AisleSpyShapes.pill)
+                    .border(1.dp, colors.primary.copy(alpha = 0.35f), AisleSpyShapes.pill)
                     .padding(horizontal = 10.dp, vertical = 4.dp)
                     .semantics { contentDescription = "only the barcode is sent" },
             )
@@ -363,44 +346,11 @@ private fun RowHeader(
                 Icon(
                     imageVector = if (torchEnabled) Icons.Filled.FlashOn else Icons.Filled.FlashOff,
                     contentDescription = null,
-                    tint = ScanCream.copy(alpha = 0.7f),
+                    tint = colors.ink.copy(alpha = 0.7f),
                     modifier = Modifier.size(20.dp),
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun BarcodeCardHint(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .background(Color(0xFFF6F1E6), AisleSpyShapes.smallTile)
-            .padding(horizontal = 22.dp, vertical = 12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-    ) {
-        Canvas(modifier = Modifier.size(width = 88.dp, height = 44.dp)) {
-            val barWidths = floatArrayOf(3f, 6f, 2f, 4f, 2f, 7f, 3f, 5f, 2f, 6f, 3f)
-            var x = 0f
-            val gap = 3.dp.toPx()
-            barWidths.forEach { wDp ->
-                val w = wDp.dp.toPx()
-                drawRect(
-                    color = Color(0xFF1C1A14),
-                    topLeft = Offset(x, 0f),
-                    size = ComposeSize(w, size.height),
-                )
-                x += w + gap
-            }
-        }
-        Text(
-            text = "barcode",
-            fontFamily = IbmPlexMono,
-            fontSize = 10.sp,
-            letterSpacing = 0.14.sp,
-            color = Color(0xFF1C1A14),
-        )
     }
 }
 
@@ -505,15 +455,16 @@ private fun ShutterButton(
     decoding: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val colors = AisleColors.current
+    // Lime accent while decoding; otherwise theme primary fill + onPrimary glyph.
+    val fill = if (decoding) PaleLime else colors.primary
+    val glyph = if (decoding) ScanBackground else colors.onPrimary
     Box(
         modifier = modifier
             .size(74.dp)
-            .border(5.dp, ScanCream.copy(alpha = 0.25f), CircleShape)
+            .border(5.dp, colors.primary.copy(alpha = 0.25f), CircleShape)
             .padding(5.dp)
-            .background(
-                color = if (decoding) PaleLime else ScanCream,
-                shape = CircleShape,
-            ),
+            .background(color = fill, shape = CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         // Viewfinder glyph
@@ -521,14 +472,14 @@ private fun ShutterButton(
             val stroke = 3.dp.toPx()
             val r = 7.dp.toPx()
             drawRoundRect(
-                color = ScanBackground,
+                color = glyph,
                 topLeft = Offset(0f, 0f),
                 size = ComposeSize(size.width, size.height),
                 cornerRadius = CornerRadius(r, r),
                 style = Stroke(width = stroke),
             )
             drawLine(
-                color = ScanBackground,
+                color = glyph,
                 start = Offset(-3.dp.toPx(), size.height / 2f),
                 end = Offset(size.width + 3.dp.toPx(), size.height / 2f),
                 strokeWidth = stroke,
