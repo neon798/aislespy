@@ -225,6 +225,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-022 — Onboarding accuracy / discretion step
+
+- **Date:** 2026-07-20
+- **Status:** Accepted
+- **Context:** Open Food Facts / Open Beauty Facts and community contributions can be incomplete or occasionally wrong. Users should treat AisleSpy as a reference and read the physical label when a result looks off. This reinforces the existing informational-only / not-medical-advice posture already on the final privacy step and in product copy. The design handoff specified a 3-step onboarding; product wants one extra informational caveat without changing completion, prefs, or routes.
+- **Decision:** Add one **accuracy/discretion** onboarding step titled **“Trust, but verify”**, inserted as the **second-to-last** step (order: scan → score → caveat → privacy). Non-final CTA remains “Continue”; final privacy step keeps `showDisclaimer = true` and CTA “Start the recon.” Presentation only — calm label + magnifying-glass art (no warning triangle / alarm colors). Completing still uses the existing first-launch flag path; ViewModel, routes, and disclaimer text are unchanged.
+- **Consequences:** Onboarding is 4 steps instead of the design handoff’s 3. Dots, CTA advance, and art `when (stepIndex)` follow the data-driven `Steps` list. No scoring, network, or privacy-surface change.
+
+---
+
 ## Template for new entries
 
 ```markdown

@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.StrokeCap
@@ -69,6 +70,11 @@ private val Steps = listOf(
         cta = "Continue",
     ),
     OnboardingStep(
+        title = "Trust, but verify",
+        body = "AisleSpy is a great reference, but it leans on open databases and community contributions — so it can miss things or occasionally get one wrong. If a result looks off, use your judgment and read the physical label.",
+        cta = "Continue",
+    ),
+    OnboardingStep(
         title = "Recon, not surveillance",
         body = "No account, no ads, no analytics. Lookups send only the barcode — your history never leaves this phone.",
         cta = "Start the recon",
@@ -77,7 +83,7 @@ private val Steps = listOf(
 )
 
 /**
- * First-launch 3-step onboarding (design handoff §1). Completing or skipping
+ * First-launch multi-step onboarding. Completing or skipping
  * persists first-launch done via [OnboardingViewModel], then navigates to scan.
  */
 @Composable
@@ -233,6 +239,7 @@ private fun OnboardingStepArt(stepIndex: Int) {
     when (stepIndex) {
         0 -> BarcodeBarsArt()
         1 -> ScoreRingArt()
+        2 -> LabelMagnifierArt()
         else -> PadlockArt()
     }
 }
@@ -307,7 +314,80 @@ private fun ScoreRingArt() {
     }
 }
 
-/** Padlock (step 2). */
+/**
+ * Product label + magnifying glass (step 2) — calm “examine the label” motif.
+ * No warning triangle, exclamation, or alarm colors.
+ */
+@Composable
+private fun LabelMagnifierArt() {
+    val ink = AisleColors.current.ink
+    val olive = AisleColors.current.olive
+    val muted = AisleColors.current.muted55
+    Canvas(modifier = Modifier.size(88.dp)) {
+        val stroke = 4.dp.toPx()
+        val thinStroke = 3.dp.toPx()
+
+        // Label card (rounded rect)
+        val labelLeft = size.width * 0.08f
+        val labelTop = size.height * 0.12f
+        val labelW = size.width * 0.62f
+        val labelH = size.height * 0.72f
+        val corner = 8.dp.toPx()
+        drawRoundRect(
+            color = ink,
+            topLeft = Offset(labelLeft, labelTop),
+            size = Size(labelW, labelH),
+            cornerRadius = CornerRadius(corner, corner),
+            style = Stroke(width = stroke),
+        )
+
+        // Short horizontal “text” lines on the label
+        val lineLeft = labelLeft + labelW * 0.16f
+        val lineMaxW = labelW * 0.68f
+        val lineYs = listOf(0.28f, 0.44f, 0.60f, 0.76f)
+        val lineWidths = listOf(1f, 0.85f, 0.72f, 0.55f)
+        lineYs.forEachIndexed { i, frac ->
+            val y = labelTop + labelH * frac
+            val w = lineMaxW * lineWidths[i]
+            drawLine(
+                color = muted,
+                start = Offset(lineLeft, y),
+                end = Offset(lineLeft + w, y),
+                strokeWidth = thinStroke,
+                cap = StrokeCap.Round,
+            )
+        }
+
+        // Magnifying glass overlapping lower-right of the label
+        val lensCx = size.width * 0.68f
+        val lensCy = size.height * 0.62f
+        val lensR = size.minDimension * 0.20f
+        drawCircle(
+            color = olive,
+            radius = lensR,
+            center = Offset(lensCx, lensCy),
+            style = Stroke(width = stroke),
+        )
+        // Handle
+        val handleStart = Offset(
+            lensCx + lensR * 0.72f,
+            lensCy + lensR * 0.72f,
+        )
+        val handleEnd = Offset(
+            lensCx + lensR * 1.55f,
+            lensCy + lensR * 1.55f,
+        )
+        drawLine(
+            color = olive,
+            start = handleStart,
+            end = handleEnd,
+            strokeWidth = stroke,
+            cap = StrokeCap.Round,
+        )
+    }
+}
+
+/** Padlock (step 3 — privacy / final). */
 @Composable
 private fun PadlockArt() {
     val olive = AisleColors.current.olive
