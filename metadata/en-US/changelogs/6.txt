@@ -1,0 +1,1 @@
+New app icon. Onboarding now reminds you to check the label when a result looks off. Scan screen follows your light/dark theme.
