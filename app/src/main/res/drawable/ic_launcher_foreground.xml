@@ -4,13 +4,57 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- White magnifier glyph, centered in adaptive-icon safe zone -->
-    <!-- Outer lens ring (donut) -->
+    <!-- Background barcode bars (#FAF6EE @ 45%) -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M54,34c-11,0 -20,9 -20,20s9,20 20,20s20,-9 20,-20s-9,-20 -20,-20zM54,41c7.2,0 13,5.8 13,13s-5.8,13 -13,13s-13,-5.8 -13,-13s5.8,-13 13,-13z" />
-    <!-- Handle -->
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M22.5,38 h0 a2.5,2.5 0 0 1 2.5,2.5 v27 a2.5,2.5 0 0 1 -2.5,2.5 h0 a2.5,2.5 0 0 1 -2.5,-2.5 v-27 a2.5,2.5 0 0 1 2.5,-2.5 z" />
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M66.5,66.5 L79,79 L74.5,83.5 L62,71 z" />
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M32.5,38 h3 a2.5,2.5 0 0 1 2.5,2.5 v27 a2.5,2.5 0 0 1 -2.5,2.5 h-3 a2.5,2.5 0 0 1 -2.5,-2.5 v-27 a2.5,2.5 0 0 1 2.5,-2.5 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M45,38 h0 a2,2 0 0 1 2,2 v28 a2,2 0 0 1 -2,2 h0 a2,2 0 0 1 -2,-2 v-28 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M54.5,38 h1 a2.5,2.5 0 0 1 2.5,2.5 v27 a2.5,2.5 0 0 1 -2.5,2.5 h-1 a2.5,2.5 0 0 1 -2.5,-2.5 v-27 a2.5,2.5 0 0 1 2.5,-2.5 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M65,38 h0 a2,2 0 0 1 2,2 v28 a2,2 0 0 1 -2,2 h0 a2,2 0 0 1 -2,-2 v-28 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M74.5,38 h3 a2.5,2.5 0 0 1 2.5,2.5 v27 a2.5,2.5 0 0 1 -2.5,2.5 h-3 a2.5,2.5 0 0 1 -2.5,-2.5 v-27 a2.5,2.5 0 0 1 2.5,-2.5 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:fillAlpha="0.45"
+        android:pathData="M87,38 h0 a2,2 0 0 1 2,2 v28 a2,2 0 0 1 -2,2 h0 a2,2 0 0 1 -2,-2 v-28 a2,2 0 0 1 2,-2 z" />
+    <!-- Lens disc (center 46,50 r=22) -->
+    <path
+        android:fillColor="#5D6633"
+        android:pathData="M24,50 a22,22 0 1 1 44,0 a22,22 0 1 1 -44,0 z" />
+    <!-- Lens rim -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#CDD6A3"
+        android:strokeWidth="6"
+        android:pathData="M24,50 a22,22 0 1 1 44,0 a22,22 0 1 1 -44,0 z" />
+    <!-- Magnified bars -->
+    <path
+        android:fillColor="#FAF6EE"
+        android:pathData="M38,40 h0.5 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h-0.5 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:pathData="M46,40 h3 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h-3 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FAF6EE"
+        android:pathData="M57,40 h0 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h0 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <!-- Handle: rounded rect rotated 45° about (61,65) -->
+    <path
+        android:fillColor="#CDD6A3"
+        android:pathData="M64.5355,68.5355 L75.8492,79.8492 A5,5 0 0 1 68.7782,86.9203 L57.4645,75.6066 A5,5 0 0 1 64.5355,68.5355 z" />
 </vector>

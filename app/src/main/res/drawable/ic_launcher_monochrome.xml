@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Single-color silhouette for Android 13+ themed icons; system tints #FFFFFF. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Lens rim as ~6dp ring (outer r=25, inner r=19 around center 46,50) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M21,50 a25,25 0 1 1 50,0 a25,25 0 1 1 -50,0 z M27,50 a19,19 0 1 1 38,0 a19,19 0 1 1 -38,0 z" />
+    <!-- Magnified bars -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,40 h0.5 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h-0.5 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M46,40 h3 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h-3 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M57,40 h0 a2,2 0 0 1 2,2 v16 a2,2 0 0 1 -2,2 h0 a2,2 0 0 1 -2,-2 v-16 a2,2 0 0 1 2,-2 z" />
+    <!-- Handle -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M64.5355,68.5355 L75.8492,79.8492 A5,5 0 0 1 68.7782,86.9203 L57.4645,75.6066 A5,5 0 0 1 64.5355,68.5355 z" />
+</vector>
