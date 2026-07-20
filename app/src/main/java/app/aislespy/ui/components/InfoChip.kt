@@ -3,23 +3,33 @@ package app.aislespy.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aislespy.ui.theme.AisleSpyShapes
+import app.aislespy.ui.theme.AisleSpyTextStyles
+import app.aislespy.ui.theme.CardBorder
+import app.aislespy.ui.theme.CardWhite
+import app.aislespy.ui.theme.MutedText60
+import app.aislespy.ui.theme.Olive
+import app.aislespy.ui.theme.OliveContainer
+import app.aislespy.ui.theme.OliveOnContainer
 import app.aislespy.ui.theme.brandAmber
 import app.aislespy.ui.theme.brandAmberOnDark
 import app.aislespy.ui.theme.brandAmberOnLight
 
+/** Outline for confidence chips: rgba(80,60,30,.3). */
+private val OutlineChipBorder = Color(0x4D503C1E)
+
 /**
- * Read-only chip for badges, category, confidence, source DB, etc.
- * Unified style across result and related screens.
+ * Olive-container badge chip (dietary, NOVA, source labels, generic badges).
+ * Pill shape, olive container bg, on-container text.
  */
 @Composable
 fun InfoChip(
@@ -27,21 +37,52 @@ fun InfoChip(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
-    SuggestionChip(
-        onClick = {},
-        label = { Text(label) },
-        enabled = false,
-        modifier = if (contentDescription != null) {
-            modifier.semantics { this.contentDescription = contentDescription }
-        } else {
-            modifier
-        },
-    )
+    val talkBack = contentDescription ?: label
+    Surface(
+        modifier = modifier.semantics { this.contentDescription = talkBack },
+        shape = AisleSpyShapes.pill,
+        color = OliveContainer,
+        contentColor = OliveOnContainer,
+        border = BorderStroke(1.dp, Olive.copy(alpha = 0.25f)),
+    ) {
+        Text(
+            text = label,
+            style = AisleSpyTextStyles.badgeChip,
+            color = OliveOnContainer,
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
+        )
+    }
+}
+
+/**
+ * Outline confidence / meta chip ("Confidence: High").
+ */
+@Composable
+fun OutlineInfoChip(
+    label: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+) {
+    val talkBack = contentDescription ?: label
+    Surface(
+        modifier = modifier.semantics { this.contentDescription = talkBack },
+        shape = AisleSpyShapes.pill,
+        color = Color.Transparent,
+        contentColor = MutedText60,
+        border = BorderStroke(1.5.dp, OutlineChipBorder),
+    ) {
+        Text(
+            text = label,
+            style = AisleSpyTextStyles.badgeChip.copy(fontWeight = FontWeight.Bold),
+            color = MutedText60,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+        )
+    }
 }
 
 /**
  * Values / certification badge (ADR-017): gold/amber outline + leading ★.
- * Informational only — not a score signal. Dark-scheme uses lighter amber for contrast.
+ * Informational only — not a score signal. Pill shape; semantics unchanged.
  */
 @Composable
 fun ValuesInfoChip(
@@ -60,16 +101,43 @@ fun ValuesInfoChip(
     val talkBack = contentDescription ?: "$label, values badge"
     Surface(
         modifier = modifier.semantics { this.contentDescription = talkBack },
-        shape = RoundedCornerShape(8.dp),
+        shape = AisleSpyShapes.pill,
         color = container,
         contentColor = content,
         border = BorderStroke(1.5.dp, outline),
     ) {
         Text(
             text = "★ $label",
-            style = MaterialTheme.typography.labelLarge,
+            style = AisleSpyTextStyles.badgeChip,
             color = content,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
+        )
+    }
+}
+
+/**
+ * Neutral ownership chip (ADR-019 corporate parent) — factual, not alarm-red.
+ * Pill shape with muted outline; distinct from values gold-star treatment.
+ */
+@Composable
+fun OwnershipInfoChip(
+    label: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+) {
+    val talkBack = contentDescription ?: "$label, ownership information"
+    Surface(
+        modifier = modifier.semantics { this.contentDescription = talkBack },
+        shape = AisleSpyShapes.pill,
+        color = CardWhite,
+        contentColor = MutedText60,
+        border = BorderStroke(1.dp, CardBorder),
+    ) {
+        Text(
+            text = label,
+            style = AisleSpyTextStyles.badgeChip,
+            color = MutedText60,
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
         )
     }
 }
@@ -92,7 +160,7 @@ fun ResultBadgeChip(
             modifier = modifier,
             contentDescription = contentDescription ?: "$label, values badge",
         )
-        "ownership" -> InfoChip(
+        "ownership" -> OwnershipInfoChip(
             label = label,
             modifier = modifier,
             contentDescription = contentDescription ?: "$label, ownership information",

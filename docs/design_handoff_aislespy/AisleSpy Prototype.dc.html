@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=Zilla+Slab:wght@500;600;700&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#ece7db;font-family:'Public Sans',sans-serif}a{color:#5d6633}a:hover{color:#465024}input{font-family:'IBM Plex Mono',monospace}@keyframes scanline{0%{top:12%}50%{top:84%}100%{top:12%}}@keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:28px;box-sizing:border-box">
+<x-import component-from-global-scope="AndroidDevice" from="./android-frame.jsx" hint-size="412px,892px">
+<div style="height:100%;display:flex;flex-direction:column;color:#33301f;--hf:{{ headingFontStack }}">
+
+<sc-if value="{{ showOnboarding }}" hint-placeholder-val="{{ true }}">
+<div style="flex:1;display:flex;flex-direction:column;padding:20px 28px 28px;background:#faf6ee;box-sizing:border-box">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-weight:800;font-size:19px;letter-spacing:-.01em">AisleSpy</span>
+    <span onClick="{{ onObSkip }}" style="font-size:13px;font-weight:600;color:rgba(51,48,31,.5);cursor:pointer;padding:8px">Skip</span>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center">
+    <div style="width:150px;height:150px;border-radius:50%;background:#fff;border:1px solid rgba(80,60,30,.14);display:flex;align-items:center;justify-content:center">
+      <sc-if value="{{ showOb0 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:5px;align-items:center;height:52px"><div style="width:4px;height:52px;background:#33301f"></div><div style="width:8px;height:52px;background:#33301f"></div><div style="width:4px;height:52px;background:#B36B00"></div><div style="width:6px;height:52px;background:#33301f"></div><div style="width:3px;height:52px;background:#33301f"></div><div style="width:9px;height:52px;background:#2E7D32"></div><div style="width:4px;height:52px;background:#33301f"></div></div></sc-if>
+      <sc-if value="{{ showOb1 }}" hint-placeholder-val="{{ false }}"><div style="position:relative;width:96px;height:96px"><svg viewBox="0 0 96 96" width="96" height="96"><circle cx="48" cy="48" r="41" fill="none" stroke="rgba(80,60,30,.12)" stroke-width="8"></circle><circle cx="48" cy="48" r="41" fill="none" stroke="#B36B00" stroke-width="8" stroke-linecap="round" stroke-dasharray="175 257.6" transform="rotate(-90 48 48)"></circle></svg><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:30px;font-weight:700">68</div></div></sc-if>
+      <sc-if value="{{ showOb2 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center"><div style="width:34px;height:26px;border:5px solid #5d6633;border-bottom:none;border-radius:17px 17px 0 0"></div><div style="width:58px;height:44px;background:#5d6633;border-radius:10px;display:flex;align-items:center;justify-content:center"><div style="width:10px;height:10px;border-radius:50%;background:#faf6ee"></div></div></div></sc-if>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;max-width:290px">
+      <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:27px;font-weight:700;line-height:1.15;letter-spacing:-.01em">{{ obTitle }}</span>
+      <span style="font-size:14px;line-height:1.6;color:rgba(51,48,31,.65)">{{ obBody }}</span>
+      <sc-if value="{{ showOb2 }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:rgba(51,48,31,.45)">Scores are informational — not medical advice.</span></sc-if>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:18px;align-items:center">
+    <div style="display:flex;gap:7px"><sc-for list="{{ obDots }}" as="d" hint-placeholder-count="3"><div style="width:8px;height:8px;border-radius:50%;background:{{ d.bg }}"></div></sc-for></div>
+    <div onClick="{{ onObNext }}" style="width:100%;background:#5d6633;color:#faf6ee;border-radius:99px;padding:16px 0;text-align:center;font-size:15px;font-weight:700;cursor:pointer;box-sizing:border-box" style-hover="background:#4c5429">{{ obBtnLabel }}</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showScan }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;flex-direction:column;background:#23211a;overflow:hidden;position:relative">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;position:relative;z-index:2">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-weight:800;font-size:18px;color:#faf6ee">AisleSpy</span>
+    <span style="font-size:10.5px;font-weight:600;color:#cdd6a3;border:1px solid rgba(205,214,163,.4);padding:4px 10px;border-radius:99px">only the barcode is sent</span>
+  </div>
+  <div style="flex:1;position:relative;margin:6px 20px;border-radius:20px;overflow:hidden;background:repeating-linear-gradient(135deg,#2b2921 0 14px,#26241d 14px 28px)">
+    <span style="position:absolute;top:10px;left:0;right:0;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(250,246,238,.35)">camera preview</span>
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+      <div style="background:#f6f1e6;border-radius:10px;padding:16px 22px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;transform:rotate(-3deg);box-shadow:0 12px 30px rgba(0,0,0,.4)">
+        <div style="display:flex;gap:3px;align-items:flex-end;height:44px"><div style="width:3px;height:44px;background:#1c1a14"></div><div style="width:6px;height:44px;background:#1c1a14"></div><div style="width:2px;height:44px;background:#1c1a14"></div><div style="width:4px;height:44px;background:#1c1a14"></div><div style="width:2px;height:44px;background:#1c1a14"></div><div style="width:7px;height:44px;background:#1c1a14"></div><div style="width:3px;height:44px;background:#1c1a14"></div><div style="width:5px;height:44px;background:#1c1a14"></div><div style="width:2px;height:44px;background:#1c1a14"></div><div style="width:6px;height:44px;background:#1c1a14"></div><div style="width:3px;height:44px;background:#1c1a14"></div></div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#1c1a14;letter-spacing:.14em">{{ nextBarcode }}</span>
+      </div>
+    </div>
+    <div style="position:absolute;inset:36px 26px;pointer-events:none">
+      <div style="position:absolute;top:0;left:0;width:34px;height:34px;border-top:4px solid #cdd6a3;border-left:4px solid #cdd6a3;border-radius:8px 0 0 0"></div>
+      <div style="position:absolute;top:0;right:0;width:34px;height:34px;border-top:4px solid #cdd6a3;border-right:4px solid #cdd6a3;border-radius:0 8px 0 0"></div>
+      <div style="position:absolute;bottom:0;left:0;width:34px;height:34px;border-bottom:4px solid #cdd6a3;border-left:4px solid #cdd6a3;border-radius:0 0 0 8px"></div>
+      <div style="position:absolute;bottom:0;right:0;width:34px;height:34px;border-bottom:4px solid #cdd6a3;border-right:4px solid #cdd6a3;border-radius:0 0 8px 0"></div>
+    </div>
+    <sc-if value="{{ scanning }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:8%;right:8%;height:2px;background:#cdd6a3;box-shadow:0 0 14px #cdd6a3;animation:scanline 1.3s ease-in-out infinite;top:12%"></div></sc-if>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px 20px 18px">
+    <span style="font-size:12.5px;color:rgba(250,246,238,.55)">{{ scanStatus }}</span>
+    <div onClick="{{ onShutter }}" style="width:74px;height:74px;border-radius:50%;background:{{ shutterBg }};border:5px solid rgba(250,246,238,.25);display:flex;align-items:center;justify-content:center;cursor:pointer">
+      <div style="width:26px;height:26px;border:3px solid #23211a;border-radius:7px;position:relative"><div style="position:absolute;left:-3px;right:-3px;top:50%;height:3px;background:#23211a"></div></div>
+    </div>
+    <span onClick="{{ onGoManual }}" style="font-size:12px;font-weight:600;color:#cdd6a3;cursor:pointer;text-decoration:underline;text-underline-offset:3px;padding:4px">Type the barcode instead</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showManual }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:14px;padding:14px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">Type the barcode</span>
+    <span style="font-size:13px;line-height:1.55;color:rgba(51,48,31,.6)">For when the camera can't read it — enter the EAN or UPC digits from under the bars.</span>
+    <input value="{{ manualCode }}" onChange="{{ onManualChange }}" inputMode="numeric" placeholder="e.g. 7612345001234" style="width:100%;box-sizing:border-box;padding:15px 16px;font-size:16px;letter-spacing:.1em;border:1.5px solid rgba(80,60,30,.3);border-radius:14px;background:#fff;color:#33301f;outline:none" style-focus="border-color:#5d6633"></input>
+    <sc-if value="{{ manualErrShow }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:#C62828">{{ manualErr }}</span></sc-if>
+    <div onClick="{{ onManualSubmit }}" style="background:#5d6633;color:#faf6ee;border-radius:99px;padding:15px 0;text-align:center;font-size:15px;font-weight:700;cursor:pointer" style-hover="background:#4c5429">Look it up</div>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45);margin-top:6px">TRY ONE OF THESE</span>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <sc-for list="{{ sampleCodes }}" as="c" hint-placeholder-count="4">
+        <div onClick="{{ c.onTap }}" style="display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:12px;padding:11px 14px;cursor:pointer" style-hover="border-color:rgba(80,60,30,.3)"><span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px">{{ c.code }}</span><span style="font-size:11px;color:rgba(51,48,31,.5)">{{ c.hint }}</span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showChooser }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:14px;padding:16px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">One barcode, two matches</span>
+    <span style="font-size:13px;line-height:1.55;color:rgba(51,48,31,.6)">This code turned up in both open databases. Which product are you holding?</span>
+    <sc-for list="{{ chooserOpts }}" as="o" hint-placeholder-count="2">
+      <div onClick="{{ o.onTap }}" style="background:#fff;border:1.5px solid rgba(80,60,30,.15);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:4px;cursor:pointer" style-hover="border-color:#5d6633">
+        <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5d6633">{{ o.kind }}</span>
+        <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:17px;font-weight:700">{{ o.name }}</span>
+        <span style="font-size:12px;color:rgba(51,48,31,.55)">{{ o.meta }}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showResult }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px 0">
+    <span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span>
+    <sc-if value="{{ showScored }}" hint-placeholder-val="{{ true }}"><span onClick="{{ onBookmark }}" style="font-size:11.5px;font-weight:700;cursor:pointer;padding:5px 12px;border-radius:99px;background:{{ bmBg }};color:{{ bmColor }};border:1px solid rgba(93,102,51,.4)">{{ bmLabel }}</span></sc-if>
+  </div>
+
+  <sc-if value="{{ showNotFound }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 28px;text-align:center">
+      <div style="width:110px;height:110px;border-radius:50%;background:#fff;border:1px dashed rgba(80,60,30,.3);display:flex;align-items:center;justify-content:center;font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:36px;font-weight:700;color:rgba(51,48,31,.35)">?</div>
+      <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700">{{ nfTitle }}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(51,48,31,.5)">{{ nfBarcode }}</span>
+      <span style="font-size:13.5px;line-height:1.6;color:rgba(51,48,31,.65);max-width:280px">This barcode isn't in Open Food Facts or Open Beauty Facts yet. You could be the first to file it.</span>
+      <div style="display:flex;flex-direction:column;gap:9px;width:100%;max-width:280px;margin-top:6px">
+        <div onClick="{{ onGoScan }}" style="background:#5d6633;color:#faf6ee;border-radius:99px;padding:14px 0;font-size:14px;font-weight:700;cursor:pointer" style-hover="background:#4c5429">Scan another</div>
+        <div style="border:1.5px solid rgba(93,102,51,.5);color:#5d6633;border-radius:99px;padding:13px 0;font-size:14px;font-weight:700;cursor:pointer">Contribute this product</div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showPartial }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 24px 6px;text-align:center;animation:fadeup .35s ease both">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5d6633">{{ rKind }}</span>
+      <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:21px;font-weight:700;line-height:1.25;max-width:290px;letter-spacing:-.01em">{{ rName }}</span>
+      <span style="font-size:12.5px;color:rgba(51,48,31,.55)">{{ rBrand }}</span>
+      <div style="width:110px;height:110px;border-radius:50%;background:#fff;border:1px solid rgba(80,60,30,.14);display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:6px"><span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:38px;font-weight:700;color:rgba(51,48,31,.35)">—</span><span style="font-size:10px;color:rgba(51,48,31,.45)">unscored</span></div>
+      <span style="font-size:11px;font-weight:700;padding:5px 12px;border-radius:99px;border:1.5px solid rgba(80,60,30,.3);color:rgba(51,48,31,.6)">Confidence: Low</span>
+      <span style="font-size:13px;line-height:1.6;color:rgba(51,48,31,.65);max-width:290px;margin-top:4px">Found in Open Beauty Facts, but there's no usable ingredient list — so we won't invent a score.</span>
+      <div style="border:1.5px solid rgba(93,102,51,.5);color:#5d6633;border-radius:99px;padding:12px 26px;font-size:13.5px;font-weight:700;cursor:pointer;margin-top:8px">Add the ingredient list</div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showScored }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 24px 6px;text-align:center;animation:fadeup .35s ease both">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5d6633">{{ rKind }}</span>
+      <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:21px;font-weight:700;line-height:1.25;max-width:300px;letter-spacing:-.01em">{{ rName }}</span>
+      <span style="font-size:12.5px;color:rgba(51,48,31,.55)">{{ rBrand }} · <span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ rBarcode }}</span></span>
+      <div aria-label="{{ rAria }}" style="position:relative;width:124px;height:124px;margin-top:4px">
+        <svg viewBox="0 0 124 124" width="124" height="124"><circle cx="62" cy="62" r="53" fill="#fff" stroke="rgba(80,60,30,.14)" stroke-width="1"></circle><circle cx="62" cy="62" r="53" fill="none" stroke="{{ rColor }}" stroke-width="7" stroke-linecap="round" stroke-dasharray="{{ rDash }}" transform="rotate(-90 62 62)"></circle></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:42px;font-weight:700;line-height:1">{{ rScore }}</span><span style="font-size:10px;color:rgba(51,48,31,.5)">out of 100</span></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:2px">
+        <span style="font-size:12px;font-weight:800;letter-spacing:.05em;padding:6px 14px;border-radius:99px;background:{{ rBandBg }};color:#FFFFFF">{{ rBand }}</span>
+        <span style="font-size:11px;font-weight:700;padding:6px 12px;border-radius:99px;border:1.5px solid rgba(80,60,30,.3);color:rgba(51,48,31,.65)">Confidence: {{ rConf }}</span>
+      </div>
+      <span style="font-size:13.5px;line-height:1.55;color:rgba(51,48,31,.75);max-width:300px;margin-top:4px">{{ rSummary }}</span>
+      <sc-if value="{{ showDriver }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:600;color:{{ rColor }}">{{ rDriver }}</span></sc-if>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px">
+        <sc-for list="{{ rBadges }}" as="b" hint-placeholder-count="3"><span style="font-size:11px;font-weight:600;padding:5px 11px;border-radius:99px;background:rgba(93,102,51,.1);color:#4c5429;border:1px solid rgba(93,102,51,.25)">{{ b.label }}</span></sc-for>
+      </div>
+    </div>
+    <div style="margin:12px 22px 0;border-top:1px dashed rgba(80,60,30,.25)"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;padding:14px 22px 4px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">WHAT'S BEHIND THE NUMBER</span><span onClick="{{ onGoMethod }}" style="font-size:11.5px;font-weight:600;color:#5d6633;cursor:pointer;text-decoration:underline;text-underline-offset:3px">How we score</span></div>
+      <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+        <sc-for list="{{ rComponents }}" as="cp" hint-placeholder-count="3">
+          <div style="padding:12px 15px;display:flex;flex-direction:column;gap:5px;border-bottom:1px solid rgba(80,60,30,.08)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;font-weight:700">{{ cp.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(51,48,31,.55)">{{ cp.share }}</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><div style="flex:1;height:5px;border-radius:3px;background:rgba(80,60,30,.1)"><div style="width:{{ cp.pct }};height:5px;border-radius:3px;background:{{ cp.barColor }}"></div></div><span style="font-size:12px;font-weight:700;min-width:44px;text-align:right">{{ cp.sub }}</span></div>
+            <span style="font-size:11.5px;line-height:1.45;color:rgba(51,48,31,.6)">{{ cp.detail }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;padding:12px 22px 4px">
+      <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">{{ suspectTitle }}</span>
+      <sc-if value="{{ showNoConcerns }}" hint-placeholder-val="{{ false }}">
+        <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:14px 16px;font-size:12.5px;line-height:1.55;color:rgba(51,48,31,.7)">Nothing in this product matched our concern pack. That doesn't guarantee perfection — just no known flags.</div>
+      </sc-if>
+      <sc-for list="{{ rConcerns }}" as="cn" hint-placeholder-count="2">
+        <div onClick="{{ cn.onTap }}" style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:13px 15px;display:flex;flex-direction:column;gap:5px;cursor:pointer" style-hover="border-color:rgba(80,60,30,.3)">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font-size:13px;font-weight:700">{{ cn.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(51,48,31,.45)">{{ cn.tag }}</span><span style="margin-left:auto;color:rgba(51,48,31,.3);font-size:15px">›</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><div style="width:52px;height:5px;border-radius:3px;background:rgba(80,60,30,.1)"><div style="width:{{ cn.sevPct }};height:5px;border-radius:3px;background:{{ cn.sevColor }}"></div></div><span style="font-size:10.5px;font-weight:700;color:{{ cn.sevColor }}">Severity {{ cn.sev }}/5</span><span style="font-size:10.5px;color:rgba(51,48,31,.45)">{{ cn.posHint }}</span></div>
+          <span style="font-size:11.5px;line-height:1.5;color:rgba(51,48,31,.7)">{{ cn.short }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ showNutritionRow }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:12px 22px 0">
+        <div onClick="{{ onGoNutrition }}" style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer" style-hover="border-color:rgba(80,60,30,.3)">
+          <div style="width:34px;height:34px;border-radius:9px;background:rgba(93,102,51,.12);display:flex;align-items:center;justify-content:center;font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-weight:800;font-size:16px;color:#4c5429">{{ rNutriGrade }}</div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:1px"><span style="font-size:13px;font-weight:700">Nutrition</span><span style="font-size:11px;color:rgba(51,48,31,.55)">Nutri-Score + per-100 g figures · not part of the score</span></div>
+          <span style="color:rgba(51,48,31,.3);font-size:16px">›</span>
+        </div>
+      </div>
+    </sc-if>
+    <div style="padding:12px 22px 2px;font-size:10.5px;line-height:1.6;color:rgba(51,48,31,.45)"><strong style="color:rgba(51,48,31,.55)">Ingredients:</strong> {{ rIngredients }}</div>
+  </sc-if>
+
+  <sc-if value="{{ showDisclaimer }}" hint-placeholder-val="{{ true }}">
+    <div style="margin:12px 22px 24px;border:1px dashed rgba(80,60,30,.3);border-radius:14px;padding:12px 15px;font-size:11px;line-height:1.6;color:rgba(51,48,31,.55)">Scores are informational only — not medical advice or an allergen guarantee. Open data can be incomplete; the physical label is authoritative. <span onClick="{{ onGoMethod }}" style="color:#5d6633;font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px">How we score</span></div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:12px;padding:12px 24px 24px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(51,48,31,.5)">{{ dTag }}</span>
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:26px;font-weight:700;letter-spacing:-.01em;margin-top:-8px">{{ dName }}</span>
+    <div style="display:flex;align-items:center;gap:10px"><div style="width:80px;height:7px;border-radius:4px;background:rgba(80,60,30,.1)"><div style="width:{{ dSevPct }};height:7px;border-radius:4px;background:{{ dSevColor }}"></div></div><span style="font-size:12px;font-weight:800;color:{{ dSevColor }}">Severity {{ dSev }} of 5</span></div>
+    <span style="font-size:12px;font-weight:600;color:rgba(51,48,31,.55)">{{ dSevMeaning }}</span>
+    <sc-if value="{{ dHasPos }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:rgba(51,48,31,.6);background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:10px;padding:9px 12px">Position on label: {{ dPos }} — earlier usually means more of it.</span></sc-if>
+    <span style="font-size:13.5px;line-height:1.65;color:rgba(51,48,31,.75)">{{ dLong }}</span>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45);margin-top:6px">SOURCES</span>
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:14px;overflow:hidden">
+      <sc-for list="{{ dSources }}" as="src" hint-placeholder-count="2"><div style="padding:11px 14px;border-bottom:1px solid rgba(80,60,30,.08);font-size:12px;color:#5d6633;font-weight:600">{{ src.label }}</div></sc-for>
+    </div>
+    <span style="font-size:11px;line-height:1.6;color:rgba(51,48,31,.5)">Informational only — not medical advice.</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNutrition }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:12px;padding:12px 24px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">Nutrition</span>
+    <div style="background:rgba(93,102,51,.1);border:1px solid rgba(93,102,51,.25);border-radius:12px;padding:10px 13px;font-size:11.5px;line-height:1.5;color:#4c5429;font-weight:600">Shown for context only — nutrition does not affect the AisleSpy score.</div>
+    <div style="display:flex;align-items:center;gap:14px;background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:14px 16px">
+      <div style="width:52px;height:52px;border-radius:13px;background:rgba(93,102,51,.12);display:flex;align-items:center;justify-content:center;font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-weight:800;font-size:26px;color:#4c5429">{{ nGrade }}</div>
+      <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:13.5px;font-weight:700">Nutri-Score {{ nGrade }}</span><span style="font-size:11.5px;color:rgba(51,48,31,.55)">From Open Food Facts, when the producer supplies data</span></div>
+    </div>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">PER 100 G</span>
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+      <sc-for list="{{ nRows }}" as="n" hint-placeholder-count="6"><div style="display:flex;justify-content:space-between;padding:11px 15px;border-bottom:1px solid rgba(80,60,30,.08)"><span style="font-size:12.5px">{{ n.label }}</span><span style="font-size:12.5px;font-weight:700;font-family:'IBM Plex Mono',monospace">{{ n.val }}</span></div></sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showHistory }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:18px 22px 10px;display:flex;justify-content:space-between;align-items:center">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">{{ histTitle }}</span>
+    <sc-if value="{{ histHasItems }}" hint-placeholder-val="{{ true }}"><span onClick="{{ onClearAll }}" style="font-size:11.5px;font-weight:700;color:#C62828;cursor:pointer;padding:6px 4px">{{ clearLabel }}</span></sc-if>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:2px 22px 24px">
+    <sc-for list="{{ histItems }}" as="h" hint-placeholder-count="4">
+      <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+        <div onClick="{{ h.onOpen }}" style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;cursor:pointer">
+          <span style="flex:none;width:44px;text-align:center;font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:15px;font-weight:800;padding:8px 0;border-radius:11px;background:{{ h.bandBg }};color:#FFFFFF">{{ h.score }}</span>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+            <span style="font-size:13.5px;font-weight:700;line-height:1.3">{{ h.name }}</span>
+            <span style="font-size:11.5px;color:rgba(51,48,31,.55)">{{ h.band }} · {{ h.time }}</span>
+          </div>
+        </div>
+        <span onClick="{{ h.onDelete }}" style="flex:none;font-size:11px;font-weight:700;color:{{ h.delColor }};cursor:pointer;padding:6px 8px">{{ h.delLabel }}</span>
+      </div>
+    </sc-for>
+    <sc-if value="{{ histEmpty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:38px 20px;font-size:13px;color:rgba(51,48,31,.5);line-height:1.6">{{ histEmptyCopy }}</div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showSettings }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:18px 22px 12px"><span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">Settings</span></div>
+  <div style="margin:0 22px 14px;background:#5d6633;border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:5px;color:#faf6ee">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:16px;font-weight:700">Recon, not surveillance</span>
+    <span style="font-size:12px;line-height:1.55;color:rgba(250,246,238,.8)">No accounts, no ads, no analytics. History stays on this phone. Lookups send only the barcode to Open Food Facts / Open Beauty Facts.</span>
+  </div>
+  <div style="padding:0 22px 6px"><span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">TRUST</span></div>
+  <div style="margin:0 22px 14px;background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+    <div onClick="{{ onGoMethod }}" style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(80,60,30,.08);cursor:pointer" style-hover="background:rgba(93,102,51,.05)"><span style="font-size:13px;font-weight:600">How we score</span><span style="color:rgba(51,48,31,.3)">›</span></div>
+    <div onClick="{{ onGoPrivacy }}" style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(80,60,30,.08);cursor:pointer" style-hover="background:rgba(93,102,51,.05)"><span style="font-size:13px;font-weight:600">Privacy</span><span style="color:rgba(51,48,31,.3)">›</span></div>
+    <div onClick="{{ onGoLicenses }}" style="padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer" style-hover="background:rgba(93,102,51,.05)"><span style="font-size:13px;font-weight:600">Licenses &amp; attribution</span><span style="color:rgba(51,48,31,.3)">›</span></div>
+  </div>
+  <div style="padding:0 22px 6px"><span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">VERSIONS</span></div>
+  <div style="margin:0 22px 24px;background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+    <div style="padding:12px 15px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(80,60,30,.08)"><span style="font-size:12.5px">App</span><span style="font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:rgba(51,48,31,.6)">0.9.0</span></div>
+    <div style="padding:12px 15px;display:flex;justify-content:space-between;border-bottom:1px solid rgba(80,60,30,.08)"><span style="font-size:12.5px">Methodology</span><span style="font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:rgba(51,48,31,.6)">2.0.0</span></div>
+    <div style="padding:12px 15px;display:flex;justify-content:space-between"><span style="font-size:12.5px">Knowledge pack</span><span style="font-size:12.5px;font-family:'IBM Plex Mono',monospace;color:rgba(51,48,31,.6)">2026.07.12</span></div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showMethod }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:12px;padding:12px 24px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">How we score</span>
+    <span style="font-size:13px;line-height:1.6;color:rgba(51,48,31,.7)">One 1–100 number for <strong>ingredient quality only</strong>. Higher is better. Nutrition, dietary badges and brand ownership are shown for context but never enter the number.</span>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">THE FOUR BANDS</span>
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+      <sc-for list="{{ methodBands }}" as="mb" hint-placeholder-count="4">
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 15px;border-bottom:1px solid rgba(80,60,30,.08)"><span style="width:74px;text-align:center;font-size:11px;font-weight:800;letter-spacing:.04em;padding:5px 0;border-radius:99px;background:{{ mb.bg }};color:#FFFFFF">{{ mb.label }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:rgba(51,48,31,.6)">{{ mb.range }}</span></div>
+      </sc-for>
+    </div>
+    <span style="font-size:11px;font-weight:700;letter-spacing:.07em;color:rgba(51,48,31,.45)">FOOD WEIGHTS (METHODOLOGY 2.0.0)</span>
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;overflow:hidden">
+      <div style="padding:12px 15px;border-bottom:1px solid rgba(80,60,30,.08);display:flex;justify-content:space-between"><span style="font-size:12.5px">Flagged ingredients</span><span style="font-size:12.5px;font-weight:700">65%</span></div>
+      <div style="padding:12px 15px;border-bottom:1px solid rgba(80,60,30,.08);display:flex;justify-content:space-between"><span style="font-size:12.5px">Ultra-processing (NOVA)</span><span style="font-size:12.5px;font-weight:700">30%</span></div>
+      <div style="padding:12px 15px;display:flex;justify-content:space-between"><span style="font-size:12.5px">Label positives</span><span style="font-size:12.5px;font-weight:700">5%</span></div>
+    </div>
+    <span style="font-size:12.5px;line-height:1.6;color:rgba(51,48,31,.65)">Missing a component? Its weight is dropped and the rest renormalize — we never invent data. Beauty products use a parallel formula: position-weighted hazards, fragrance &amp; allergens, and regulatory flags. <strong>Confidence</strong> (High / Medium / Low) tells you how complete the inputs were.</span>
+    <span style="font-size:11px;line-height:1.6;color:rgba(51,48,31,.5)">Scores are informational only — not medical advice, an allergen guarantee, or a safety certification.</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showPrivacy }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:12px 24px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">Privacy</span>
+    <sc-for list="{{ privacyRows }}" as="pr" hint-placeholder-count="5">
+      <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:14px;padding:12px 15px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700">{{ pr.head }}</span><span style="font-size:12px;line-height:1.5;color:rgba(51,48,31,.6)">{{ pr.body }}</span></div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showLicenses }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;overflow:auto;background:#faf6ee">
+  <div style="padding:14px 16px 0"><span onClick="{{ onBack }}" style="font-size:13.5px;font-weight:600;color:rgba(51,48,31,.6);cursor:pointer;padding:6px 8px" style-hover="color:#33301f">← Back</span></div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:12px 24px 24px">
+    <span style="font-family:var(--hf,'Bricolage Grotesque'),sans-serif;font-size:24px;font-weight:700;letter-spacing:-.01em">Licenses &amp; attribution</span>
+    <sc-for list="{{ licenseRows }}" as="lr" hint-placeholder-count="4">
+      <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:14px;padding:12px 15px;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:700">{{ lr.head }}</span><span style="font-size:12px;line-height:1.5;color:rgba(51,48,31,.6)">{{ lr.body }}</span></div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showNav }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;display:flex;background:#faf6ee;border-top:1px solid rgba(80,60,30,.15);padding:8px 10px 6px">
+  <div onClick="{{ onGoScan }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0">
+    <svg width="22" height="22" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3" fill="none" stroke="{{ scanTabColor }}" stroke-width="2"></rect><line x1="7" y1="12" x2="17" y2="12" stroke="{{ scanTabColor }}" stroke-width="2"></line></svg>
+    <span style="font-size:10.5px;font-weight:700;color:{{ scanTabColor }}">Scan</span>
+  </div>
+  <div onClick="{{ onGoHistory }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0">
+    <svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="none" stroke="{{ histTabColor }}" stroke-width="2"></circle><path d="M12 8v4l3 2" fill="none" stroke="{{ histTabColor }}" stroke-width="2" stroke-linecap="round"></path></svg>
+    <span style="font-size:10.5px;font-weight:700;color:{{ histTabColor }}">History</span>
+  </div>
+  <div onClick="{{ onGoSettings }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:4px 0">
+    <svg width="22" height="22" viewBox="0 0 24 24"><line x1="4" y1="8" x2="20" y2="8" stroke="{{ setTabColor }}" stroke-width="2"></line><circle cx="9" cy="8" r="3" fill="#faf6ee" stroke="{{ setTabColor }}" stroke-width="2"></circle><line x1="4" y1="16" x2="20" y2="16" stroke="{{ setTabColor }}" stroke-width="2"></line><circle cx="15" cy="16" r="3" fill="#faf6ee" stroke="{{ setTabColor }}" stroke-width="2"></circle></svg>
+    <span style="font-size:10.5px;font-weight:700;color:{{ setTabColor }}">Settings</span>
+  </div>
+</div>
+</sc-if>
+
+</div>
+</x-import>
+<span style="font-size:11.5px;color:rgba(51,48,31,.5);font-family:'Public Sans',sans-serif;max-width:412px;text-align:center">Each scan demos a different state: Ok → Bad → ambiguous (chooser) → Excellent (zero concerns) → partial → not found. Manual entry, ingredient detail, nutrition, history delete &amp; trust pages all work.</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;headingFont&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;Bricolage Grotesque&quot;, &quot;Zilla Slab&quot;, &quot;Public Sans&quot;], &quot;default&quot;: &quot;Bricolage Grotesque&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Type&quot;}, &quot;spyCopy&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Voice&quot;}, &quot;skipOnboarding&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Flow&quot;}}">
+const BANDS = [
+  { min: 75, label: 'EXCELLENT', name: 'Excellent', accent: '#2E7D32', chip: '#1B5E20' },
+  { min: 50, label: 'OK', name: 'Ok', accent: '#B36B00', chip: '#8A5A00' },
+  { min: 25, label: 'POOR', name: 'Poor', accent: '#D84315', chip: '#BF360C' },
+  { min: 1, label: 'BAD', name: 'Bad', accent: '#C62828', chip: '#B71C1C' }];
+const band = s => BANDS.find(b => s >= b.min);
+const SEV_COLOR = { 1: '#8f8a5a', 2: '#8f8a5a', 3: '#B36B00', 4: '#D84315', 5: '#C62828' };
+const SEV_MEANING = { 1: 'Mild note — mainly for sensitive individuals.', 2: 'Minor concern — limited-evidence debate.', 3: 'Moderate concern — notable caveats.', 4: 'Strong concern — restricted in some regions.', 5: 'Highest concern in our pack — ban/restrict or strong evidence flags.' };
+const PRODUCTS = [
+  { id: 'granola', kind: 'FOOD', name: 'Oat & Honey Granola Bar', brand: 'Sunfield Foods', barcode: '7 612345 001234', score: 68, conf: 'High',
+    summary: 'Decent ingredient quality. A couple of things matched our pack — nothing above minor severity.',
+    driver: 'Main drag: ultra-processing.',
+    badges: ['Vegetarian', 'Not vegan', 'NOVA 3'],
+    components: [
+      { name: 'Flagged ingredients', sub: '74', pct: '74%', share: '65% of score', detail: '2 concerns matched, both low severity.' },
+      { name: 'Ultra-processing', sub: '50', pct: '50%', share: '30% of score', detail: 'NOVA group 3 — processed food.' },
+      { name: 'Label positives', sub: '40', pct: '40%', share: '5% of score', detail: 'No qualifying certification labels found.' }],
+    concerns: [
+      { name: 'Natural flavouring', tag: 'FLAVOUR', sev: 2, pos: 'near end of list', short: 'An umbrella term — the exact compounds aren\u2019t disclosed on the label.', long: '\u201CNatural flavouring\u201D can cover many compounds derived from plant or animal sources. It\u2019s not a safety problem in itself; it\u2019s flagged for opacity — you can\u2019t tell what\u2019s actually in it from the label.', sources: ['Open Food Facts — additives taxonomy', 'EU Regulation 1334/2008 (flavourings)'] },
+      { name: 'Soy lecithin', tag: 'E322', sev: 1, pos: 'near end of list', short: 'An emulsifier that keeps oils mixed. A heads-up if you avoid soy.', long: 'Lecithin keeps oils from separating and is considered safe at any normal food amount by EFSA and the FDA. It carries the lowest severity in our pack — the note exists for people avoiding soy for allergy or preference.', sources: ['EFSA re-evaluation of lecithins (E322), 2017', 'Open Food Facts — E322'] }],
+    ingredients: 'rolled oats (42%), honey, sunflower oil, brown rice syrup, almonds, natural flavouring, soy lecithin, sea salt.',
+    nutriGrade: 'B', nutriments: [['Energy', '1,780 kJ'], ['Sugars', '18 g'], ['Salt', '0.4 g'], ['Saturated fat', '1.9 g'], ['Fibre', '7.1 g'], ['Protein', '9.4 g']] },
+  { id: 'ramen', kind: 'FOOD', name: 'Midnight Ramen — Chicken', brand: 'Kettle & Co', barcode: '8 712100 849084', score: 18, conf: 'High',
+    summary: 'Low ingredient quality: several flagged additives on top of heavy processing.',
+    driver: 'Main drags: flagged ingredients, ultra-processing.',
+    badges: ['Not vegetarian', 'NOVA 4', 'Owned by Continental Brands'],
+    components: [
+      { name: 'Flagged ingredients', sub: '15', pct: '15%', share: '65% of score', detail: '4 concerns matched, including one at severity 5.' },
+      { name: 'Ultra-processing', sub: '10', pct: '10%', share: '30% of score', detail: 'NOVA group 4 — ultra-processed.' },
+      { name: 'Label positives', sub: '0', pct: '0%', share: '5% of score', detail: 'None found.' }],
+    concerns: [
+      { name: 'TBHQ', tag: 'E319', sev: 5, pos: 'mid-list', short: 'A synthetic preservative — the highest-severity match in this product.', long: 'TBHQ keeps frying oils from going rancid. It\u2019s legal in small doses, but it\u2019s restricted in several regions and reviews have linked high intakes to health concerns, which is why it sits at the top of our severity scale.', sources: ['EFSA opinion on TBHQ (E319)', 'Open Food Facts — E319'] },
+      { name: 'Caramel colour', tag: 'E150C', sev: 3, pos: 'near end of list', short: 'A colouring whose production can create 4-MEI, a debated by-product.', long: 'Ammonia-process caramel colouring can contain 4-methylimidazole. Regulators consider typical exposure acceptable; California\u2019s Prop 65 lists it, which keeps the debate alive. Moderate severity.', sources: ['EFSA re-evaluation of caramel colours', 'OEHHA Prop 65 — 4-MEI'] },
+      { name: 'Flavour enhancer', tag: 'E621 \u00B7 MSG', sev: 2, pos: 'near top of sachet list', short: 'MSG is safe for most people — flagged as a marker of heavy flavour engineering.', long: 'Decades of research haven\u2019t confirmed the old fears about MSG at food doses. It stays in our pack at low severity because it usually signals a heavily engineered flavour profile rather than a health risk.', sources: ['FDA — Questions and answers on MSG', 'Open Food Facts — E621'] },
+      { name: 'Palm oil', tag: '', sev: 2, pos: 'near top of list', short: 'Fine in moderation for you; flagged for saturated fat and sourcing concerns.', long: 'Palm oil is high in saturated fat, and conventional production is a major deforestation driver. Our pack flags it at low severity on the combined signal.', sources: ['WHO — saturated fat guidance', 'Open Food Facts — palm oil'] }],
+    ingredients: 'wheat noodles (wheat flour, palm oil, salt), flavour sachet (salt, monosodium glutamate, sugar, chicken powder, TBHQ, caramel colour E150c).',
+    nutriGrade: 'D', nutriments: [['Energy', '1,880 kJ'], ['Sugars', '3.1 g'], ['Salt', '4.7 g'], ['Saturated fat', '8.2 g'], ['Fibre', '1.8 g'], ['Protein', '8.9 g']] },
+  { id: 'dessert', kind: 'FOOD', name: 'Dew Drop Coconut Dessert', brand: 'Bare Botanica Foods', barcode: '5 010029 220117', score: 41, conf: 'Medium',
+    summary: 'Middling ingredient quality — and the processing data is missing, so the score leans on fewer signals.',
+    driver: 'Main drag: flagged ingredients.',
+    badges: ['Vegan'],
+    components: [
+      { name: 'Flagged ingredients', sub: '40', pct: '40%', share: '93% of score (reweighted)', detail: '2 concerns matched.' },
+      { name: 'Ultra-processing', sub: '\u2014', pct: '0%', share: 'omitted', detail: 'No NOVA data — score reweighted.' },
+      { name: 'Label positives', sub: '55', pct: '55%', share: '7% of score (reweighted)', detail: 'Organic claim on label tags.' }],
+    concerns: [
+      { name: 'Carrageenan', tag: 'E407', sev: 3, pos: 'mid-list', short: 'A seaweed-derived thickener with a long-running gut-health debate.', long: 'Food-grade carrageenan is approved in the EU and US, but studies on degraded forms keep a moderate-severity debate alive. People with gut sensitivities sometimes choose to avoid it.', sources: ['EFSA re-evaluation of carrageenan (E407)', 'Open Food Facts — E407'] },
+      { name: 'Natural flavouring', tag: 'FLAVOUR', sev: 2, pos: 'near end of list', short: 'Umbrella term — exact compounds not disclosed.', long: 'Flagged for opacity rather than known harm: the label doesn\u2019t say which compounds are used.', sources: ['EU Regulation 1334/2008 (flavourings)'] }],
+    ingredients: 'coconut milk (62%), water, sugar, carrageenan, natural flavouring.',
+    nutriGrade: 'C', nutriments: [['Energy', '640 kJ'], ['Sugars', '11 g'], ['Salt', '0.1 g'], ['Saturated fat', '9.0 g'], ['Fibre', '0.7 g'], ['Protein', '1.3 g']] },
+  { id: 'moist', kind: 'BEAUTY', name: 'Dew Drop Daily Moisturizer', brand: 'Bare Botanica', barcode: '5 010029 220117', score: 54, conf: 'Medium',
+    summary: 'A mixed formula: one moderate fragrance concern, otherwise unremarkable.',
+    driver: 'Main drag: fragrance & allergens.',
+    badges: ['Cruelty-free'],
+    components: [
+      { name: 'Hazard matches', sub: '62', pct: '62%', share: '60% of score', detail: '1 moderate match, position-weighted (late in list).' },
+      { name: 'Fragrance & allergens', sub: '35', pct: '35%', share: '25% of score', detail: 'Undisclosed parfum present.' },
+      { name: 'Regulatory flags', sub: '95', pct: '95%', share: '15% of score', detail: 'No restricted or banned entries matched.' }],
+    concerns: [
+      { name: 'Fragrance', tag: 'PARFUM', sev: 3, pos: 'last on list', short: 'An umbrella term — the most common cause of skin reactions in cosmetics.', long: '\u201CParfum\u201D can legally cover dozens of compounds, including known contact allergens. Its position at the very end of the INCI list suggests a small amount, which the position-weighted score reflects. If you have reactive skin, unfragranced is the safer bet.', sources: ['SCCS opinion on fragrance allergens', 'Open Beauty Facts — parfum'] },
+      { name: 'Phenoxyethanol', tag: 'PRESERVATIVE', sev: 1, pos: 'near end of list', short: 'A preservative, safe at the \u22641% used in cosmetics.', long: 'EU rules cap phenoxyethanol at 1% in cosmetics, where reviews find it safe. Mild note only.', sources: ['SCCS opinion on phenoxyethanol', 'EU Cosmetics Regulation 1223/2009'] }],
+    ingredients: 'aqua, glycerin, caprylic/capric triglyceride, niacinamide, cetearyl alcohol, dimethicone, phenoxyethanol, parfum.',
+    nutriGrade: null, nutriments: [] },
+  { id: 'yogurt', kind: 'FOOD', name: 'Cloudtop Greek Yogurt, Plain', brand: 'Meadowlark Dairy', barcode: '9 002233 010101', score: 88, conf: 'High',
+    summary: 'Nothing in this product matched our concern pack, and processing is minimal.',
+    driver: '',
+    badges: ['Vegetarian', 'NOVA 1', 'Independent'],
+    components: [
+      { name: 'Flagged ingredients', sub: '100', pct: '100%', share: '65% of score', detail: 'No matches in the knowledge pack.' },
+      { name: 'Ultra-processing', sub: '80', pct: '80%', share: '30% of score', detail: 'NOVA group 1 — unprocessed or minimally processed.' },
+      { name: 'Label positives', sub: '20', pct: '20%', share: '5% of score', detail: 'No certification labels found.' }],
+    concerns: [],
+    ingredients: 'pasteurised milk, cream, live active cultures.',
+    nutriGrade: 'B', nutriments: [['Energy', '406 kJ'], ['Sugars', '3.6 g'], ['Salt', '0.1 g'], ['Saturated fat', '3.0 g'], ['Fibre', '0 g'], ['Protein', '9.0 g']] },
+  { id: 'shampoo', kind: 'BEAUTY', name: 'Silk Ribbon Shampoo', brand: 'Bare Botanica', barcode: '3 600522 087136', score: null, conf: 'Low',
+    summary: '', driver: '', badges: [], components: [], concerns: [], ingredients: null, nutriGrade: null, nutriments: [] }];
+const byId = Object.fromEntries(PRODUCTS.map(p => [p.id, p]));
+const QUEUE = ['granola', 'ramen', '__chooser', 'yogurt', 'shampoo', '__notfound'];
+const BARCODE_MAP = { '7612345001234': 'granola', '8712100849084': 'ramen', '5010029220117': '__chooser', '9002233010101': 'yogurt', '3600522087136': 'shampoo' };
+
+class Component extends DCLogic {
+  state = {
+    stack: [{ name: 'onboarding' }], ob: 0, scanning: false, queue: 0, saved: {},
+    history: [{ pid: 'ramen', time: 'Yesterday' }, { pid: 'yogurt', time: 'Tuesday' }, { pid: 'moist', time: 'Jul 12' }],
+    manualCode: '', manualErr: '', confirmClear: false, confirmDel: null,
+  };
+  componentDidMount() { if (this.props.skipOnboarding && this.cur().name === 'onboarding') this.setState({ stack: [{ name: 'scan' }] }); }
+  cur() { return this.state.stack[this.state.stack.length - 1]; }
+  push(v) { this.setState(s => ({ stack: s.stack.concat([v]), confirmClear: false, confirmDel: null })); }
+  pop() { this.setState(s => ({ stack: s.stack.length > 1 ? s.stack.slice(0, -1) : [{ name: 'scan' }] })); }
+  goTab(t) { this.setState({ stack: [{ name: t }], confirmClear: false, confirmDel: null }); }
+  addHistory(pid) { this.setState(s => ({ history: [{ pid, time: 'Just now' }].concat(s.history.filter(h => h.pid !== pid)) })); }
+  openCode(pid, barcode) {
+    if (pid === '__chooser') this.push({ name: 'chooser' });
+    else if (pid) { this.addHistory(pid); this.push({ name: 'result', pid }); }
+    else this.push({ name: 'result', notFound: true, barcode });
+  }
+  renderVals() {
+    const s = this.state, cur = this.cur(), spy = this.props.spyCopy ?? true;
+    const OB = [
+      { title: 'Your eyes in the aisle', body: 'Scan any food or beauty barcode. AisleSpy checks it against open community databases and reports back in seconds.' },
+      { title: 'Every score shows its work', body: 'One 1\u2013100 score for ingredient quality \u2014 with the flagged ingredients, processing level and exact weights behind it, in plain language.' },
+      { title: 'Recon, not surveillance', body: 'No account, no ads, no analytics. Lookups send only the barcode \u2014 your history never leaves this phone.' }];
+    const fonts = { 'Bricolage Grotesque': "'Bricolage Grotesque'", 'Zilla Slab': "'Zilla Slab'", 'Public Sans': "'Public Sans'" };
+    const p = cur.pid ? byId[cur.pid] : byId[QUEUE.includes(cur.name) ? 'granola' : 'granola'];
+    const dp = cur.name === 'detail' ? byId[cur.dpid] : null;
+    const dc = dp ? dp.concerns[cur.ci] : null;
+    const np = cur.name === 'nutrition' ? byId[cur.npid] : null;
+    const pb = p && p.score != null ? band(p.score) : null;
+    const isPartial = cur.name === 'result' && !cur.notFound && p && p.score == null;
+    const isScored = cur.name === 'result' && !cur.notFound && p && p.score != null;
+    const tabRoot = s.stack[0].name;
+    const inactive = 'rgba(51,48,31,.45)', OLIVE = '#5d6633';
+    const queueItem = QUEUE[s.queue % QUEUE.length];
+    const queueCode = { granola: '7 612345 001234', ramen: '8 712100 849084', __chooser: '5 010029 220117', yogurt: '9 002233 010101', shampoo: '3 600522 087136', __notfound: '0 481516 234200' }[queueItem];
+    return {
+      headingFontStack: fonts[this.props.headingFont] ?? "'Bricolage Grotesque'",
+      showOnboarding: cur.name === 'onboarding', showScan: cur.name === 'scan', showManual: cur.name === 'manual',
+      showChooser: cur.name === 'chooser', showResult: cur.name === 'result', showDetail: cur.name === 'detail',
+      showNutrition: cur.name === 'nutrition', showHistory: cur.name === 'history', showSettings: cur.name === 'settings',
+      showMethod: cur.name === 'method', showPrivacy: cur.name === 'privacy', showLicenses: cur.name === 'licenses',
+      showNav: cur.name !== 'onboarding',
+      showOb0: s.ob === 0, showOb1: s.ob === 1, showOb2: s.ob === 2,
+      obTitle: OB[s.ob].title, obBody: OB[s.ob].body,
+      obDots: OB.map((_, i) => ({ bg: i === s.ob ? OLIVE : 'rgba(80,60,30,.2)' })),
+      obBtnLabel: s.ob === 2 ? (spy ? 'Start the recon' : 'Start scanning') : 'Continue',
+      onObNext: () => s.ob === 2 ? this.goTab('scan') : this.setState({ ob: s.ob + 1 }),
+      onObSkip: () => this.goTab('scan'),
+      scanning: s.scanning, nextBarcode: queueCode,
+      scanStatus: s.scanning ? (spy ? 'Running recon\u2026' : 'Reading barcode\u2026') : 'Line up a barcode inside the frame',
+      shutterBg: s.scanning ? '#cdd6a3' : '#faf6ee',
+      onShutter: () => {
+        if (s.scanning) return;
+        this.setState({ scanning: true });
+        setTimeout(() => {
+          this.setState(st => ({ scanning: false, queue: st.queue + 1 }));
+          this.openCode(queueItem === '__notfound' ? null : queueItem, queueCode);
+        }, 1600);
+      },
+      onGoManual: () => this.push({ name: 'manual' }),
+      manualCode: s.manualCode, manualErr: s.manualErr, manualErrShow: !!s.manualErr,
+      onManualChange: e => this.setState({ manualCode: e.target.value.replace(/[^0-9]/g, '').slice(0, 13), manualErr: '' }),
+      onManualSubmit: () => {
+        const code = s.manualCode;
+        if (code.length < 8) { this.setState({ manualErr: 'Barcodes are 8\u201313 digits \u2014 keep typing.' }); return; }
+        const hit = BARCODE_MAP[code];
+        this.openCode(hit === '__chooser' ? '__chooser' : hit || null, code.replace(/(\d)(?=(\d{6})+$)/g, '$1 '));
+      },
+      sampleCodes: [['7612345001234', 'granola bar'], ['8712100849084', 'instant ramen'], ['5010029220117', 'ambiguous match'], ['0481516234200', 'unknown code']].map(([code, hint]) => ({ code, hint, onTap: () => this.setState({ manualCode: code, manualErr: '' }) })),
+      chooserOpts: [
+        { kind: 'FOOD \u00B7 OPEN FOOD FACTS', name: 'Dew Drop Coconut Dessert', meta: 'Bare Botanica Foods \u00B7 150 g pot', onTap: () => { this.addHistory('dessert'); this.push({ name: 'result', pid: 'dessert' }); } },
+        { kind: 'BEAUTY \u00B7 OPEN BEAUTY FACTS', name: 'Dew Drop Daily Moisturizer', meta: 'Bare Botanica \u00B7 50 ml jar', onTap: () => { this.addHistory('moist'); this.push({ name: 'result', pid: 'moist' }); } }],
+      showScored: isScored, showPartial: isPartial, showNotFound: !!cur.notFound,
+      showDisclaimer: cur.name === 'result' && !cur.notFound,
+      nfTitle: spy ? 'Cold case' : 'Not found', nfBarcode: cur.barcode || '',
+      rKind: p ? (p.kind === 'FOOD' ? 'FOOD \u00B7 OPEN FOOD FACTS' : 'BEAUTY \u00B7 OPEN BEAUTY FACTS') : '',
+      rName: p ? p.name : '', rBrand: p ? p.brand : '', rBarcode: p ? p.barcode : '',
+      rScore: isScored ? p.score : '', rBand: pb ? pb.label : '', rBandBg: pb ? pb.chip : '#8A5A00',
+      rColor: pb ? pb.accent : '#B36B00', rDash: pb ? (p.score / 100 * 333).toFixed(1) + ' 333' : '0 333',
+      rConf: p ? p.conf : '', rSummary: p ? p.summary : '',
+      rAria: isScored && pb ? 'Score ' + p.score + ' out of 100, ' + pb.name + ', confidence ' + p.conf : '',
+      showDriver: isScored && !!p.driver, rDriver: p ? p.driver : '',
+      rBadges: p ? p.badges.map(b => ({ label: b })) : [],
+      rComponents: p ? p.components.map(c => ({ ...c, barColor: c.sub === '\u2014' ? 'rgba(80,60,30,.2)' : (pb ? pb.accent : '#B36B00') })) : [],
+      suspectTitle: spy ? 'SUSPECT INGREDIENTS' : 'FLAGGED INGREDIENTS',
+      showNoConcerns: isScored && p.concerns.length === 0,
+      rConcerns: p ? p.concerns.map((c, i) => ({ name: c.name, tag: c.tag, sev: c.sev, sevPct: (c.sev * 20) + '%', sevColor: SEV_COLOR[c.sev], posHint: c.pos ? '\u00B7 ' + c.pos : '', short: c.short, onTap: () => this.push({ name: 'detail', dpid: p.id, ci: i }) })) : [],
+      showNutritionRow: isScored && p.kind === 'FOOD' && !!p.nutriGrade,
+      rNutriGrade: p ? (p.nutriGrade || '') : '', rIngredients: p && p.ingredients ? p.ingredients : '',
+      onGoNutrition: () => this.push({ name: 'nutrition', npid: p.id }),
+      bmLabel: p && s.saved[p.id] ? 'Saved \u2713' : 'Save',
+      bmBg: p && s.saved[p.id] ? OLIVE : 'transparent', bmColor: p && s.saved[p.id] ? '#faf6ee' : OLIVE,
+      onBookmark: () => p && this.setState(st => ({ saved: { ...st.saved, [p.id]: !st.saved[p.id] } })),
+      dName: dc ? dc.name : '', dTag: dc ? (dp.name + (dc.tag ? ' \u00B7 ' + dc.tag : '')) : '',
+      dSev: dc ? dc.sev : 1, dSevPct: dc ? (dc.sev * 20) + '%' : '20%', dSevColor: dc ? SEV_COLOR[dc.sev] : '#8f8a5a',
+      dSevMeaning: dc ? SEV_MEANING[dc.sev] : '', dHasPos: !!(dc && dc.pos), dPos: dc ? dc.pos : '',
+      dLong: dc ? dc.long : '', dSources: dc ? dc.sources.map(x => ({ label: x })) : [],
+      nGrade: np ? (np.nutriGrade || '\u2014') : '', nRows: np ? np.nutriments.map(([label, val]) => ({ label, val })) : [],
+      histTitle: spy ? 'Mission log' : 'History',
+      histHasItems: s.history.length > 0, histEmpty: s.history.length === 0,
+      histEmptyCopy: spy ? 'No missions yet.\nScan something in the aisle to start the log.' : 'No scans yet.',
+      clearLabel: s.confirmClear ? 'Really clear all?' : 'Clear all',
+      onClearAll: () => s.confirmClear ? this.setState({ history: [], confirmClear: false }) : this.setState({ confirmClear: true }),
+      histItems: s.history.map(h => {
+        const hp = byId[h.pid], hb = hp.score != null ? band(hp.score) : null;
+        return { name: hp.name, time: h.time, score: hp.score != null ? hp.score : '\u2014',
+          band: hb ? hb.name : 'Unscored', bandBg: hb ? hb.chip : 'rgba(51,48,31,.35)',
+          delLabel: s.confirmDel === h.pid ? 'Delete?' : '\u00D7',
+          delColor: s.confirmDel === h.pid ? '#C62828' : 'rgba(51,48,31,.4)',
+          onDelete: () => s.confirmDel === h.pid ? this.setState(st => ({ history: st.history.filter(x => x.pid !== h.pid), confirmDel: null })) : this.setState({ confirmDel: h.pid }),
+          onOpen: () => this.push({ name: 'result', pid: h.pid }) };
+      }),
+      methodBands: BANDS.map(b => ({ label: b.name, bg: b.chip, range: b.min === 75 ? '75\u2013100' : b.min === 50 ? '50\u201374' : b.min === 25 ? '25\u201349' : '1\u201324' })),
+      privacyRows: [
+        { head: 'No accounts, ever', body: 'There is nothing to sign up for and nothing to log in to.' },
+        { head: 'No telemetry or analytics', body: 'The app ships with zero tracking SDKs. Nothing phones home.' },
+        { head: 'History stays on this phone', body: 'Scans are stored in a local database only. Delete them any time.' },
+        { head: 'Lookups send only the barcode', body: 'Network requests go to Open Food Facts / Open Beauty Facts and their image servers \u2014 not to any AisleSpy server.' },
+        { head: 'Scoring runs on the device', body: 'The score is computed locally from product data plus a shipped knowledge pack.' }],
+      licenseRows: [
+        { head: 'AisleSpy \u2014 Apache-2.0', body: 'app.aislespy \u00B7 source available on the project repository.' },
+        { head: 'Open Food Facts / Open Beauty Facts', body: 'Product data under the Open Database License (ODbL). Thank you, contributors.' },
+        { head: 'FOSS barcode decoder', body: 'Camera decoding uses a fully open-source library \u2014 no Play Services, no ML Kit.' },
+        { head: 'Knowledge packs', body: 'Curated from open regulatory and scientific sources (EFSA, SCCS, FDA, EU law).' }],
+      onBack: () => this.pop(),
+      onGoScan: () => this.goTab('scan'), onGoHistory: () => this.goTab('history'), onGoSettings: () => this.goTab('settings'),
+      onGoMethod: () => this.push({ name: 'method' }), onGoPrivacy: () => this.push({ name: 'privacy' }), onGoLicenses: () => this.push({ name: 'licenses' }),
+      scanTabColor: tabRoot === 'scan' ? OLIVE : inactive,
+      histTabColor: tabRoot === 'history' ? OLIVE : inactive,
+      setTabColor: tabRoot === 'settings' ? OLIVE : inactive,
+    };
+  }
+}
+</script>
+</body>
+</html>

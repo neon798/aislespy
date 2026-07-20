@@ -194,6 +194,21 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-020 — Warm & natural visual identity (design handoff)
+
+- **Date:** 2026-07-19
+- **Status:** Accepted
+- **Context:** A full visual identity and screen design handoff landed in `docs/design_handoff_aislespy/` (interactive HTML prototype + README tokens). MVP UI used a generic Material green palette and system fonts; brand direction is cream surfaces, deep olive accent, and characterful grotesque headings while keeping score-band semantics fixed by the product brief.
+- **Decision:** Adopt the **warm & natural** light visual identity from the handoff:
+  1. **Theme tokens:** cream surface `#faf6ee`, ink `#33301f`, olive `#5d6633` / olive dark `#4c5429`, olive container (~11% olive), pale lime `#cdd6a3` (scan accents), scan bg `#23211a`, card white + card border, dashed divider, muted ink alphas, error `#C62828`.
+  2. **Typography (OFL, bundled in `res/font/`):** Bricolage Grotesque (headings / wordmark / score numerals / Nutri-Score letter, 700–800), Public Sans (body / labels / buttons, 400–800), IBM Plex Mono (barcodes / subscores / versions, 400–500). Licenses under `assets/licenses/fonts/`.
+  3. **Score band colors unchanged** (Excellent/Ok/Poor/Bad accents and filled chip hexes from brief §2 / existing `ScoreBandColors`). Severity 1–5 colors follow the handoff khaki/amber/orange/red scale with mandatory “Severity n/5” text.
+  4. **Shared primitives:** pill primary/secondary buttons, white outlined cards (radii 16/14/11/18), section labels (11/700 UPPERCASE), olive-container / band / values / ownership chips, severity bar, score ring (white disc, 7px band arc), dashed divider/disclaimer helpers, bottom nav vector icons (viewfinder / clock / sliders) at 22px with olive active / ink@0.45 inactive.
+  5. **Deferred (handoff Gaps):** full **dark theme** design (keep a functional dark `ColorScheme` only); **app icon / launcher identity**.
+- **Consequences:** Theme foundation lives in `ui/theme/` (`Color`, `Type`, `Shape`, `Theme`, `ScoreColors`). Screens are restyled against these tokens in a follow-up pass; scoring engines, knowledge packs, and band hex values stay untouched. Dynamic color remains off. New network hosts / proprietary fonts must not be introduced for branding.
+
+---
+
 ## Template for new entries
 
 ```markdown

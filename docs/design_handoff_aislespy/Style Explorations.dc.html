@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#f0eee9;font-family:system-ui,sans-serif}a{color:#2a78d6}a:hover{color:#1a5cb0}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 6px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 system-ui,sans-serif;color:#1a1a1a}.dv-intro{max-width:760px;font:400 12.5px/1.6 system-ui,sans-serif;color:rgba(0,0,0,.6);margin:0 0 24px}.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11px/1.3 system-ui,sans-serif;color:rgba(0,0,0,.55)}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:26px 0 0;font:12px/1.5 system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Visual directions — score result screen</span></div>
+<p class="dv-intro">Same content in four divergent styles: a scanned granola bar scoring 72/100, ring-style score (your pick), transparent breakdown, flagged ingredients in plain language, and the privacy promise visible on-screen. Pick a direction (or mix elements) and I'll build the full tappable flow — onboarding, scan, result, history, settings.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Clinical &amp; trustworthy — cool whites, precise sans, teal accent</div>
+<div style="width:360px;background:#fbfcfd;border:1px solid rgba(20,40,50,.1);border-radius:24px;overflow:hidden;font-family:'Public Sans',sans-serif;color:#14232a">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 10px"><span style="font-size:13px;font-weight:600;letter-spacing:.02em">Result</span><span style="display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;color:#0d7a6f;background:oklch(0.95 0.02 185);padding:4px 9px;border-radius:99px"><span style="width:6px;height:6px;border-radius:50%;background:#0d7a6f"></span>Scanned on-device</span></div>
+  <div style="display:flex;gap:16px;align-items:center;padding:14px 20px 18px">
+    <div style="position:relative;width:96px;height:96px;flex:none">
+      <svg viewBox="0 0 96 96" width="96" height="96"><circle cx="48" cy="48" r="41" fill="none" stroke="oklch(0.93 0.01 220)" stroke-width="9"></circle><circle cx="48" cy="48" r="41" fill="none" stroke="oklch(0.62 0.11 175)" stroke-width="9" stroke-linecap="round" stroke-dasharray="185.5 257.6" transform="rotate(-90 48 48)"></circle></svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-size:30px;font-weight:800;line-height:1">72</span><span style="font-size:9px;font-weight:600;color:rgba(20,35,42,.45);letter-spacing:.08em">/ 100</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:11px;font-weight:600;color:oklch(0.55 0.11 175);letter-spacing:.04em">GOOD</span>
+      <span style="font-size:17px;font-weight:700;line-height:1.25">Oat &amp; Honey Granola Bar</span>
+      <span style="font-size:12px;color:rgba(20,35,42,.55)">Sunfield Foods · 6-pack, 210 g</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px;padding:0 20px 16px">
+    <span style="font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(20,35,42,.5)">HOW WE SCORED IT</span>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:grid;grid-template-columns:86px 1fr 30px;gap:10px;align-items:center;font-size:12px"><span>Nutrition</span><div style="height:6px;border-radius:3px;background:oklch(0.94 0.01 220)"><div style="width:78%;height:6px;border-radius:3px;background:oklch(0.62 0.11 175)"></div></div><span style="font-weight:600;text-align:right">31</span></div>
+      <div style="display:grid;grid-template-columns:86px 1fr 30px;gap:10px;align-items:center;font-size:12px"><span>Additives</span><div style="height:6px;border-radius:3px;background:oklch(0.94 0.01 220)"><div style="width:55%;height:6px;border-radius:3px;background:oklch(0.72 0.11 85)"></div></div><span style="font-weight:600;text-align:right">17</span></div>
+      <div style="display:grid;grid-template-columns:86px 1fr 30px;gap:10px;align-items:center;font-size:12px"><span>Processing</span><div style="height:6px;border-radius:3px;background:oklch(0.94 0.01 220)"><div style="width:60%;height:6px;border-radius:3px;background:oklch(0.62 0.11 175)"></div></div><span style="font-weight:600;text-align:right">24</span></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:0 20px 20px">
+    <span style="font-size:11px;font-weight:700;letter-spacing:.06em;color:rgba(20,35,42,.5)">WORTH KNOWING</span>
+    <div style="display:flex;gap:10px;padding:12px;border:1px solid oklch(0.88 0.05 85);background:oklch(0.98 0.015 85);border-radius:12px"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:oklch(0.72 0.11 85);margin-top:4px"></span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12.5px;font-weight:600">Soy lecithin (E322)</span><span style="font-size:11.5px;line-height:1.45;color:rgba(20,35,42,.65)">An emulsifier that keeps oils mixed. Generally fine, but worth knowing if you avoid soy.</span></div></div>
+    <div style="display:flex;gap:10px;padding:12px;border:1px solid oklch(0.9 0.01 220);background:#fff;border-radius:12px"><span style="flex:none;width:8px;height:8px;border-radius:50%;background:oklch(0.62 0.11 175);margin-top:4px"></span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12.5px;font-weight:600">Added sugar — 9 g per bar</span><span style="font-size:11.5px;line-height:1.45;color:rgba(20,35,42,.65)">About 2 teaspoons. Moderate for a snack bar of this size.</span></div></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Warm &amp; natural — cream paper, serif headings, olive/clay</div>
+<div style="width:360px;background:#faf6ee;border:1px solid rgba(80,60,30,.14);border-radius:28px;overflow:hidden;font-family:'Public Sans',sans-serif;color:#33301f">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px 8px"><span style="font-family:Lora,serif;font-size:15px;font-weight:600;font-style:italic">Your scan</span><span style="font-size:10.5px;font-weight:600;color:#5d6633;border:1px solid rgba(93,102,51,.35);padding:4px 10px;border-radius:99px">🌱 nothing leaves your phone</span></div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 22px 14px;text-align:center">
+    <div style="position:relative;width:120px;height:120px">
+      <svg viewBox="0 0 120 120" width="120" height="120"><circle cx="60" cy="60" r="51" fill="oklch(0.97 0.02 100)" stroke="oklch(0.9 0.03 100)" stroke-width="1"></circle><circle cx="60" cy="60" r="51" fill="none" stroke="oklch(0.58 0.09 120)" stroke-width="7" stroke-linecap="round" stroke-dasharray="230.8 320.4" transform="rotate(-90 60 60)"></circle></svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:Lora,serif;font-size:40px;font-weight:600;line-height:1">72</span><span style="font-size:10px;color:rgba(51,48,31,.5)">out of 100</span></div>
+    </div>
+    <span style="font-family:Lora,serif;font-size:20px;font-weight:600;line-height:1.3;max-width:260px">Oat &amp; Honey Granola Bar</span>
+    <span style="font-size:12px;color:rgba(51,48,31,.55)">Sunfield Foods · a pretty good choice</span>
+  </div>
+  <div style="margin:0 22px;border-top:1px dashed rgba(80,60,30,.25)"></div>
+  <div style="display:flex;justify-content:space-between;gap:8px;padding:14px 22px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1"><span style="font-family:Lora,serif;font-size:19px;font-weight:600;color:#5d6633">31<span style="font-size:11px;color:rgba(51,48,31,.4)">/40</span></span><span style="font-size:10.5px;color:rgba(51,48,31,.6)">nutrition</span></div>
+    <div style="width:1px;background:rgba(80,60,30,.15)"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1"><span style="font-family:Lora,serif;font-size:19px;font-weight:600;color:#a05e2c">17<span style="font-size:11px;color:rgba(51,48,31,.4)">/30</span></span><span style="font-size:10.5px;color:rgba(51,48,31,.6)">additives</span></div>
+    <div style="width:1px;background:rgba(80,60,30,.15)"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1"><span style="font-family:Lora,serif;font-size:19px;font-weight:600;color:#5d6633">24<span style="font-size:11px;color:rgba(51,48,31,.4)">/30</span></span><span style="font-size:10.5px;color:rgba(51,48,31,.6)">processing</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:4px 22px 22px">
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:13px 15px;display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:700;color:#a05e2c">Soy lecithin</span><span style="font-size:11.5px;line-height:1.5;color:rgba(51,48,31,.7)">Keeps the oils from separating. Harmless for most people — a heads-up if you avoid soy.</span></div>
+    <div style="background:#fff;border:1px solid rgba(80,60,30,.12);border-radius:16px;padding:13px 15px;display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:700;color:#5d6633">Added sugar, 9 g</span><span style="font-size:11.5px;line-height:1.5;color:rgba(51,48,31,.7)">Around two teaspoons per bar — reasonable, but it adds up if you eat a few.</span></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Techy &amp; minimal — dark mode, mono data, single lime accent</div>
+<div style="width:360px;background:#101312;border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;font-family:'Space Grotesk',sans-serif;color:#e8ece9">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px 10px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(232,236,233,.5)">SCAN_RESULT</span><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:oklch(0.85 0.17 130);border:1px solid oklch(0.5 0.1 130 / 0.5);padding:3px 8px;border-radius:4px">0 BYTES SENT</span></div>
+  <div style="display:flex;gap:16px;align-items:center;padding:12px 20px 16px">
+    <div style="position:relative;width:92px;height:92px;flex:none">
+      <svg viewBox="0 0 92 92" width="92" height="92"><circle cx="46" cy="46" r="39" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="7"></circle><circle cx="46" cy="46" r="39" fill="none" stroke="oklch(0.85 0.17 130)" stroke-width="7" stroke-linecap="round" stroke-dasharray="176.4 245.0" transform="rotate(-90 46 46)"></circle></svg>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;line-height:1;color:oklch(0.85 0.17 130)">72</span><span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:rgba(232,236,233,.4)">/100</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <span style="font-size:17px;font-weight:600;line-height:1.25">Oat &amp; Honey Granola Bar</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(232,236,233,.45)">EAN 7 612345 001234</span>
+      <span style="font-size:11px;color:rgba(232,236,233,.55)">Sunfield Foods · Open Food Facts</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:7px;padding:0 20px 16px">
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px"><span style="color:rgba(232,236,233,.6)">NUTRITION</span><span>31/40</span><div style="grid-column:1/-1;height:4px;background:rgba(255,255,255,.08)"><div style="width:78%;height:4px;background:oklch(0.85 0.17 130)"></div></div></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px"><span style="color:rgba(232,236,233,.6)">ADDITIVES</span><span>17/30</span><div style="grid-column:1/-1;height:4px;background:rgba(255,255,255,.08)"><div style="width:55%;height:4px;background:oklch(0.75 0.14 85)"></div></div></div>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-family:'IBM Plex Mono',monospace;font-size:11px"><span style="color:rgba(232,236,233,.6)">PROCESSING</span><span>24/30</span><div style="grid-column:1/-1;height:4px;background:rgba(255,255,255,.08)"><div style="width:60%;height:4px;background:oklch(0.85 0.17 130)"></div></div></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:8px;padding:0 20px 20px">
+    <div style="border-left:2px solid oklch(0.75 0.14 85);background:rgba(255,255,255,.03);padding:11px 13px;display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:600">soy lecithin <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:oklch(0.75 0.14 85)">E322</span></span><span style="font-size:11.5px;line-height:1.5;color:rgba(232,236,233,.6)">Emulsifier — keeps oils mixed. Fine for most; flagged if you avoid soy.</span></div>
+    <div style="border-left:2px solid oklch(0.85 0.17 130);background:rgba(255,255,255,.03);padding:11px 13px;display:flex;flex-direction:column;gap:3px"><span style="font-size:12.5px;font-weight:600">added sugar <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(232,236,233,.4)">9G/BAR</span></span><span style="font-size:11.5px;line-height:1.5;color:rgba(232,236,233,.6)">≈2 tsp. Moderate for this serving size.</span></div>
+  </div>
+</div></div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Bold &amp; editorial — big type, flat color blocks, high contrast</div>
+<div style="width:360px;background:#f4f1ea;border:1px solid rgba(0,0,0,.12);border-radius:20px;overflow:hidden;font-family:Archivo,sans-serif;color:#141414">
+  <div style="background:oklch(0.78 0.14 150);padding:22px 22px 18px;display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:800;letter-spacing:.1em">SCANNED</span><span style="font-size:10.5px;font-weight:700;background:#141414;color:#f4f1ea;padding:4px 9px;border-radius:4px">PRIVATE BY DESIGN</span></div>
+    <div style="display:flex;align-items:flex-end;gap:14px">
+      <span style="font-size:72px;font-weight:900;line-height:.85;letter-spacing:-.03em">72</span>
+      <div style="display:flex;flex-direction:column;gap:2px;padding-bottom:4px"><span style="font-size:12px;font-weight:800;letter-spacing:.06em">OUT OF 100</span><span style="font-size:12px;font-weight:600;color:rgba(20,20,20,.7)">Pretty good choice</span></div>
+    </div>
+    <span style="font-size:19px;font-weight:800;line-height:1.15;letter-spacing:-.01em">Oat &amp; Honey Granola Bar</span>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1px solid rgba(0,0,0,.12)">
+    <div style="padding:13px 10px 11px;display:flex;flex-direction:column;gap:2px;border-right:1px solid rgba(0,0,0,.12)"><span style="font-size:20px;font-weight:900">31<span style="font-size:11px;font-weight:700;color:rgba(20,20,20,.4)">/40</span></span><span style="font-size:9.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,20,20,.55)">NUTRITION</span></div>
+    <div style="padding:13px 10px 11px;display:flex;flex-direction:column;gap:2px;border-right:1px solid rgba(0,0,0,.12);background:oklch(0.87 0.1 85)"><span style="font-size:20px;font-weight:900">17<span style="font-size:11px;font-weight:700;color:rgba(20,20,20,.4)">/30</span></span><span style="font-size:9.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,20,20,.55)">ADDITIVES</span></div>
+    <div style="padding:13px 10px 11px;display:flex;flex-direction:column;gap:2px"><span style="font-size:20px;font-weight:900">24<span style="font-size:11px;font-weight:700;color:rgba(20,20,20,.4)">/30</span></span><span style="font-size:9.5px;font-weight:700;letter-spacing:.08em;color:rgba(20,20,20,.55)">PROCESSING</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column;padding:6px 0 8px">
+    <div style="padding:13px 22px;display:flex;flex-direction:column;gap:3px;border-bottom:1px solid rgba(0,0,0,.08)"><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;background:oklch(0.75 0.14 85);flex:none"></span><span style="font-size:14px;font-weight:800">Soy lecithin</span></div><span style="font-size:12px;line-height:1.5;color:rgba(20,20,20,.65)">Keeps oils mixed together. Fine for most people — skip it if you avoid soy.</span></div>
+    <div style="padding:13px 22px;display:flex;flex-direction:column;gap:3px"><div style="display:flex;align-items:center;gap:8px"><span style="width:10px;height:10px;background:oklch(0.78 0.14 150);flex:none"></span><span style="font-size:14px;font-weight:800">Added sugar — 9 g</span></div><span style="font-size:12px;line-height:1.5;color:rgba(20,20,20,.65)">About 2 teaspoons per bar. Moderate, not alarming.</span></div>
+  </div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "build the full prototype in <a class="dv-oid" href="#1a">1a</a>" · "mix <a class="dv-oid" href="#1b">1b</a>'s warmth with <a class="dv-oid" href="#1c">1c</a>'s score ring" · "show me the scan screen in <a class="dv-oid" href="#1d">1d</a>"</p>
+</section>
+</x-dc>
+</body>
+</html>

@@ -1,13 +1,22 @@
 package app.aislespy.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CropFree
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -30,6 +39,12 @@ import app.aislespy.ui.settings.LicensesScreen
 import app.aislespy.ui.settings.MethodologyScreen
 import app.aislespy.ui.settings.PrivacyScreen
 import app.aislespy.ui.settings.SettingsScreen
+import app.aislespy.ui.theme.AisleSpyTextStyles
+import app.aislespy.ui.theme.CreamSurface
+import app.aislespy.ui.theme.Ink
+import app.aislespy.ui.theme.MutedText45
+import app.aislespy.ui.theme.Olive
+import app.aislespy.ui.theme.OliveContainer
 
 /**
  * Route patterns from docs/UI_UX.md (route table).
@@ -68,13 +83,17 @@ object Routes {
 private data class TopLevelDestination(
     val route: String,
     val label: String,
-    val iconGlyph: String,
+    val icon: ImageVector,
 )
 
+/**
+ * Bottom nav: Scan (viewfinder), History (clock), Settings (sliders).
+ * 22px stroke icons; active = olive, inactive = ink@0.45; labels 10.5/700.
+ */
 private val topLevelDestinations = listOf(
-    TopLevelDestination(Routes.SCAN, "Scan", "S"),
-    TopLevelDestination(Routes.HISTORY, "History", "H"),
-    TopLevelDestination(Routes.SETTINGS, "Settings", "⚙"),
+    TopLevelDestination(Routes.SCAN, "Scan", Icons.Outlined.CropFree),
+    TopLevelDestination(Routes.HISTORY, "History", Icons.Outlined.Schedule),
+    TopLevelDestination(Routes.SETTINGS, "Settings", Icons.Outlined.Tune),
 )
 
 private val bottomBarRoutes = topLevelDestinations.map { it.route }.toSet()
@@ -94,7 +113,10 @@ fun AisleSpyNavGraph(
         modifier = modifier,
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = CreamSurface,
+                    contentColor = Ink,
+                ) {
                     topLevelDestinations.forEach { dest ->
                         val selected = currentDestination
                             ?.hierarchy
@@ -110,8 +132,26 @@ fun AisleSpyNavGraph(
                                     restoreState = true
                                 }
                             },
-                            icon = { Text(dest.iconGlyph) },
-                            label = { Text(dest.label) },
+                            icon = {
+                                Icon(
+                                    imageVector = dest.icon,
+                                    contentDescription = dest.label,
+                                    modifier = Modifier.size(22.dp),
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = dest.label,
+                                    style = AisleSpyTextStyles.navLabel,
+                                )
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Olive,
+                                selectedTextColor = Olive,
+                                unselectedIconColor = MutedText45,
+                                unselectedTextColor = MutedText45,
+                                indicatorColor = OliveContainer,
+                            ),
                         )
                     }
                 }

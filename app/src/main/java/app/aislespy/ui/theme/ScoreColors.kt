@@ -9,6 +9,8 @@ import app.aislespy.domain.model.ScoreBand
 /**
  * Theme-aware score band colors for arcs, labels, and filled chips.
  * Chip container/content pairs are chosen for ~WCAG AA contrast.
+ *
+ * Band hex values are locked by the product brief / design handoff — do not restyle.
  */
 @Immutable
 data class ScoreBandColors(
@@ -42,23 +44,29 @@ fun scoreBandColors(band: ScoreBand): ScoreBandColors {
     )
 }
 
-/** Severity 1–5 chip colors (COMPONENTS.md: 1–2 amber, 3 orange, 4–5 red). */
+/**
+ * Severity 1–5 colors (design handoff).
+ * Always pair with a numeric "Severity n/5" label — never color-only.
+ */
 @Immutable
 data class SeverityColors(
     val accent: Color,
     val container: Color,
 )
 
+fun severityAccent(severity: Int): Color = when (severity.coerceIn(1, 5)) {
+    1, 2 -> SeverityLow
+    3 -> SeverityMedium
+    4 -> SeverityHigh
+    else -> SeverityCritical
+}
+
 @Composable
 fun severityColors(severity: Int): SeverityColors {
+    val accent = severityAccent(severity)
     val dark = isSystemInDarkTheme()
-    val accent = when (severity.coerceIn(1, 5)) {
-        1, 2 -> if (dark) scoreOkDark else scoreOkLight
-        3 -> if (dark) scorePoorDark else scorePoorLight
-        else -> if (dark) scoreBadDark else scoreBadLight
-    }
     return SeverityColors(
         accent = accent,
-        container = accent.copy(alpha = if (dark) 0.28f else 0.18f),
+        container = accent.copy(alpha = if (dark) 0.28f else 0.14f),
     )
 }

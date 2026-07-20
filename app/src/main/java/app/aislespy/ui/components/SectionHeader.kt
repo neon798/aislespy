@@ -1,15 +1,16 @@
 package app.aislespy.ui.components
 
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
+import app.aislespy.ui.theme.AisleSpyTextStyles
+import app.aislespy.ui.theme.MutedText45
 
 /**
- * Consistent section title used on result, settings detail, and similar screens.
+ * Section label — 11/700 UPPERCASE, letter-spacing .07em, muted.
+ * Used on result, settings, nutrition, and similar screens.
  */
 @Composable
 fun SectionHeader(
@@ -17,9 +18,18 @@ fun SectionHeader(
     modifier: Modifier = Modifier,
 ) {
     Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        fontWeight = FontWeight.SemiBold,
+        text = text.uppercase(),
+        style = AisleSpyTextStyles.sectionLabel,
+        color = MutedText45,
         modifier = modifier.semantics { heading() },
     )
+}
+
+/** Alias matching the design-handoff name. */
+@Composable
+fun SectionLabel(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
+    SectionHeader(text = text, modifier = modifier)
 }

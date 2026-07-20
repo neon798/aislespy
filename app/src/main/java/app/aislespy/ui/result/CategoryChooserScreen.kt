@@ -1,55 +1,43 @@
 package app.aislespy.ui.result
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import app.aislespy.AisleSpyApp
-import app.aislespy.ui.components.ProductImagePlaceholder
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import app.aislespy.ui.components.AisleCard
+import app.aislespy.ui.components.BackLink
+import app.aislespy.ui.theme.AisleSpyShapes
+import app.aislespy.ui.theme.CardBorderStrong
+import app.aislespy.ui.theme.CreamSurface
+import app.aislespy.ui.theme.IbmPlexMono
+import app.aislespy.ui.theme.Ink
+import app.aislespy.ui.theme.MutedText55
+import app.aislespy.ui.theme.MutedText60
+import app.aislespy.ui.theme.Olive
+import app.aislespy.ui.theme.PublicSans
 
 /**
- * Dedicated category chooser (UI_UX §category_chooser / T-420).
- *
- * Reads the food/beauty pair from [ChoicePairStore] (published by [ResultViewModel]
- * on an ambiguous dual hit). Option cards stay serious; title may use spy flair.
+ * Category chooser when one barcode hits both OFF and OBF (handoff §7).
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryChooserScreen(
     barcode: String,
@@ -68,65 +56,60 @@ fun CategoryChooserScreen(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            TopAppBar(
-                title = { Text("Category") },
-                navigationIcon = {
-                    IconButton(onClick = onCancel) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Cancel",
-                        )
-                    }
-                },
-            )
-        },
+        containerColor = CreamSurface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .verticalScroll(rememberScrollState()),
         ) {
-            Text(
-                text = "Two dossiers found",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
+            BackLink(
+                onClick = onCancel,
+                contentDescription = "Cancel",
+                modifier = Modifier.padding(start = 8.dp, top = 8.dp),
             )
-            Text(
-                text = "Which kind of product?",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp),
-            )
-            Text(
-                text = barcode,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(top = 8.dp, bottom = 28.dp),
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 8.dp, bottom = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                Text(
+                    text = "One barcode, two matches",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Ink,
+                    modifier = Modifier.semantics { heading() },
+                )
+                Text(
+                    text = "This code turned up in both open databases. Which product are you holding?",
+                    fontFamily = PublicSans,
+                    fontSize = 13.sp,
+                    lineHeight = 20.sp,
+                    color = MutedText60,
+                )
+                Text(
+                    text = barcode,
+                    fontFamily = IbmPlexMono,
+                    fontSize = 12.sp,
+                    color = MutedText55,
+                )
 
-            CategoryOptionCard(
-                categoryLabel = "Food product",
-                productName = food?.name?.takeIf { it.isNotBlank() } ?: "Food product",
-                imageUrl = food?.imageUrl,
-                onClick = onChooseFood,
-            )
-            Spacer(Modifier.height(16.dp))
-            CategoryOptionCard(
-                categoryLabel = "Beauty product",
-                productName = beauty?.name?.takeIf { it.isNotBlank() } ?: "Beauty product",
-                imageUrl = beauty?.imageUrl,
-                onClick = onChooseBeauty,
-            )
-
-            Spacer(Modifier.height(24.dp))
-            TextButton(onClick = onCancel) {
-                Text("Cancel")
+                CategoryOptionCard(
+                    sourceLabel = "FOOD · OPEN FOOD FACTS",
+                    productName = food?.name?.takeIf { it.isNotBlank() } ?: "Food product",
+                    meta = food?.brands?.takeIf { it.isNotBlank() }
+                        ?: "Open Food Facts match",
+                    onClick = onChooseFood,
+                )
+                CategoryOptionCard(
+                    sourceLabel = "BEAUTY · OPEN BEAUTY FACTS",
+                    productName = beauty?.name?.takeIf { it.isNotBlank() } ?: "Beauty product",
+                    meta = beauty?.brands?.takeIf { it.isNotBlank() }
+                        ?: "Open Beauty Facts match",
+                    onClick = onChooseBeauty,
+                )
             }
         }
     }
@@ -134,76 +117,50 @@ fun CategoryChooserScreen(
 
 @Composable
 private fun CategoryOptionCard(
-    categoryLabel: String,
+    sourceLabel: String,
     productName: String,
-    imageUrl: String?,
+    meta: String,
     onClick: () -> Unit,
 ) {
-    Card(
+    AisleCard(
         onClick = onClick,
+        shape = AisleSpyShapes.chooserOption,
+        contentPadding = 0.dp,
         modifier = Modifier
-            .fillMaxWidth()
+            .border(1.5.dp, CardBorderStrong, AisleSpyShapes.chooserOption)
             .semantics {
-                contentDescription = "$categoryLabel: $productName"
+                contentDescription = "$sourceLabel: $productName"
             },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
+                .padding(horizontal = 18.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            OptionThumbnail(imageUrl = imageUrl, name = productName)
-            Spacer(Modifier.width(16.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = categoryLabel,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                )
-                Text(
-                    text = productName,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 4.dp),
-                )
-            }
+            Text(
+                text = sourceLabel,
+                fontFamily = PublicSans,
+                fontWeight = FontWeight.Bold,
+                fontSize = 10.5.sp,
+                letterSpacing = 0.08.sp,
+                color = Olive,
+            )
+            Text(
+                text = productName,
+                style = MaterialTheme.typography.titleLarge,
+                color = Ink,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                text = meta,
+                fontFamily = PublicSans,
+                fontSize = 12.sp,
+                color = MutedText55,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
-    }
-}
-
-@Composable
-private fun OptionThumbnail(imageUrl: String?, name: String) {
-    val context = LocalContext.current
-    val shape = RoundedCornerShape(10.dp)
-    val size = 72.dp
-    if (imageUrl.isNullOrBlank()) {
-        Box(modifier = Modifier.size(size)) {
-            ProductImagePlaceholder(shape = shape, label = "—")
-        }
-    } else {
-        SubcomposeAsyncImage(
-            model = ImageRequest.Builder(context)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Thumbnail for $name",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(size)
-                .clip(shape),
-            loading = {
-                ProductImagePlaceholder(shape = shape, showLabel = false)
-            },
-            error = {
-                ProductImagePlaceholder(shape = shape, label = "—")
-            },
-        )
     }
 }
