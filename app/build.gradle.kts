@@ -14,8 +14,8 @@ android {
         applicationId = "app.aislespy"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.1.0-beta.4"
+        versionCode = 5
+        versionName = "0.1.0-beta.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
