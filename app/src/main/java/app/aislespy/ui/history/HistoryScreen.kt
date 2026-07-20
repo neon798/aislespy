@@ -37,12 +37,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.domain.model.ProductCategory
 import app.aislespy.ui.components.AisleListRowCard
 import app.aislespy.ui.components.ScoreBadge
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.ErrorRed
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
 import app.aislespy.ui.theme.PublicSans
+import app.aislespy.ui.theme.AisleColors
 
 private const val EMPTY_COPY =
     "No missions yet. Scan something in the aisle to start the log."
@@ -60,7 +56,7 @@ fun HistoryScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -78,7 +74,7 @@ fun HistoryScreen(
                 Text(
                     text = "Mission log",
                     style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     modifier = Modifier.semantics { heading() },
                 )
                 if (!uiState.empty) {
@@ -87,7 +83,7 @@ fun HistoryScreen(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 11.5.sp,
-                        color = ErrorRed,
+                        color = AisleColors.current.error,
                         modifier = Modifier
                             .clickable(onClick = resolvedVm::requestClearAll)
                             .padding(horizontal = 4.dp, vertical = 6.dp)
@@ -108,7 +104,7 @@ fun HistoryScreen(
                         fontFamily = PublicSans,
                         fontSize = 13.sp,
                         lineHeight = 20.8.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -157,7 +153,7 @@ fun HistoryScreen(
             },
             confirmButton = {
                 TextButton(onClick = resolvedVm::confirmClearAll) {
-                    Text("Clear all", color = ErrorRed)
+                    Text("Clear all", color = AisleColors.current.error)
                 }
             },
             dismissButton = {
@@ -217,7 +213,7 @@ fun HistoryRow(
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.5.sp,
                         lineHeight = 17.5.sp,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -225,7 +221,7 @@ fun HistoryRow(
                         text = "${item.band.label} · ${item.scannedAtLabel}",
                         fontFamily = PublicSans,
                         fontSize = 11.5.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -236,7 +232,7 @@ fun HistoryRow(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 11.sp,
-                color = if (deleteArmed) ErrorRed else MutedText45,
+                color = if (deleteArmed) AisleColors.current.error else AisleColors.current.muted45,
                 modifier = Modifier
                     .clickable(onClick = onDelete)
                     .padding(horizontal = 8.dp, vertical = 6.dp)

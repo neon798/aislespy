@@ -209,6 +209,22 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-021 — Warm dark theme + theme-aware AisleColors tokens
+
+- **Date:** 2026-07-20
+- **Status:** Accepted
+- **Context:** ADR-020 shipped the warm & natural **light** identity. The design handoff listed dark theme as a Gap (only score-band dark accents were specified). `AisleSpyTheme` already called `isSystemInDarkTheme()` and `ScoreBandColors` switched accents, but nearly every screen/component hard-coded light-only vals (`CreamSurface`, `Ink`, `CardWhite`, muted ladder, olive containers, etc.), so switching the M3 `ColorScheme` did nothing for real UI surfaces. Dark mode was effectively broken.
+- **Decision:**
+  1. **Warm dark palette** derived from the cream/olive identity (not cool gray): background/surface `#16140E`, cards `#221F17` / elevated `#2A2619`, on-surface `#ECE7DB`, muted ladder = `#ECE7DB` @ 0.45/0.55/0.6/0.7, card border `#ECE7DB` @ ~0.12, dashed divider @ ~0.22, primary olive lifted to `#C2CD84` with onPrimary `#1B1810`, olive container olive@~30% with on-container `#DDE4B4`, error `#EF9A9A` (matches dark Bad band). Secondary/tertiary keep pale lime.
+  2. **Score band accents** in dark remain the brief’s `#81C784` / `#FFB74D` / `#FF8A65` / `#EF9A9A`; filled chip backgrounds + white labels stay locked (readable on both themes). Severity scale unchanged.
+  3. Introduce **`AisleColors`** theme-aware semantic tokens (`LocalAisleColors` + `AisleColors.current`) for surface, card, ink, muted ladder, olive/primary, containers, error, etc. Screens and shared components reference these instead of raw light vals. M3 `ColorScheme` light/dark are built from the same tokens so Material widgets (fields, ripples, dialogs) match.
+  4. App **follows the system** light/dark setting (`darkTheme` default = `isSystemInDarkTheme()`); dynamic color stays off. Status/navigation bar icon appearance follows theme via `WindowInsetsController`.
+  5. **Scan screen exception:** camera chrome stays the intentional fixed dark-adjacent surface (`#23211A` + pale lime + cream accents) in **both** themes — not re-themed.
+  6. **Still open (handoff Gap):** app icon / launcher identity (unchanged by this ADR).
+- **Consequences:** Presentation-only change — scoring, knowledge packs, ViewModels, routes, and copy unchanged. Light tokens remain in `Color.kt` for token definitions; UI outside `ui/theme/` must not reference light-only vals directly. ADR-020’s deferred “full dark theme design” is closed by this derived warm dark palette pending any future designer-specified dark handoff.
+
+---
+
 ## Template for new entries
 
 ```markdown

@@ -73,14 +73,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.ui.components.AislePrimaryButton
 import app.aislespy.ui.components.AisleSecondaryButton
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.MutedText55
 import app.aislespy.ui.theme.PaleLime
 import app.aislespy.ui.theme.PublicSans
 import app.aislespy.ui.theme.ScanBackground
+import app.aislespy.ui.theme.ScanCream
 import app.aislespy.ui.util.rememberReducedMotion
 import java.util.concurrent.Executors
 
@@ -145,12 +145,13 @@ fun ScanScreen(
         }
     }
 
+    val aisleColors = AisleColors.current
     Scaffold(
         modifier = modifier,
         containerColor = if (uiState.permission == CameraPermission.Granted) {
             ScanBackground
         } else {
-            CreamSurface
+            aisleColors.surface
         },
     ) { innerPadding ->
         when (uiState.permission) {
@@ -234,7 +235,7 @@ private fun ScanGrantedContent(
                 text = "camera preview",
                 fontFamily = IbmPlexMono,
                 fontSize = 10.sp,
-                color = CreamSurface.copy(alpha = 0.35f),
+                color = ScanCream.copy(alpha = 0.35f),
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .padding(top = 10.dp),
@@ -271,7 +272,7 @@ private fun ScanGrantedContent(
                 text = if (runningRecon) SCAN_RUNNING else SCAN_HINT,
                 fontFamily = PublicSans,
                 fontSize = 12.5.sp,
-                color = CreamSurface.copy(alpha = 0.55f),
+                color = ScanCream.copy(alpha = 0.55f),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.semantics {
                     contentDescription = if (runningRecon) SCAN_RUNNING else SCAN_HINT
@@ -330,7 +331,7 @@ private fun RowHeader(
         Text(
             text = "AisleSpy",
             style = AisleSpyTextStyles.wordmark.copy(fontSize = 18.sp),
-            color = CreamSurface,
+            color = ScanCream,
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -362,7 +363,7 @@ private fun RowHeader(
                 Icon(
                     imageVector = if (torchEnabled) Icons.Filled.FlashOn else Icons.Filled.FlashOff,
                     contentDescription = null,
-                    tint = CreamSurface.copy(alpha = 0.7f),
+                    tint = ScanCream.copy(alpha = 0.7f),
                     modifier = Modifier.size(20.dp),
                 )
             }
@@ -507,10 +508,10 @@ private fun ShutterButton(
     Box(
         modifier = modifier
             .size(74.dp)
-            .border(5.dp, CreamSurface.copy(alpha = 0.25f), CircleShape)
+            .border(5.dp, ScanCream.copy(alpha = 0.25f), CircleShape)
             .padding(5.dp)
             .background(
-                color = if (decoding) PaleLime else CreamSurface,
+                color = if (decoding) PaleLime else ScanCream,
                 shape = CircleShape,
             ),
         contentAlignment = Alignment.Center,
@@ -543,6 +544,7 @@ private fun PermissionPane(
     onManualEntry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val colors = AisleColors.current
     Column(
         modifier = modifier.padding(horizontal = 28.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.Center,
@@ -551,13 +553,13 @@ private fun PermissionPane(
         Text(
             text = "AisleSpy",
             style = AisleSpyTextStyles.wordmark,
-            color = app.aislespy.ui.theme.Ink,
+            color = colors.ink,
         )
         Spacer(Modifier.height(20.dp))
         Text(
             text = if (denied) "Camera access denied" else "Camera for barcodes only",
             style = androidx.compose.material3.MaterialTheme.typography.headlineSmall,
-            color = app.aislespy.ui.theme.Ink,
+            color = colors.ink,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(10.dp))
@@ -566,7 +568,7 @@ private fun PermissionPane(
             fontFamily = PublicSans,
             fontSize = 13.5.sp,
             lineHeight = 21.sp,
-            color = MutedText55,
+            color = colors.muted55,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(28.dp))

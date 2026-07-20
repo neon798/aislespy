@@ -12,20 +12,12 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.Olive
-import app.aislespy.ui.theme.OliveContainer
-import app.aislespy.ui.theme.OliveOnContainer
 import app.aislespy.ui.theme.brandAmber
 import app.aislespy.ui.theme.brandAmberOnDark
 import app.aislespy.ui.theme.brandAmberOnLight
-
-/** Outline for confidence chips: rgba(80,60,30,.3). */
-private val OutlineChipBorder = Color(0x4D503C1E)
 
 /**
  * Olive-container badge chip (dietary, NOVA, source labels, generic badges).
@@ -37,18 +29,19 @@ fun InfoChip(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
+    val aisle = AisleColors.current
     val talkBack = contentDescription ?: label
     Surface(
         modifier = modifier.semantics { this.contentDescription = talkBack },
         shape = AisleSpyShapes.pill,
-        color = OliveContainer,
-        contentColor = OliveOnContainer,
-        border = BorderStroke(1.dp, Olive.copy(alpha = 0.25f)),
+        color = aisle.oliveContainer,
+        contentColor = aisle.oliveOnContainer,
+        border = BorderStroke(1.dp, aisle.olive.copy(alpha = 0.25f)),
     ) {
         Text(
             text = label,
             style = AisleSpyTextStyles.badgeChip,
-            color = OliveOnContainer,
+            color = aisle.oliveOnContainer,
             modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
         )
     }
@@ -63,18 +56,19 @@ fun OutlineInfoChip(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
+    val aisle = AisleColors.current
     val talkBack = contentDescription ?: label
     Surface(
         modifier = modifier.semantics { this.contentDescription = talkBack },
         shape = AisleSpyShapes.pill,
         color = Color.Transparent,
-        contentColor = MutedText60,
-        border = BorderStroke(1.5.dp, OutlineChipBorder),
+        contentColor = aisle.muted60,
+        border = BorderStroke(1.5.dp, aisle.outlineChipBorder),
     ) {
         Text(
             text = label,
             style = AisleSpyTextStyles.badgeChip.copy(fontWeight = FontWeight.Bold),
-            color = MutedText60,
+            color = aisle.muted60,
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
         )
     }
@@ -125,18 +119,19 @@ fun OwnershipInfoChip(
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
 ) {
+    val aisle = AisleColors.current
     val talkBack = contentDescription ?: "$label, ownership information"
     Surface(
         modifier = modifier.semantics { this.contentDescription = talkBack },
         shape = AisleSpyShapes.pill,
-        color = CardWhite,
-        contentColor = MutedText60,
-        border = BorderStroke(1.dp, CardBorder),
+        color = aisle.card,
+        contentColor = aisle.muted60,
+        border = BorderStroke(1.dp, aisle.cardBorder),
     ) {
         Text(
             text = label,
             style = AisleSpyTextStyles.badgeChip,
-            color = MutedText60,
+            color = aisle.muted60,
             modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
         )
     }

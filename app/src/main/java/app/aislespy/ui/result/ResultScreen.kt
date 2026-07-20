@@ -74,22 +74,11 @@ import app.aislespy.ui.components.SeverityBar
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.AisleSpyTextStyles
 import app.aislespy.ui.theme.BricolageGrotesque
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CardBorderStrong
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.MutedText70
-import app.aislespy.ui.theme.Olive
-import app.aislespy.ui.theme.OliveContainer
-import app.aislespy.ui.theme.OliveOnContainer
 import app.aislespy.ui.theme.PublicSans
 import app.aislespy.ui.theme.scoreBandColors
 import app.aislespy.ui.util.rememberReducedMotion
+import app.aislespy.ui.theme.AisleColors
 
 /** Handoff disclaimer (result footer). */
 private const val RESULT_DISCLAIMER =
@@ -132,7 +121,7 @@ fun ResultScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -248,13 +237,13 @@ private fun SuccessContent(
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.5.sp,
                 letterSpacing = 0.08.sp,
-                color = Olive,
+                color = AisleColors.current.olive,
                 modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = product.name,
                 style = AisleSpyTextStyles.productName,
-                color = Ink,
+                color = AisleColors.current.ink,
                 textAlign = TextAlign.Center,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
@@ -268,7 +257,7 @@ private fun SuccessContent(
                 },
                 fontFamily = PublicSans,
                 fontSize = 12.5.sp,
-                color = MutedText55,
+                color = AisleColors.current.muted55,
                 textAlign = TextAlign.Center,
             )
 
@@ -305,7 +294,7 @@ private fun SuccessContent(
                         fontFamily = PublicSans,
                         fontSize = 13.5.sp,
                         lineHeight = 21.sp,
-                        color = MutedText70,
+                        color = AisleColors.current.muted70,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 4.dp),
                     )
@@ -364,7 +353,7 @@ private fun SuccessContent(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 11.5.sp,
-                        color = Olive,
+                        color = AisleColors.current.olive,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier
                             .clickable(onClick = onMethodology)
@@ -396,7 +385,7 @@ private fun SuccessContent(
                                 subscore = "—",
                                 detail = omittedDetail(label),
                                 fillFraction = 0f,
-                                barColor = CardBorder,
+                                barColor = AisleColors.current.cardBorder,
                                 muted = true,
                                 showDivider = index < state.omittedComponents.lastIndex,
                             )
@@ -420,7 +409,7 @@ private fun SuccessContent(
                             text = "Beauty ingredient flags will appear here once scoring lands.",
                             fontFamily = PublicSans,
                             fontSize = 12.5.sp,
-                            color = MutedText60,
+                            color = AisleColors.current.muted60,
                         )
                     }
                     state.concerns.isEmpty() -> {
@@ -430,7 +419,7 @@ private fun SuccessContent(
                                 fontFamily = PublicSans,
                                 fontSize = 12.5.sp,
                                 lineHeight = 19.sp,
-                                color = MutedText70,
+                                color = AisleColors.current.muted70,
                             )
                         }
                     }
@@ -461,7 +450,7 @@ private fun SuccessContent(
                     fontFamily = PublicSans,
                     fontSize = 10.5.sp,
                     lineHeight = 16.8.sp,
-                    color = MutedText45,
+                    color = AisleColors.current.muted45,
                     modifier = Modifier.padding(horizontal = 22.dp, vertical = 4.dp),
                 )
             }
@@ -480,14 +469,14 @@ private fun SuccessContent(
                     fontFamily = PublicSans,
                     fontSize = 11.sp,
                     lineHeight = 17.6.sp,
-                    color = MutedText55,
+                    color = AisleColors.current.muted55,
                 )
                 Text(
                     text = "How we score",
                     fontFamily = PublicSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 11.sp,
-                    color = Olive,
+                    color = AisleColors.current.olive,
                     textDecoration = TextDecoration.Underline,
                     modifier = Modifier
                         .clickable(onClick = onMethodology)
@@ -505,8 +494,8 @@ private fun PartialScoreBlock(message: String) {
     Box(
         modifier = Modifier
             .size(110.dp)
-            .background(CardWhite, CircleShape)
-            .border(1.dp, CardBorderStrong, CircleShape),
+            .background(AisleColors.current.card, CircleShape)
+            .border(1.dp, AisleColors.current.cardBorderStrong, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -515,14 +504,14 @@ private fun PartialScoreBlock(message: String) {
                 fontFamily = BricolageGrotesque,
                 fontWeight = FontWeight.Bold,
                 fontSize = 38.sp,
-                color = Ink.copy(alpha = 0.35f),
+                color = AisleColors.current.ink.copy(alpha = 0.35f),
                 modifier = Modifier.semantics { contentDescription = "Score not available" },
             )
             Text(
                 text = "unscored",
                 fontFamily = PublicSans,
                 fontSize = 10.sp,
-                color = MutedText45,
+                color = AisleColors.current.muted45,
             )
         }
     }
@@ -532,7 +521,7 @@ private fun PartialScoreBlock(message: String) {
         fontFamily = PublicSans,
         fontSize = 13.sp,
         lineHeight = 20.8.sp,
-        color = MutedText70,
+        color = AisleColors.current.muted70,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(top = 4.dp),
     )
@@ -542,10 +531,10 @@ private fun PartialScoreBlock(message: String) {
         fontFamily = PublicSans,
         fontWeight = FontWeight.Bold,
         fontSize = 13.5.sp,
-        color = Olive,
+        color = AisleColors.current.olive,
         modifier = Modifier
             .padding(top = 8.dp)
-            .border(1.5.dp, Olive.copy(alpha = 0.5f), AisleSpyShapes.pill)
+            .border(1.5.dp, AisleColors.current.olive.copy(alpha = 0.5f), AisleSpyShapes.pill)
             .padding(horizontal = 26.dp, vertical = 12.dp)
             .semantics { contentDescription = "Add the ingredient list" },
     )
@@ -578,13 +567,13 @@ private fun ComponentRow(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 13.sp,
-                color = if (muted) MutedText60 else Ink,
+                color = if (muted) AisleColors.current.muted60 else AisleColors.current.ink,
             )
             Text(
                 text = share,
                 fontFamily = IbmPlexMono,
                 fontSize = 11.sp,
-                color = MutedText55,
+                color = AisleColors.current.muted55,
             )
         }
         Row(
@@ -595,14 +584,14 @@ private fun ComponentRow(
                 modifier = Modifier
                     .weight(1f)
                     .height(5.dp)
-                    .background(CardBorder.copy(alpha = 0.5f), AisleSpyShapes.pill),
+                    .background(AisleColors.current.cardBorder.copy(alpha = 0.5f), AisleSpyShapes.pill),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(fillFraction.coerceIn(0f, 1f))
                         .height(5.dp)
                         .background(
-                            if (muted) CardBorder else barColor,
+                            if (muted) AisleColors.current.cardBorder else barColor,
                             AisleSpyShapes.pill,
                         ),
                 )
@@ -612,7 +601,7 @@ private fun ComponentRow(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
-                color = if (muted) MutedText55 else Ink,
+                color = if (muted) AisleColors.current.muted55 else AisleColors.current.ink,
                 modifier = Modifier.width(44.dp),
                 textAlign = TextAlign.End,
             )
@@ -623,7 +612,7 @@ private fun ComponentRow(
                 fontFamily = PublicSans,
                 fontSize = 11.5.sp,
                 lineHeight = 16.7.sp,
-                color = MutedText60,
+                color = AisleColors.current.muted60,
             )
         }
     }
@@ -632,7 +621,7 @@ private fun ComponentRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(CardBorder.copy(alpha = 0.6f)),
+                .background(AisleColors.current.cardBorder.copy(alpha = 0.6f)),
         )
     }
 }
@@ -665,7 +654,7 @@ private fun ConcernCard(
                     fontFamily = PublicSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f),
@@ -673,7 +662,7 @@ private fun ConcernCard(
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = null,
-                    tint = MutedText45,
+                    tint = AisleColors.current.muted45,
                     modifier = Modifier.size(18.dp),
                 )
             }
@@ -687,7 +676,7 @@ private fun ConcernCard(
                         text = "· ${concern.positionHint.replaceFirstChar { it.lowercase() }}",
                         fontFamily = PublicSans,
                         fontSize = 10.5.sp,
-                        color = MutedText45,
+                        color = AisleColors.current.muted45,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
@@ -698,7 +687,7 @@ private fun ConcernCard(
                 fontFamily = PublicSans,
                 fontSize = 11.5.sp,
                 lineHeight = 17.sp,
-                color = MutedText70,
+                color = AisleColors.current.muted70,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -729,7 +718,7 @@ private fun NutritionNavRow(
             Box(
                 modifier = Modifier
                     .size(34.dp)
-                    .background(OliveContainer, AisleSpyShapes.smallTile),
+                    .background(AisleColors.current.oliveContainer, AisleSpyShapes.smallTile),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -737,7 +726,7 @@ private fun NutritionNavRow(
                     fontFamily = BricolageGrotesque,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 16.sp,
-                    color = OliveOnContainer,
+                    color = AisleColors.current.oliveOnContainer,
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -746,19 +735,19 @@ private fun NutritionNavRow(
                     fontFamily = PublicSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.sp,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                 )
                 Text(
                     text = "Nutri-Score + per-100 g figures · not part of the score",
                     fontFamily = PublicSans,
                     fontSize = 11.sp,
-                    color = MutedText55,
+                    color = AisleColors.current.muted55,
                 )
             }
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
-                tint = MutedText45,
+                tint = AisleColors.current.muted45,
             )
         }
     }
@@ -790,13 +779,13 @@ private fun NotFoundContent(
             Box(
                 modifier = Modifier
                     .size(110.dp)
-                    .background(CardWhite, CircleShape)
+                    .background(AisleColors.current.card, CircleShape)
                     .border(
                         width = 1.dp,
-                        color = CardBorder.copy(alpha = 0.9f),
+                        color = AisleColors.current.cardBorder.copy(alpha = 0.9f),
                         shape = CircleShape,
                     )
-                    .border(1.dp, MutedText45.copy(alpha = 0.4f), CircleShape),
+                    .border(1.dp, AisleColors.current.muted45.copy(alpha = 0.4f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 // Dashed feel via lighter border; numeral
@@ -805,20 +794,20 @@ private fun NotFoundContent(
                     fontFamily = BricolageGrotesque,
                     fontWeight = FontWeight.Bold,
                     fontSize = 36.sp,
-                    color = Ink.copy(alpha = 0.35f),
+                    color = AisleColors.current.ink.copy(alpha = 0.35f),
                 )
             }
             Text(
                 text = "Cold case",
                 style = MaterialTheme.typography.headlineMedium,
-                color = Ink,
+                color = AisleColors.current.ink,
                 modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = state.barcode,
                 fontFamily = IbmPlexMono,
                 fontSize = 12.sp,
-                color = MutedText55,
+                color = AisleColors.current.muted55,
             )
             Text(
                 text = "This barcode isn't in Open Food Facts or Open Beauty Facts yet. " +
@@ -826,7 +815,7 @@ private fun NotFoundContent(
                 fontFamily = PublicSans,
                 fontSize = 13.5.sp,
                 lineHeight = 21.6.sp,
-                color = MutedText70,
+                color = AisleColors.current.muted70,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(6.dp))
@@ -847,7 +836,7 @@ private fun NotFoundContent(
                 fontFamily = PublicSans,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 12.sp,
-                color = Olive,
+                color = AisleColors.current.olive,
                 textDecoration = TextDecoration.Underline,
                 modifier = Modifier
                     .clickable {
@@ -888,8 +877,8 @@ private fun NetworkErrorContent(
             Box(
                 modifier = Modifier
                     .size(110.dp)
-                    .background(CardWhite, CircleShape)
-                    .border(1.dp, MutedText45.copy(alpha = 0.4f), CircleShape),
+                    .background(AisleColors.current.card, CircleShape)
+                    .border(1.dp, AisleColors.current.muted45.copy(alpha = 0.4f), CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -897,20 +886,20 @@ private fun NetworkErrorContent(
                     fontFamily = BricolageGrotesque,
                     fontWeight = FontWeight.Bold,
                     fontSize = 36.sp,
-                    color = Ink.copy(alpha = 0.35f),
+                    color = AisleColors.current.ink.copy(alpha = 0.35f),
                 )
             }
             Text(
                 text = "Lost contact",
                 style = MaterialTheme.typography.headlineMedium,
-                color = Ink,
+                color = AisleColors.current.ink,
                 modifier = Modifier.semantics { heading() },
             )
             Text(
                 text = state.barcode,
                 fontFamily = IbmPlexMono,
                 fontSize = 12.sp,
-                color = MutedText55,
+                color = AisleColors.current.muted55,
             )
             Text(
                 text = state.message.ifBlank {
@@ -919,7 +908,7 @@ private fun NetworkErrorContent(
                 fontFamily = PublicSans,
                 fontSize = 13.5.sp,
                 lineHeight = 21.6.sp,
-                color = MutedText70,
+                color = AisleColors.current.muted70,
                 textAlign = TextAlign.Center,
             )
             Spacer(Modifier.height(6.dp))

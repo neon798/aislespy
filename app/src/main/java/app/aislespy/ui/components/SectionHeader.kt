@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.MutedText45
 
 /**
  * Section label — 11/700 UPPERCASE, letter-spacing .07em, muted.
@@ -20,7 +20,7 @@ fun SectionHeader(
     Text(
         text = text.uppercase(),
         style = AisleSpyTextStyles.sectionLabel,
-        color = MutedText45,
+        color = AisleColors.current.muted45,
         modifier = modifier.semantics { heading() },
     )
 }

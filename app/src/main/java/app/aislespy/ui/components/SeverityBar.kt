@@ -20,8 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CardBorder
 import app.aislespy.ui.theme.PublicSans
 import app.aislespy.ui.theme.severityAccent
 
@@ -55,6 +55,7 @@ fun SeverityBar(
     } else {
         "Severity $level/5"
     }
+    val trackColor = AisleColors.current.cardBorder.copy(alpha = 0.4f)
 
     Row(
         modifier = modifier.semantics(mergeDescendants = true) {
@@ -68,7 +69,7 @@ fun SeverityBar(
                 .width(trackWidth)
                 .height(trackHeight)
                 .clip(RoundedCornerShape(3.dp))
-                .background(CardBorder.copy(alpha = 0.4f)),
+                .background(trackColor),
         ) {
             Box(
                 modifier = Modifier

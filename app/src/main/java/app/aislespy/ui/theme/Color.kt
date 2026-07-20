@@ -33,6 +33,18 @@ val PaleLime = Color(0xFFCDD6A3)
 /** Scan screen background only ("dark-adjacent", not the app dark theme). */
 val ScanBackground = Color(0xFF23211A)
 
+/**
+ * Fixed cream used on the scan screen (text, shutter) — intentional constant in both themes.
+ * Same hex as [CreamSurface]; named separately so scan UI never picks up theme-aware cream.
+ */
+val ScanCream = Color(0xFFFAF6EE)
+
+/**
+ * Fixed ink on scan product-card overlays — intentional constant in both themes.
+ * Same hex as [Ink].
+ */
+val ScanInk = Color(0xFF33301F)
+
 /** Card fill. */
 val CardWhite = Color(0xFFFFFFFF)
 
@@ -45,6 +57,12 @@ val CardBorderStrong = Color(0x26503C1E)
 /** 1px dashed section separators: rgba(80, 60, 30, 0.25). */
 val DashedDividerColor = Color(0x40503C1E)
 
+/** Disclaimer dashed border: rgba(80, 60, 30, 0.30). */
+val DisclaimerBorder = Color(0x4D503C1E)
+
+/** Outline chip border: rgba(80, 60, 30, 0.30). */
+val OutlineChipBorder = Color(0x4D503C1E)
+
 /** Muted text ladder — ink @ alpha (labels → body-muted). */
 val MutedText45 = Color(0x7333301F) // .45
 val MutedText55 = Color(0x8C33301F) // .55
@@ -53,6 +71,67 @@ val MutedText70 = Color(0xB233301F) // .70
 
 /** Error / destructive (same hex as Bad band — intentional). */
 val ErrorRed = Color(0xFFC62828)
+
+// ---------------------------------------------------------------------------
+// Warm dark palette (ADR-021) — brown-charcoal, not cool gray
+// ---------------------------------------------------------------------------
+
+/** Dark background / surface — warm near-black. */
+val DarkSurface = Color(0xFF16140E)
+
+/** Alias for dark screen background. */
+val DarkBackground = DarkSurface
+
+/** Dark card / surfaceContainer. */
+val DarkCard = Color(0xFF221F17)
+
+/** Dark elevated card variant. */
+val DarkCardElevated = Color(0xFF2A2619)
+
+/** Dark onSurface / ink — warm off-white. */
+val DarkOnSurface = Color(0xFFECE7DB)
+
+/** Alias matching light naming. */
+val DarkInk = DarkOnSurface
+
+/** Dark card border — warm off-white @ ~12%. */
+val DarkCardBorder = Color(0x1FECE7DB)
+
+/** Stronger dark card border (~.15). */
+val DarkCardBorderStrong = Color(0x26ECE7DB)
+
+/** Dark dashed divider — warm off-white @ ~22%. */
+val DarkDashedDivider = Color(0x38ECE7DB)
+
+/** Dark disclaimer / outline-chip border — warm off-white @ ~30%. */
+val DarkDisclaimerBorder = Color(0x4DECE7DB)
+
+/** Dark muted ladder — #ECE7DB @ .45/.55/.6/.7 */
+val DarkMuted45 = Color(0x73ECE7DB)
+val DarkMuted55 = Color(0x8CECE7DB)
+val DarkMuted60 = Color(0x99ECE7DB)
+val DarkMuted70 = Color(0xB2ECE7DB)
+
+/** Dark primary — olive lifted for legibility on dark surfaces. */
+val DarkOlivePrimary = Color(0xFFC2CD84)
+
+/** Dark primary pressed — slightly deeper lifted olive. */
+val DarkOliveDark = Color(0xFFA8B36A)
+
+/** On primary in dark (buttons). */
+val DarkOnPrimary = Color(0xFF1B1810)
+
+/** Dark olive container — olive #5d6633 @ ~30%. */
+val DarkOliveContainer = Color(0x4D5D6633)
+
+/** Text / icons on dark olive container. */
+val DarkOliveOnContainer = Color(0xFFDDE4B4)
+
+/** Dark error — matches dark Bad band accent. */
+val DarkError = Color(0xFFEF9A9A)
+
+/** Dark error container — error @ ~16%. */
+val DarkErrorContainer = Color(0x29EF9A9A)
 
 // ---------------------------------------------------------------------------
 // Severity 1–5 (design system; never color-only — always pair with "Severity n/5")
@@ -111,19 +190,9 @@ val brandAmberOnLight = Color(0xFF9A6700)
 val brandAmberOnDark = Color(0xFFFFB74D)
 
 // ---------------------------------------------------------------------------
-// Dark theme scaffolding (not designed yet — handoff Gaps; functional only)
+// Legacy aliases (prefer Olive / Cream / Dark* tokens)
 // ---------------------------------------------------------------------------
 
-val DarkBackground = Color(0xFF1A1914)
-val DarkOnBackground = Color(0xFFF0EDE4)
-val DarkSurface = Color(0xFF1A1914)
-val DarkOnSurface = Color(0xFFF0EDE4)
-val DarkPrimary = Color(0xFFB8C47A)
-val DarkOnPrimary = Color(0xFF2A2E14)
-val DarkPrimaryContainer = Color(0xFF3D4224)
-val DarkOnPrimaryContainer = Color(0xFFCDD6A3)
-
-// Legacy aliases kept so any remaining call sites compile; prefer Olive / Cream tokens.
 @Deprecated("Use Olive", ReplaceWith("Olive"))
 val GreenPrimary = Olive
 
@@ -145,20 +214,29 @@ val GreenContainer = OliveContainer
 @Deprecated("Use OliveOnContainer", ReplaceWith("OliveOnContainer"))
 val GreenOnContainer = OliveOnContainer
 
-@Deprecated("Use DarkPrimary", ReplaceWith("DarkPrimary"))
-val GreenDarkPrimary = DarkPrimary
+@Deprecated("Use DarkOlivePrimary", ReplaceWith("DarkOlivePrimary"))
+val DarkPrimary = DarkOlivePrimary
+
+@Deprecated("Use DarkOnPrimary", ReplaceWith("DarkOnPrimary"))
+val GreenDarkPrimary = DarkOlivePrimary
 
 @Deprecated("Use DarkOnPrimary", ReplaceWith("DarkOnPrimary"))
 val GreenDarkOnPrimary = DarkOnPrimary
 
-@Deprecated("Use DarkPrimaryContainer", ReplaceWith("DarkPrimaryContainer"))
-val GreenDarkPrimaryContainer = DarkPrimaryContainer
+@Deprecated("Use DarkOliveContainer", ReplaceWith("DarkOliveContainer"))
+val DarkPrimaryContainer = DarkOliveContainer
 
-@Deprecated("Use DarkOnPrimaryContainer", ReplaceWith("DarkOnPrimaryContainer"))
-val GreenDarkOnPrimaryContainer = DarkOnPrimaryContainer
+@Deprecated("Use DarkOliveOnContainer", ReplaceWith("DarkOliveOnContainer"))
+val DarkOnPrimaryContainer = DarkOliveOnContainer
 
-@Deprecated("Use DarkPrimary", ReplaceWith("DarkPrimary"))
-val GreenDarkSecondary = DarkPrimary
+@Deprecated("Use DarkOliveContainer", ReplaceWith("DarkOliveContainer"))
+val GreenDarkPrimaryContainer = DarkOliveContainer
+
+@Deprecated("Use DarkOliveOnContainer", ReplaceWith("DarkOliveOnContainer"))
+val GreenDarkOnPrimaryContainer = DarkOliveOnContainer
+
+@Deprecated("Use DarkOlivePrimary", ReplaceWith("DarkOlivePrimary"))
+val GreenDarkSecondary = DarkOlivePrimary
 
 @Deprecated("Use PaleLime", ReplaceWith("PaleLime"))
 val GreenDarkTertiary = PaleLime

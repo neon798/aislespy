@@ -29,17 +29,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.aislespy.domain.model.ScoreBand
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.MutedText55
 import app.aislespy.ui.theme.scoreBandColors
 import app.aislespy.ui.util.rememberReducedMotion
 
 /**
  * Hero 1–100 score ring (design handoff).
  *
- * White disc, 7px band-accent arc (sweep = score%, rounded cap, starts 12 o'clock),
+ * Card-colored disc, 7px band-accent arc (sweep = score%, rounded cap, starts 12 o'clock),
  * Bricolage numeral 42 + "out of 100".
  *
  * TalkBack: “Score N out of 100, ‹band›, confidence ‹level›”.
@@ -60,6 +58,7 @@ fun ScoreRing(
     val clamped = value.coerceIn(1, 100)
     val colors = scoreBandColors(band)
     val bandColor = colors.accent
+    val aisle = AisleColors.current
     val reducedMotion = rememberReducedMotion()
     val shouldAnimate = animated && !reducedMotion
 
@@ -103,15 +102,15 @@ fun ScoreRing(
             modifier = Modifier
                 .size(ringSize)
                 .clip(CircleShape)
-                .background(CardWhite)
-                .border(1.dp, CardBorder, CircleShape),
+                .background(aisle.card)
+                .border(1.dp, aisle.cardBorder, CircleShape),
         ) {
             Canvas(modifier = Modifier.size(ringSize)) {
                 val stroke = ringStroke.toPx()
                 val diameter = this.size.minDimension - stroke
                 val topLeft = Offset(stroke / 2f, stroke / 2f)
                 val arcSize = Size(diameter, diameter)
-                // Band-accent arc only (white disc is the track); starts at 12 o'clock.
+                // Band-accent arc only (card disc is the track); starts at 12 o'clock.
                 drawArc(
                     color = bandColor,
                     startAngle = -90f,
@@ -126,14 +125,14 @@ fun ScoreRing(
                 Text(
                     text = clamped.toString(),
                     style = AisleSpyTextStyles.scoreNumeral,
-                    color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
+                    color = aisle.ink,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                 )
                 Text(
                     text = "out of 100",
                     style = AisleSpyTextStyles.scoreCaption,
-                    color = MutedText55,
+                    color = aisle.muted55,
                     textAlign = TextAlign.Center,
                 )
             }

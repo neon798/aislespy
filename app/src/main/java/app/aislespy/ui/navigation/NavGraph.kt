@@ -40,11 +40,7 @@ import app.aislespy.ui.settings.MethodologyScreen
 import app.aislespy.ui.settings.PrivacyScreen
 import app.aislespy.ui.settings.SettingsScreen
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.Olive
-import app.aislespy.ui.theme.OliveContainer
+import app.aislespy.ui.theme.AisleColors
 
 /**
  * Route patterns from docs/UI_UX.md (route table).
@@ -114,8 +110,8 @@ fun AisleSpyNavGraph(
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar(
-                    containerColor = CreamSurface,
-                    contentColor = Ink,
+                    containerColor = AisleColors.current.surface,
+                    contentColor = AisleColors.current.ink,
                 ) {
                     topLevelDestinations.forEach { dest ->
                         val selected = currentDestination
@@ -146,11 +142,11 @@ fun AisleSpyNavGraph(
                                 )
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Olive,
-                                selectedTextColor = Olive,
-                                unselectedIconColor = MutedText45,
-                                unselectedTextColor = MutedText45,
-                                indicatorColor = OliveContainer,
+                                selectedIconColor = AisleColors.current.olive,
+                                selectedTextColor = AisleColors.current.olive,
+                                unselectedIconColor = AisleColors.current.muted45,
+                                unselectedTextColor = AisleColors.current.muted45,
+                                indicatorColor = AisleColors.current.oliveContainer,
                             ),
                         )
                     }

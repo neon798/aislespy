@@ -35,15 +35,9 @@ import app.aislespy.ui.components.AisleCard
 import app.aislespy.ui.components.BackLink
 import app.aislespy.ui.components.ScoreBandChip
 import app.aislespy.ui.components.SectionHeader
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.MutedText70
 import app.aislespy.ui.theme.PublicSans
+import app.aislespy.ui.theme.AisleColors
 
 private const val BRAND_BODY =
     "No accounts, no ads, no analytics. History stays on this phone. " +
@@ -63,7 +57,7 @@ fun SettingsScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -75,7 +69,7 @@ fun SettingsScreen(
             Text(
                 text = "Settings",
                 style = MaterialTheme.typography.headlineMedium,
-                color = Ink,
+                color = AisleColors.current.ink,
                 modifier = Modifier
                     .padding(horizontal = 22.dp)
                     .padding(top = 18.dp, bottom = 12.dp)
@@ -166,7 +160,7 @@ fun MethodologyScreen(
             fontFamily = PublicSans,
             fontSize = 11.sp,
             lineHeight = 17.6.sp,
-            color = MutedText55,
+            color = AisleColors.current.muted55,
             modifier = Modifier.padding(top = 4.dp),
         )
     }
@@ -205,14 +199,14 @@ fun PrivacyScreen(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                     )
                     Text(
                         text = body,
                         fontFamily = PublicSans,
                         fontSize = 12.sp,
                         lineHeight = 18.sp,
-                        color = MutedText60,
+                        color = AisleColors.current.muted60,
                     )
                 }
             }
@@ -254,14 +248,14 @@ fun LicensesScreen(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.Bold,
                         fontSize = 13.sp,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                     )
                     Text(
                         text = body,
                         fontFamily = PublicSans,
                         fontSize = 12.sp,
                         lineHeight = 18.sp,
-                        color = MutedText60,
+                        color = AisleColors.current.muted60,
                     )
                 }
             }
@@ -289,16 +283,16 @@ private fun SettingsLinkRow(
             fontFamily = PublicSans,
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
-            color = Ink,
+            color = AisleColors.current.ink,
         )
         Text(
             text = "›",
             fontSize = 16.sp,
-            color = MutedText45,
+            color = AisleColors.current.muted45,
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
+        HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.5f))
     }
 }
 
@@ -318,17 +312,17 @@ private fun VersionRow(
             text = label,
             fontFamily = PublicSans,
             fontSize = 12.5.sp,
-            color = Ink,
+            color = AisleColors.current.ink,
         )
         Text(
             text = value,
             fontFamily = IbmPlexMono,
             fontSize = 12.5.sp,
-            color = MutedText60,
+            color = AisleColors.current.muted60,
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
+        HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.5f))
     }
 }
 
@@ -346,11 +340,11 @@ private fun BandRow(band: ScoreBand, range: String, showDivider: Boolean) {
             text = range,
             fontFamily = IbmPlexMono,
             fontSize = 12.sp,
-            color = MutedText60,
+            color = AisleColors.current.muted60,
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
+        HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.5f))
     }
 }
 
@@ -366,18 +360,18 @@ private fun WeightRow(label: String, weight: String, showDivider: Boolean) {
             text = label,
             fontFamily = PublicSans,
             fontSize = 12.5.sp,
-            color = Ink,
+            color = AisleColors.current.ink,
         )
         Text(
             text = weight,
             fontFamily = PublicSans,
             fontWeight = FontWeight.Bold,
             fontSize = 12.5.sp,
-            color = Ink,
+            color = AisleColors.current.ink,
         )
     }
     if (showDivider) {
-        HorizontalDivider(color = CardBorder.copy(alpha = 0.5f))
+        HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.5f))
     }
 }
 
@@ -390,7 +384,7 @@ private fun ScrollableInfoScaffold(
 ) {
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -412,7 +406,7 @@ private fun ScrollableInfoScaffold(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     modifier = Modifier.semantics { heading() },
                 )
                 content()
@@ -428,6 +422,6 @@ private fun BodyText(text: String) {
         fontFamily = PublicSans,
         fontSize = 13.sp,
         lineHeight = 20.8.sp,
-        color = MutedText70,
+        color = AisleColors.current.muted70,
     )
 }

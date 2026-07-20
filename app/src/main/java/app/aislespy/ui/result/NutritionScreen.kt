@@ -34,16 +34,10 @@ import app.aislespy.ui.components.BackLink
 import app.aislespy.ui.components.SectionHeader
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.BricolageGrotesque
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.Olive
-import app.aislespy.ui.theme.OliveContainer
-import app.aislespy.ui.theme.OliveOnContainer
 import app.aislespy.ui.theme.PublicSans
 import java.util.Locale
+import app.aislespy.ui.theme.AisleColors
 
 /**
  * Nutrition sub-screen: Nutri-Score grade + per-100g nutriments.
@@ -63,7 +57,7 @@ fun NutritionScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -87,7 +81,7 @@ fun NutritionScreen(
                         text = "No nutrition data available",
                         fontFamily = PublicSans,
                         fontSize = 13.5.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -102,7 +96,7 @@ fun NutritionScreen(
                     Text(
                         text = "Nutrition",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                         modifier = Modifier.semantics { heading() },
                     )
 
@@ -110,8 +104,8 @@ fun NutritionScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(OliveContainer, AisleSpyShapes.smallTile)
-                            .border(1.dp, Olive.copy(alpha = 0.25f), AisleSpyShapes.smallTile)
+                            .background(AisleColors.current.oliveContainer, AisleSpyShapes.smallTile)
+                            .border(1.dp, AisleColors.current.olive.copy(alpha = 0.25f), AisleSpyShapes.smallTile)
                             .padding(horizontal = 13.dp, vertical = 10.dp),
                     ) {
                         Text(
@@ -120,7 +114,7 @@ fun NutritionScreen(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 11.5.sp,
                             lineHeight = 17.sp,
-                            color = OliveOnContainer,
+                            color = AisleColors.current.oliveOnContainer,
                         )
                     }
 
@@ -141,18 +135,18 @@ fun NutritionScreen(
                                         text = label,
                                         fontFamily = PublicSans,
                                         fontSize = 12.5.sp,
-                                        color = Ink,
+                                        color = AisleColors.current.ink,
                                     )
                                     Text(
                                         text = value,
                                         fontFamily = IbmPlexMono,
                                         fontWeight = FontWeight.Bold,
                                         fontSize = 12.5.sp,
-                                        color = Ink,
+                                        color = AisleColors.current.ink,
                                     )
                                 }
                                 if (index < rows.lastIndex) {
-                                    HorizontalDivider(color = CardBorder.copy(alpha = 0.6f))
+                                    HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.6f))
                                 }
                             }
                         }
@@ -185,7 +179,7 @@ private fun NutriScoreCard(grade: Char?) {
             Box(
                 modifier = Modifier
                     .size(52.dp)
-                    .background(OliveContainer, AisleSpyShapes.smallTile),
+                    .background(AisleColors.current.oliveContainer, AisleSpyShapes.smallTile),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
@@ -193,7 +187,7 @@ private fun NutriScoreCard(grade: Char?) {
                     fontFamily = BricolageGrotesque,
                     fontWeight = FontWeight.ExtraBold,
                     fontSize = 26.sp,
-                    color = OliveOnContainer,
+                    color = AisleColors.current.oliveOnContainer,
                 )
             }
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
@@ -206,13 +200,13 @@ private fun NutriScoreCard(grade: Char?) {
                     fontFamily = PublicSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.5.sp,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                 )
                 Text(
                     text = "From Open Food Facts, when the producer supplies data",
                     fontFamily = PublicSans,
                     fontSize = 11.5.sp,
-                    color = MutedText55,
+                    color = AisleColors.current.muted55,
                 )
             }
         }

@@ -13,13 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.AisleSpyTextStyles
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.Olive
 
 /**
- * Full-width primary CTA — olive pill, cream text, 15–16 vertical padding.
+ * Full-width primary CTA — olive pill, cream/on-primary text, 15–16 vertical padding.
  */
 @Composable
 fun AislePrimaryButton(
@@ -28,6 +27,7 @@ fun AislePrimaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val colors = AisleColors.current
     Button(
         onClick = onClick,
         enabled = enabled,
@@ -36,10 +36,10 @@ fun AislePrimaryButton(
             .defaultMinSize(minHeight = 48.dp),
         shape = AisleSpyShapes.pill,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Olive,
-            contentColor = CreamSurface,
-            disabledContainerColor = Olive.copy(alpha = 0.4f),
-            disabledContentColor = CreamSurface.copy(alpha = 0.7f),
+            containerColor = colors.olive,
+            contentColor = colors.onPrimary,
+            disabledContainerColor = colors.olive.copy(alpha = 0.4f),
+            disabledContentColor = colors.onPrimary.copy(alpha = 0.7f),
         ),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 15.dp),
     ) {
@@ -57,6 +57,7 @@ fun AisleSecondaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val olive = AisleColors.current.olive
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
@@ -64,10 +65,10 @@ fun AisleSecondaryButton(
             .fillMaxWidth()
             .defaultMinSize(minHeight = 48.dp),
         shape = AisleSpyShapes.pill,
-        border = BorderStroke(1.5.dp, if (enabled) Olive else Olive.copy(alpha = 0.4f)),
+        border = BorderStroke(1.5.dp, if (enabled) olive else olive.copy(alpha = 0.4f)),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Olive,
-            disabledContentColor = Olive.copy(alpha = 0.4f),
+            contentColor = olive,
+            disabledContentColor = olive.copy(alpha = 0.4f),
         ),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 13.dp),
     ) {
@@ -83,16 +84,17 @@ fun AislePrimaryPill(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val colors = AisleColors.current
     Button(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier,
         shape = AisleSpyShapes.pill,
         colors = ButtonDefaults.buttonColors(
-            containerColor = Olive,
-            contentColor = CreamSurface,
-            disabledContainerColor = Olive.copy(alpha = 0.4f),
-            disabledContentColor = CreamSurface.copy(alpha = 0.7f),
+            containerColor = colors.olive,
+            contentColor = colors.onPrimary,
+            disabledContainerColor = colors.olive.copy(alpha = 0.4f),
+            disabledContentColor = colors.onPrimary.copy(alpha = 0.7f),
         ),
         contentPadding = PaddingValues(horizontal = 14.dp, vertical = 6.dp),
     ) {
@@ -111,14 +113,15 @@ fun AisleOutlinePill(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
+    val olive = AisleColors.current.olive
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier,
         shape = AisleSpyShapes.pill,
-        border = BorderStroke(1.dp, Olive.copy(alpha = 0.4f)),
+        border = BorderStroke(1.dp, olive.copy(alpha = 0.4f)),
         colors = ButtonDefaults.outlinedButtonColors(
-            contentColor = Olive,
+            contentColor = olive,
             containerColor = Color.Transparent,
         ),
         contentPadding = PaddingValues(horizontal = 12.dp, vertical = 5.dp),

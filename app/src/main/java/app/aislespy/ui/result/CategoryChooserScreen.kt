@@ -26,14 +26,9 @@ import app.aislespy.AisleSpyApp
 import app.aislespy.ui.components.AisleCard
 import app.aislespy.ui.components.BackLink
 import app.aislespy.ui.theme.AisleSpyShapes
-import app.aislespy.ui.theme.CardBorderStrong
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.Olive
 import app.aislespy.ui.theme.PublicSans
+import app.aislespy.ui.theme.AisleColors
 
 /**
  * Category chooser when one barcode hits both OFF and OBF (handoff §7).
@@ -56,7 +51,7 @@ fun CategoryChooserScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -79,7 +74,7 @@ fun CategoryChooserScreen(
                 Text(
                     text = "One barcode, two matches",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     modifier = Modifier.semantics { heading() },
                 )
                 Text(
@@ -87,13 +82,13 @@ fun CategoryChooserScreen(
                     fontFamily = PublicSans,
                     fontSize = 13.sp,
                     lineHeight = 20.sp,
-                    color = MutedText60,
+                    color = AisleColors.current.muted60,
                 )
                 Text(
                     text = barcode,
                     fontFamily = IbmPlexMono,
                     fontSize = 12.sp,
-                    color = MutedText55,
+                    color = AisleColors.current.muted55,
                 )
 
                 CategoryOptionCard(
@@ -127,7 +122,7 @@ private fun CategoryOptionCard(
         shape = AisleSpyShapes.chooserOption,
         contentPadding = 0.dp,
         modifier = Modifier
-            .border(1.5.dp, CardBorderStrong, AisleSpyShapes.chooserOption)
+            .border(1.5.dp, AisleColors.current.cardBorderStrong, AisleSpyShapes.chooserOption)
             .semantics {
                 contentDescription = "$sourceLabel: $productName"
             },
@@ -144,12 +139,12 @@ private fun CategoryOptionCard(
                 fontWeight = FontWeight.Bold,
                 fontSize = 10.5.sp,
                 letterSpacing = 0.08.sp,
-                color = Olive,
+                color = AisleColors.current.olive,
             )
             Text(
                 text = productName,
                 style = MaterialTheme.typography.titleLarge,
-                color = Ink,
+                color = AisleColors.current.ink,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
@@ -157,7 +152,7 @@ private fun CategoryOptionCard(
                 text = meta,
                 fontFamily = PublicSans,
                 fontSize = 12.sp,
-                color = MutedText55,
+                color = AisleColors.current.muted55,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )

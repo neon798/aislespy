@@ -12,7 +12,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.aislespy.ui.theme.MutedText60
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.PublicSans
 
 /**
@@ -30,7 +30,7 @@ fun BackLink(
         fontFamily = PublicSans,
         fontWeight = FontWeight.SemiBold,
         fontSize = 13.5.sp,
-        color = MutedText60,
+        color = AisleColors.current.muted60,
         modifier = modifier
             .clickable(onClick = onClick, role = Role.Button)
             .semantics {

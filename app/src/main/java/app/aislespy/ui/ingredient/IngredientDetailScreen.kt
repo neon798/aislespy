@@ -28,16 +28,9 @@ import app.aislespy.ui.components.SectionHeader
 import app.aislespy.ui.components.SeverityBar
 import app.aislespy.ui.result.IngredientDetailUi
 import app.aislespy.ui.theme.BricolageGrotesque
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CreamSurface
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.MutedText70
-import app.aislespy.ui.theme.Olive
 import app.aislespy.ui.theme.PublicSans
+import app.aislespy.ui.theme.AisleColors
 
 private val SeverityMeaning = mapOf(
     1 to "Mild note — mainly for sensitive individuals.",
@@ -61,7 +54,7 @@ fun IngredientDetailScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         if (resolved == null) {
             Column(modifier = Modifier.padding(innerPadding)) {
@@ -79,7 +72,7 @@ fun IngredientDetailScreen(
                         text = "No detail available for this ingredient.",
                         fontFamily = PublicSans,
                         fontSize = 13.5.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                     )
                 }
             }
@@ -105,7 +98,7 @@ fun IngredientDetailScreen(
                         text = resolved.id,
                         fontFamily = IbmPlexMono,
                         fontSize = 11.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                     )
                     Text(
                         text = resolved.name,
@@ -113,7 +106,7 @@ fun IngredientDetailScreen(
                         fontWeight = FontWeight.Bold,
                         fontSize = 26.sp,
                         lineHeight = 32.sp,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                         modifier = Modifier.semantics { heading() },
                     )
                     SeverityBar(
@@ -127,7 +120,7 @@ fun IngredientDetailScreen(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
-                        color = MutedText55,
+                        color = AisleColors.current.muted55,
                     )
                     if (!resolved.positionHint.isNullOrBlank()) {
                         AisleCard(contentPadding = 12.dp) {
@@ -135,7 +128,7 @@ fun IngredientDetailScreen(
                                 text = "Position on label: ${resolved.positionHint} — earlier usually means more of it.",
                                 fontFamily = PublicSans,
                                 fontSize = 12.sp,
-                                color = MutedText60,
+                                color = AisleColors.current.muted60,
                             )
                         }
                     }
@@ -144,7 +137,7 @@ fun IngredientDetailScreen(
                         fontFamily = PublicSans,
                         fontSize = 13.5.sp,
                         lineHeight = 22.sp,
-                        color = MutedText70,
+                        color = AisleColors.current.muted70,
                     )
                     if (resolved.sources.isNotEmpty()) {
                         SectionHeader(
@@ -158,13 +151,13 @@ fun IngredientDetailScreen(
                                     fontFamily = PublicSans,
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 12.sp,
-                                    color = Olive,
+                                    color = AisleColors.current.olive,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(horizontal = 14.dp, vertical = 11.dp),
                                 )
                                 if (index < resolved.sources.lastIndex) {
-                                    HorizontalDivider(color = CardBorder.copy(alpha = 0.6f))
+                                    HorizontalDivider(color = AisleColors.current.cardBorder.copy(alpha = 0.6f))
                                 }
                             }
                         }
@@ -174,7 +167,7 @@ fun IngredientDetailScreen(
                         fontFamily = PublicSans,
                         fontSize = 11.sp,
                         lineHeight = 17.6.sp,
-                        color = MutedText45,
+                        color = AisleColors.current.muted45,
                         modifier = Modifier.padding(top = 4.dp),
                     )
                 }

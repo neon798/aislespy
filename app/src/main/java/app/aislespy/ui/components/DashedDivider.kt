@@ -15,19 +15,16 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
-import app.aislespy.ui.theme.DashedDividerColor
-
-/** Disclaimer outline: rgba(80,60,30,.3). */
-private val DisclaimerBorder = Color(0x4D503C1E)
 
 /**
- * 1px dashed horizontal section separator (handoff: rgba(80,60,30,.25)).
+ * 1px dashed horizontal section separator.
  */
 @Composable
 fun DashedDivider(
     modifier: Modifier = Modifier,
-    color: Color = DashedDividerColor,
+    color: Color = AisleColors.current.dashedDivider,
     thickness: Dp = 1.dp,
     dashLength: Dp = 6.dp,
     gapLength: Dp = 4.dp,
@@ -56,7 +53,7 @@ fun DashedDivider(
 fun DashedBorderCard(
     modifier: Modifier = Modifier,
     shape: Shape = AisleSpyShapes.disclaimer,
-    borderColor: Color = DisclaimerBorder,
+    borderColor: Color = AisleColors.current.disclaimerBorder,
     borderWidth: Dp = 1.dp,
     contentPadding: Dp = 12.dp,
     content: @Composable BoxScope.() -> Unit,

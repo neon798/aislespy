@@ -16,16 +16,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.aislespy.ui.theme.AisleColors
 import app.aislespy.ui.theme.AisleSpyShapes
 import app.aislespy.ui.theme.BricolageGrotesque
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.Olive
 import app.aislespy.ui.theme.PublicSans
 
 /**
- * Standard white content card — 1px card-border outline, radius 16.
+ * Standard content card — 1px card-border outline, radius 16.
  */
 @Composable
 fun AisleCard(
@@ -35,8 +32,9 @@ fun AisleCard(
     contentPadding: Dp = 0.dp,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    val colors = CardDefaults.cardColors(containerColor = CardWhite)
-    val border = BorderStroke(1.dp, CardBorder)
+    val aisle = AisleColors.current
+    val colors = CardDefaults.cardColors(containerColor = aisle.card)
+    val border = BorderStroke(1.dp, aisle.cardBorder)
     val elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     val pad = if (contentPadding > 0.dp) Modifier.padding(contentPadding) else Modifier
 
@@ -81,18 +79,19 @@ fun AisleListRowCard(
     )
 }
 
-/** Brand / privacy hero card — olive fill, cream text, radius 18. */
+/** Brand / privacy hero card — olive fill, on-primary text, radius 18. */
 @Composable
 fun AisleBrandCard(
     title: String,
     body: String,
     modifier: Modifier = Modifier,
 ) {
+    val aisle = AisleColors.current
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = AisleSpyShapes.brandCard,
-        color = Olive,
-        contentColor = CreamSurface,
+        color = aisle.olive,
+        contentColor = aisle.onOlive,
     ) {
         Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 16.dp)) {
             Text(
@@ -100,7 +99,7 @@ fun AisleBrandCard(
                 fontFamily = BricolageGrotesque,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
-                color = CreamSurface,
+                color = aisle.onOlive,
             )
             Text(
                 text = body,
@@ -108,7 +107,7 @@ fun AisleBrandCard(
                 fontWeight = FontWeight.Normal,
                 fontSize = 12.sp,
                 lineHeight = 18.6.sp,
-                color = CreamSurface.copy(alpha = 0.8f),
+                color = aisle.onOlive.copy(alpha = 0.8f),
                 modifier = Modifier.padding(top = 5.dp),
             )
         }

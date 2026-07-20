@@ -40,19 +40,11 @@ import app.aislespy.ui.components.AislePrimaryButton
 import app.aislespy.ui.components.BackLink
 import app.aislespy.ui.components.SectionHeader
 import app.aislespy.ui.theme.AisleSpyShapes
-import app.aislespy.ui.theme.CardBorder
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.ErrorRed
 import app.aislespy.ui.theme.IbmPlexMono
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText60
-import app.aislespy.ui.theme.Olive
 import app.aislespy.ui.theme.PublicSans
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import app.aislespy.ui.theme.AisleColors
 
 private data class SampleCode(val code: String, val hint: String)
 
@@ -80,7 +72,7 @@ fun ManualEntryScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -103,7 +95,7 @@ fun ManualEntryScreen(
                 Text(
                     text = "Type the barcode",
                     style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     modifier = Modifier.semantics { heading() },
                 )
                 Text(
@@ -111,15 +103,12 @@ fun ManualEntryScreen(
                     fontFamily = PublicSans,
                     fontSize = 13.sp,
                     lineHeight = 20.sp,
-                    color = MutedText60,
+                    color = AisleColors.current.muted60,
                 )
 
                 val borderColor = when {
-                    focused -> Olive
-                    else -> CardBorder.copy(alpha = 0.5f).let {
-                        // ~ rgba(80,60,30,.3)
-                        androidx.compose.ui.graphics.Color(0x4D503C1E)
-                    }
+                    focused -> AisleColors.current.olive
+                    else -> AisleColors.current.outlineChipBorder
                 }
                 BasicTextField(
                     value = barcode,
@@ -128,12 +117,12 @@ fun ManualEntryScreen(
                         submittedEmpty = false
                     },
                     singleLine = true,
-                    cursorBrush = SolidColor(Olive),
+                    cursorBrush = SolidColor(AisleColors.current.olive),
                     textStyle = TextStyle(
                         fontFamily = IbmPlexMono,
                         fontSize = 16.sp,
                         letterSpacing = 0.1.em,
-                        color = Ink,
+                        color = AisleColors.current.ink,
                     ),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -156,7 +145,7 @@ fun ManualEntryScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(CardWhite, AisleSpyShapes.input)
+                                .background(AisleColors.current.card, AisleSpyShapes.input)
                                 .border(1.5.dp, borderColor, AisleSpyShapes.input)
                                 .padding(horizontal = 16.dp, vertical = 15.dp),
                         ) {
@@ -166,7 +155,7 @@ fun ManualEntryScreen(
                                     fontFamily = IbmPlexMono,
                                     fontSize = 16.sp,
                                     letterSpacing = 0.1.em,
-                                    color = MutedText45,
+                                    color = AisleColors.current.muted45,
                                 )
                             }
                             inner()
@@ -180,7 +169,7 @@ fun ManualEntryScreen(
                         fontFamily = PublicSans,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp,
-                        color = ErrorRed,
+                        color = AisleColors.current.error,
                     )
                 }
 
@@ -226,8 +215,8 @@ private fun SampleCodeRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(CardWhite, AisleSpyShapes.smallTile)
-            .border(1.dp, CardBorder, AisleSpyShapes.smallTile)
+            .background(AisleColors.current.card, AisleSpyShapes.smallTile)
+            .border(1.dp, AisleColors.current.cardBorder, AisleSpyShapes.smallTile)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 11.dp)
             .semantics { contentDescription = "Sample barcode $code, $hint" },
@@ -238,13 +227,13 @@ private fun SampleCodeRow(
             text = code,
             fontFamily = IbmPlexMono,
             fontSize = 12.5.sp,
-            color = Ink,
+            color = AisleColors.current.ink,
         )
         Text(
             text = hint,
             fontFamily = PublicSans,
             fontSize = 11.sp,
-            color = MutedText55,
+            color = AisleColors.current.muted55,
         )
     }
 }

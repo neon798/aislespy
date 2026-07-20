@@ -45,17 +45,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import app.aislespy.ui.components.AislePrimaryButton
 import app.aislespy.ui.theme.AisleSpyTextStyles
 import app.aislespy.ui.theme.BricolageGrotesque
-import app.aislespy.ui.theme.CardBorderStrong
-import app.aislespy.ui.theme.CardWhite
-import app.aislespy.ui.theme.CreamSurface
-import app.aislespy.ui.theme.Ink
-import app.aislespy.ui.theme.MutedText45
-import app.aislespy.ui.theme.MutedText55
-import app.aislespy.ui.theme.MutedText70
-import app.aislespy.ui.theme.Olive
 import app.aislespy.ui.theme.PublicSans
 import app.aislespy.ui.theme.scoreExcellentLight
 import app.aislespy.ui.theme.scoreOkLight
+import app.aislespy.ui.theme.AisleColors
 
 private data class OnboardingStep(
     val title: String,
@@ -109,7 +102,7 @@ fun OnboardingScreen(
 
     Scaffold(
         modifier = modifier,
-        containerColor = CreamSurface,
+        containerColor = AisleColors.current.surface,
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -126,14 +119,14 @@ fun OnboardingScreen(
                 Text(
                     text = "AisleSpy",
                     style = AisleSpyTextStyles.wordmark,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                 )
                 Text(
                     text = "Skip",
                     fontFamily = PublicSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 13.sp,
-                    color = MutedText55,
+                    color = AisleColors.current.muted55,
                     modifier = Modifier
                         .clickable(onClick = resolvedVm::onStartScanning)
                         .padding(8.dp)
@@ -152,8 +145,8 @@ fun OnboardingScreen(
                 Box(
                     modifier = Modifier
                         .size(150.dp)
-                        .background(CardWhite, CircleShape)
-                        .border(1.dp, CardBorderStrong, CircleShape),
+                        .background(AisleColors.current.card, CircleShape)
+                        .border(1.dp, AisleColors.current.cardBorderStrong, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     OnboardingStepArt(stepIndex = stepIndex)
@@ -168,7 +161,7 @@ fun OnboardingScreen(
                     fontSize = 27.sp,
                     lineHeight = 31.sp,
                     letterSpacing = (-0.01).sp,
-                    color = Ink,
+                    color = AisleColors.current.ink,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
@@ -181,7 +174,7 @@ fun OnboardingScreen(
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp,
                     lineHeight = 22.4.sp,
-                    color = MutedText70,
+                    color = AisleColors.current.muted70,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(horizontal = 12.dp),
                 )
@@ -191,7 +184,7 @@ fun OnboardingScreen(
                         text = "Scores are informational — not medical advice.",
                         fontFamily = PublicSans,
                         fontSize = 11.sp,
-                        color = MutedText45,
+                        color = AisleColors.current.muted45,
                         textAlign = TextAlign.Center,
                     )
                 }
@@ -210,7 +203,7 @@ fun OnboardingScreen(
                             modifier = Modifier
                                 .size(8.dp)
                                 .background(
-                                    color = if (i == stepIndex) Olive else MutedText45.copy(alpha = 0.35f),
+                                    color = if (i == stepIndex) AisleColors.current.olive else AisleColors.current.muted45.copy(alpha = 0.35f),
                                     shape = CircleShape,
                                 ),
                         )
@@ -248,13 +241,13 @@ private fun OnboardingStepArt(stepIndex: Int) {
 @Composable
 private fun BarcodeBarsArt() {
     val bars = listOf(
-        4.dp to Ink,
-        8.dp to Ink,
+        4.dp to AisleColors.current.ink,
+        8.dp to AisleColors.current.ink,
         4.dp to scoreOkLight,
-        6.dp to Ink,
-        3.dp to Ink,
+        6.dp to AisleColors.current.ink,
+        3.dp to AisleColors.current.ink,
         9.dp to scoreExcellentLight,
-        4.dp to Ink,
+        4.dp to AisleColors.current.ink,
     )
     Row(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -274,6 +267,8 @@ private fun BarcodeBarsArt() {
 /** Mini score ring “68” (step 1). */
 @Composable
 private fun ScoreRingArt() {
+    val trackColor = AisleColors.current.cardBorderStrong
+    val ink = AisleColors.current.ink
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier.size(96.dp),
@@ -284,7 +279,7 @@ private fun ScoreRingArt() {
             val topLeft = Offset(stroke / 2f, stroke / 2f)
             val arcSize = Size(diameter, diameter)
             drawArc(
-                color = CardBorderStrong,
+                color = trackColor,
                 startAngle = 0f,
                 sweepAngle = 360f,
                 useCenter = false,
@@ -307,7 +302,7 @@ private fun ScoreRingArt() {
             fontFamily = BricolageGrotesque,
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
-            color = Ink,
+            color = ink,
         )
     }
 }
@@ -315,11 +310,13 @@ private fun ScoreRingArt() {
 /** Padlock (step 2). */
 @Composable
 private fun PadlockArt() {
+    val olive = AisleColors.current.olive
+    val onPrimary = AisleColors.current.onPrimary
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Canvas(modifier = Modifier.size(width = 34.dp, height = 26.dp)) {
             val stroke = 5.dp.toPx()
             drawArc(
-                color = Olive,
+                color = olive,
                 startAngle = 180f,
                 sweepAngle = 180f,
                 useCenter = false,
@@ -331,13 +328,13 @@ private fun PadlockArt() {
         Box(
             modifier = Modifier
                 .size(width = 58.dp, height = 44.dp)
-                .background(Olive, RoundedCornerShape(10.dp)),
+                .background(olive, RoundedCornerShape(10.dp)),
             contentAlignment = Alignment.Center,
         ) {
             Box(
                 modifier = Modifier
                     .size(10.dp)
-                    .background(CreamSurface, CircleShape),
+                    .background(onPrimary, CircleShape),
             )
         }
     }
