@@ -48,6 +48,7 @@ fun SettingsScreen(
     onMethodology: () -> Unit = {},
     onPrivacy: () -> Unit = {},
     onLicenses: () -> Unit = {},
+    onSupport: () -> Unit = {},
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel? = null,
 ) {
@@ -94,6 +95,18 @@ fun SettingsScreen(
                 SettingsLinkRow(title = "How we score", onClick = onMethodology, showDivider = true)
                 SettingsLinkRow(title = "Privacy", onClick = onPrivacy, showDivider = true)
                 SettingsLinkRow(title = "Licenses & attribution", onClick = onLicenses, showDivider = false)
+            }
+
+            Spacer(Modifier.height(14.dp))
+            SectionHeader(
+                text = "Support",
+                modifier = Modifier.padding(horizontal = 22.dp, vertical = 6.dp),
+            )
+            AisleCard(
+                modifier = Modifier.padding(horizontal = 22.dp),
+                contentPadding = 0.dp,
+            ) {
+                SettingsLinkRow(title = "Support AisleSpy", onClick = onSupport, showDivider = false)
             }
 
             Spacer(Modifier.height(14.dp))

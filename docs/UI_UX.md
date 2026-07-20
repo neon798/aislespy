@@ -69,7 +69,8 @@ scan                          (start destination)
 └── settings
       ├── methodology
       ├── privacy          // render PRIVACY.md summary or WebView/local markdown
-      └── licenses
+      ├── licenses
+      └── support          // optional Bitcoin donation (ADR-024)
 ```
 
 ### Route table
@@ -88,6 +89,7 @@ scan                          (start destination)
 | `methodology` | `settings/methodology` | — |
 | `privacy` | `settings/privacy` | — |
 | `licenses` | `settings/licenses` | — |
+| `support` | `settings/support` | — — optional Bitcoin donation (ADR-024) |
 
 Bottom bar (top-level): **Scan · Ingredients · History · Settings**. Result and ingredient detail are stack pushes.
 
@@ -255,10 +257,11 @@ Local-only past scans.
 1. How scoring works → methodology
 2. Privacy → privacy
 3. Open-source licenses → licenses
-4. Knowledge pack version (read-only text)
-5. Methodology version (read-only)
-6. App version
-7. Attribution blurb (OFF/OBF)
+4. Support AisleSpy → support (optional donation; ADR-024)
+5. Knowledge pack version (read-only text)
+6. Methodology version (read-only)
+7. App version
+8. Attribution blurb (OFF/OBF)
 
 ### First launch
 On first open of app (before or overlaying scan): dialog or full-screen pager:
@@ -268,6 +271,12 @@ On first open of app (before or overlaying scan): dialog or full-screen pager:
 **Buttons:** View privacy policy · Get started  
 
 Store `onboarding_done` in DataStore.
+
+---
+
+## Screen: `support`
+
+Optional Bitcoin donation: free/open-source pitch, selectable BTC address, copy + open-in-wallet; no new network hosts (ADR-024).
 
 ---
 

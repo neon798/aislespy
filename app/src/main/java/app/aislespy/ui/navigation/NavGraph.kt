@@ -41,6 +41,7 @@ import app.aislespy.ui.settings.LicensesScreen
 import app.aislespy.ui.settings.MethodologyScreen
 import app.aislespy.ui.settings.PrivacyScreen
 import app.aislespy.ui.settings.SettingsScreen
+import app.aislespy.ui.settings.SupportScreen
 import app.aislespy.ui.theme.AisleSpyTextStyles
 import app.aislespy.ui.theme.AisleColors
 
@@ -62,6 +63,7 @@ object Routes {
     const val METHODOLOGY = "settings/methodology"
     const val PRIVACY = "settings/privacy"
     const val LICENSES = "settings/licenses"
+    const val SUPPORT = "settings/support"
 
     const val ARG_BARCODE = "barcode"
     const val ARG_SOURCE = "source"
@@ -328,6 +330,7 @@ fun AisleSpyNavGraph(
                     onMethodology = { navController.navigate(Routes.METHODOLOGY) },
                     onPrivacy = { navController.navigate(Routes.PRIVACY) },
                     onLicenses = { navController.navigate(Routes.LICENSES) },
+                    onSupport = { navController.navigate(Routes.SUPPORT) },
                 )
             }
             composable(Routes.METHODOLOGY) {
@@ -342,6 +345,11 @@ fun AisleSpyNavGraph(
             }
             composable(Routes.LICENSES) {
                 LicensesScreen(
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(Routes.SUPPORT) {
+                SupportScreen(
                     onBack = { navController.popBackStack() },
                 )
             }

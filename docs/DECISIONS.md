@@ -245,6 +245,16 @@ Append-only. Newest at bottom. When changing a decision, add a new entry that su
 
 ---
 
+## ADR-024 — In-app Support page (Bitcoin donation)
+
+- **Date:** 2026-07-20
+- **Status:** Accepted
+- **Context:** AisleSpy is free, open-source, ad-free, and ships without tracking. Users who find it useful may want a simple, optional way to support development from within the app, without adding accounts, payment-processor SDKs, or new network hosts.
+- **Decision:** Add a **Support** settings sub-screen (`settings/support`) reachable from a distinct **Support** section on Settings. The initial donation method is **Bitcoin (BTC)** only — chosen because it is privacy-friendly and avoids payment processors that expose personal details of the recipient or donor on receipts. The address is a single app constant (`SupportConfig.BITCOIN_ADDRESS`); UI provides copy-to-clipboard and optional `bitcoin:` URI open-in-wallet. No new dependencies, no new network hosts. Additional support methods may be added later.
+- **Consequences:** Route table and UI_UX gain `settings/support`. Presentation only — scoring, data, privacy surface (network destinations), and other screens unchanged. Owner must replace the placeholder BTC address before a public release that advertises donations.
+
+---
+
 ## Template for new entries
 
 ```markdown
