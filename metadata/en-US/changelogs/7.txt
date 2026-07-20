@@ -1,0 +1,1 @@
+New Ingredients tab: search additives and cosmetic ingredients by name or E-number. Support page added in Settings.
