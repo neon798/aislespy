@@ -2,97 +2,113 @@
 
 **What’s really in the aisle.**
 
-Privacy-first Android app to scan food and beauty barcodes, score products **1–100**, and explain problem ingredients in plain language—using open data, not user surveillance.
-
-[![Status](https://img.shields.io/badge/status-alpha%20(phases%201–5)-blue)](#project-status)
+[![Status](https://img.shields.io/badge/status-beta-blue)](#install)
 [![License](https://img.shields.io/badge/license-Apache%202.0-green)](LICENSE)
 
----
-
-## Why AisleSpy?
-
-| Alternative | Problem | AisleSpy |
-|-------------|---------|----------|
-| **Yuka** | Heavy data collection; Google Play dependency | No accounts, no analytics by default; F-Droid-ready; no Play Services |
-| **Open Food Facts app** | Powerful but hard to tell good vs bad at a glance | Big 1–100 score, ranked concerns, short “why it matters” copy |
-
-Data comes from **[Open Food Facts](https://world.openfoodfacts.org/)** and **[Open Beauty Facts](https://world.openbeautyfacts.org/)**. Scoring and ingredient explanations run **on your device**.
+AisleSpy is a **privacy-first** Android app that scans food and beauty barcodes, looks them up in open product databases, and shows a clear **1–100 ingredient-quality score** plus plain-language notes on flagged ingredients. History stays on your device. No accounts. No tracking SDKs.
 
 ---
 
-## Project status
+## Screenshots
 
-```
-STATUS: alpha — phases 1–5 implemented (unit-tested, CI green);
-        phase 6 (ship) not started; device verification pending
-```
-
-Implementation covers scan, dual OFF/OBF lookup, food and beauty scoring, history, settings, and polish under `app/`. Verified via JVM unit tests and debug/release builds; **emulator/device manual verification is still pending.** Phase 6 (release signing, F-Droid path) has not started.
-
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 0 | Docs & agent handoff | Done |
-| 1 | Android bootstrap (Compose) | Done |
-| 2 | Barcode scan + OFF/OBF lookup | Done |
-| 3 | Food scoring | Done |
-| 4 | Beauty scoring | Done |
-| 5 | History & polish | Done |
-| 6 | GitHub Releases + F-Droid | Not started |
-
-See [docs/ROADMAP.md](docs/ROADMAP.md).
+<table>
+  <tr>
+    <td align="center" width="16%"><img src="docs/screenshots/01-result-hero.png" width="220" alt="Result hero with score"/><br/><sub>Score at a glance</sub></td>
+    <td align="center" width="16%"><img src="docs/screenshots/02-result-scored.png" width="220" alt="Scored product result"/><br/><sub>Product result</sub></td>
+    <td align="center" width="16%"><img src="docs/screenshots/03-suspect-ingredients.png" width="220" alt="Suspect ingredients list"/><br/><sub>Suspect ingredients</sub></td>
+    <td align="center" width="16%"><img src="docs/screenshots/04-nutrition.png" width="220" alt="Nutrition screen"/><br/><sub>Nutrition (separate)</sub></td>
+    <td align="center" width="16%"><img src="docs/screenshots/05-how-we-score.png" width="220" alt="How we score"/><br/><sub>How we score</sub></td>
+    <td align="center" width="16%"><img src="docs/screenshots/07-dark-mode.png" width="220" alt="Dark mode"/><br/><sub>Dark mode</sub></td>
+  </tr>
+</table>
 
 ---
 
-## For coding agents
+## Features
 
-Start at **[AGENTS.md](AGENTS.md)**. Read order and non-negotiables are defined there.
-
----
-
-## For humans
-
-| Doc | Contents |
-|-----|----------|
-| [docs/PRODUCT.md](docs/PRODUCT.md) | Vision, users, MVP, non-goals |
-| [docs/UI_UX.md](docs/UI_UX.md) | Screens, navigation, copy |
-| [docs/SCORING.md](docs/SCORING.md) | How the 1–100 score works |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Technical design |
-| [PRIVACY.md](PRIVACY.md) | What we do and don’t collect |
-| [docs/FDROID.md](docs/FDROID.md) | Distribution plan |
+- **Barcode scan** (CameraX + zxing-cpp, no Google Play Services) and **manual entry**
+- **Dual lookup** in [Open Food Facts](https://world.openfoodfacts.org/) and [Open Beauty Facts](https://world.openbeautyfacts.org/), with a category chooser when needed
+- **Food and beauty scoring** with confidence and honest “not enough data” states
+- **1–100 ingredient-quality score** (higher is better) and four clear bands: Excellent / Ok / Poor / Bad
+- **Ranked suspect ingredients** — severity 1–5, plain-language why, and sources
+- **Separate nutrition screen** (Nutri-Score + per-100g) — nutrition never changes the score
+- **Informational badges** (shown, never scored): dietary (vegan / vegetarian / dairy-free), certifications & values (organic, fair-trade, cruelty-free, and more), and brand ownership (“Owned by …” vs verified Independent)
+- **On-device scan history** and a short-lived product cache
+- **Onboarding, settings, and trust pages** so methodology and privacy stay transparent
+- **Warm light + dark theme** that follows the system setting
+- **Accessibility**: TalkBack, large fonts, reduce motion
 
 ---
 
-## Planned features (MVP)
+## How the score works
 
-- Barcode scan (CameraX + FOSS decoder) and manual entry
-- Food (Open Food Facts) + beauty (Open Beauty Facts)
-- Composite **1–100** score (higher = better)
-- Problem ingredients with severity and plain-language explanations
-- Local scan history only (Room)
-- Modern Material 3 UI
-- Works without Google Play Services
-- Free distribution (GitHub Releases + F-Droid)
+The primary **1–100** number is about **ingredient quality only** (methodology 2.0.0):
 
-**Not medical advice.** Scores are informational tools for reading labels.
+| Share | What it covers |
+|------:|----------------|
+| 65% | Flagged ingredients from our open knowledge packs |
+| 30% | Ultra-processing / NOVA (food) |
+| 5% | Label positives (e.g. organic, fair-trade) |
 
----
+Scores fall into four bands: **Excellent** (75–100), **Ok** (50–74), **Poor** (25–49), **Bad** (1–24). When product data is thin, AisleSpy shows confidence and may withhold a number rather than invent one.
 
-## Stack
+**Nutrition** (Nutri-Score, per-100g values) lives on its own screen and **does not affect the score**. Dietary, certification, and brand-ownership badges are informational only.
 
-Kotlin · Jetpack Compose · Material 3 · CameraX · zxing-cpp · Room · Retrofit + OkHttp · Coil
-
-Application ID: `app.aislespy`
+Full formulas, severity rules, and version history: [docs/SCORING.md](docs/SCORING.md).
 
 ---
 
-## License
+## Install
 
-Apache License 2.0 — see [LICENSE](LICENSE).
+**Requirements:** Android 8.0+ (API 26). No Google Play Services required.
 
-Product data is © Open Food Facts / Open Beauty Facts contributors, available under the [Open Database License](https://opendatacommons.org/licenses/odbl/). See [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
+1. Open the **Releases** page of this repository (on GitHub: *Releases* in the repo sidebar / under the Code tab).
+2. Download the latest signed APK (currently in the **v0.1.0-beta.x** line).
+3. Install via your device’s package installer (sideload) or `adb install`.
+
+Release notes include a **SHA-256** checksum for the APK. Prefer verifying that hash before installing.
+
+**F-Droid:** submission is planned; AisleSpy is not on F-Droid yet. See [docs/FDROID.md](docs/FDROID.md).
 
 ---
 
-## Contributing
+## Privacy
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Phases 1–5 are implemented; contributions that match the docs (especially scoring methodology, knowledge packs, and Phase 6 ship work) are welcome.
+- No accounts, no cloud sync
+- No analytics or advertising SDKs in the default build
+- Scan history and cache stay **on your device**
+- Looking up a product sends only the **barcode** (plus normal HTTPS metadata) to Open Food Facts and/or Open Beauty Facts
+
+Details: [PRIVACY.md](PRIVACY.md).
+
+---
+
+## Not medical advice
+
+AisleSpy scores and ingredient notes are **informational tools for reading labels**. They are **not** medical advice, allergen guarantees, or safety certifications. Always check the physical package and consult professionals for health decisions.
+
+---
+
+## Data & licensing
+
+| What | License / terms |
+|------|-----------------|
+| App source code | [Apache License 2.0](LICENSE) |
+| Authored knowledge packs | Apache-2.0 (with the app) |
+| Product data (OFF / OBF) | © contributors, [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/) |
+| Bundled fonts (Bricolage Grotesque, Public Sans, IBM Plex Mono) | SIL Open Font License (OFL) |
+
+Attribution for product databases:
+
+> Product data © Open Food Facts / Open Beauty Facts contributors, available under the Open Database License.  
+> https://world.openfoodfacts.org · https://world.openbeautyfacts.org
+
+More detail: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
+
+---
+
+## Contributing & development
+
+Want to contribute code, docs, or knowledge packs? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+For technical architecture, agent handoff, and the full docs tree, see **[AGENTS.md](AGENTS.md)** and the **[docs/](docs/)** folder (product, scoring, UI, verification, F-Droid).

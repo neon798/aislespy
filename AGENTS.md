@@ -1,6 +1,6 @@
 # AGENTS.md — AisleSpy
 
-**STATUS:** `phases 1–5 implemented (unit-tested, CI green); phase 6 (ship) not started; device verification pending`
+**STATUS:** `public beta — app fully implemented (v0.1.0-beta.x via GitHub Releases); F-Droid submission planned; phases 1–5 done, phase 6 in progress`
 
 This file is the primary entry point for any human or coding agent working on AisleSpy. You do **not** need prior chat context if you follow the read order and non-negotiables below.
 
@@ -30,9 +30,9 @@ Full product vision: [docs/PRODUCT.md](docs/PRODUCT.md)
 | 3 | Food scoring + concerns | **Done** |
 | 4 | Beauty scoring + concerns | **Done** |
 | 5 | History, polish, trust | **Done** |
-| 6 | Ship (GitHub Releases + F-Droid) | Not started |
+| 6 | Ship (GitHub Releases + F-Droid) | **In progress** |
 
-Phases 1–5 are implemented under `app/`, covered by JVM unit tests and green CI (`assembleDebug` / `assembleRelease` / unit tests). **On-device and emulator manual verification has not been performed.** Phase 6 (release signing, F-Droid metadata verification, inclusion request) is not started.
+Phases 1–5 are shipped under `app/` (Kotlin / Compose), covered by JVM unit tests and green CI. The app is in **public beta** as signed APKs on GitHub Releases (`v0.1.0-beta.x`). Phase 6 continues with F-Droid metadata verification and inclusion request (GitHub Releases already in use).
 
 **Do not invent product decisions.** If something is unspecified, check `docs/DECISIONS.md` and open a decision entry rather than guessing.
 
@@ -143,4 +143,4 @@ Never hard-code mystery multipliers only in code.
 
 ## Current state
 
-Application code lives under `app/` (Kotlin, Jetpack Compose). The Gradle wrapper is committed; build with `./gradlew assembleDebug` / `test`. Docs under `docs/` remain the product and architecture source of truth. Scoring or knowledge-pack changes still require updates to [docs/SCORING.md](docs/SCORING.md) and [docs/DECISIONS.md](docs/DECISIONS.md) (and golden tests / `knowledge/` as appropriate)—never mystery multipliers only in code.
+Application code lives under `app/` (Kotlin, Jetpack Compose). The app is in public beta (`v0.1.0-beta.x`) via GitHub Releases; F-Droid submission is planned. The Gradle wrapper is committed; build with `./gradlew assembleDebug` / `test`. Docs under `docs/` remain the product and architecture source of truth. End-user / product-facing entry is [README.md](README.md); this file is the technical and agent handoff. Scoring or knowledge-pack changes still require updates to [docs/SCORING.md](docs/SCORING.md) and [docs/DECISIONS.md](docs/DECISIONS.md) (and golden tests / `knowledge/` as appropriate)—never mystery multipliers only in code.

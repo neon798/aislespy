@@ -2,9 +2,9 @@
 
 Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent set) at a time and meet acceptance criteria.
 
-## Implementation status (2026-07-16)
+## Implementation status (2026-07-20)
 
-T-100…T-520 implemented by Grok Build under Claude advisor review. Verified via JVM unit tests (99 green) and `assembleDebug` / `assembleRelease`; CI runs on GitHub Actions. **Emulator/device manual verification pending.** Phase 6 (T-600/610/620) not started.
+Phases 1–5 are **shipped** and the app is in **public beta** (signed APKs on GitHub Releases, `v0.1.0-beta.x`). Phase 6 (F-Droid submission / inclusion; T-600/610/620 as applicable) is **in progress** — GitHub Releases are already live. Verified via JVM unit tests and `assembleDebug` / `assembleRelease`; CI runs on GitHub Actions.
 
 Acceptance checkboxes below are marked `[x]` only where criteria are verifiable by build config, source structure, or unit tests. Device-dependent items (emulator runs, manual smoke, TalkBack checks, fresh-install UI flows) remain unchecked.
 
