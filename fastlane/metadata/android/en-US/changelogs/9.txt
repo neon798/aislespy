@@ -1,0 +1,1 @@
+Maintenance release (no new features). zxing-cpp is now built from source instead of a prebuilt package, for F-Droid readiness. In-place update over beta.8 (same signing key).
