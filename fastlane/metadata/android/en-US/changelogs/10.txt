@@ -1,0 +1,1 @@
+Maintenance release (no feature changes). Hardens the build for F-Droid packaging: the Gradle wrapper download is now verified against a pinned SHA-256 checksum. In-place update over beta.9 (same signing key).
