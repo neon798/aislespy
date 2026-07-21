@@ -4,7 +4,7 @@ Tasks use IDs `T-xxx`. Agents should implement one task (or a small dependent se
 
 ## Implementation status (2026-07-20)
 
-Phases 1–5 are **shipped** and the app is in **public beta** (signed APKs on GitHub Releases, `v0.1.0-beta.x`). Phase 6 (F-Droid submission / inclusion; T-600/610/620 as applicable) is **in progress** — GitHub Releases are already live. Verified via JVM unit tests and `assembleDebug` / `assembleRelease`; CI runs on GitHub Actions.
+Phases 1–5 are **shipped** and the app is in **public beta** (signed APKs on GitHub Releases, `v0.1.0-beta.x`; Obtainium recommended for auto-updates). Phase 6 (distribution polish — self-hosted F-Droid repo planned, F-Droid.org main under consideration; T-600/610/620 as applicable) is **in progress** — GitHub Releases are already live. Verified via JVM unit tests and `assembleDebug` / `assembleRelease`; CI runs on GitHub Actions.
 
 Acceptance checkboxes below are marked `[x]` only where criteria are verifiable by build config, source structure, or unit tests. Device-dependent items (emulator runs, manual smoke, TalkBack checks, fresh-install UI flows) remain unchecked.
 
@@ -223,7 +223,7 @@ Acceptance checkboxes below are marked `[x]` only where criteria are verifiable 
 - **Files:** `fastlane/metadata/android/en-US/*`, images
 - **Acceptance criteria:**
   - [ ] Descriptions match behavior
-  - [ ] FDROID.md checklist complete
+  - [ ] DISTRIBUTION.md checklist complete
 - **Verify:** Metadata lint if available
 
 ### T-620 Inclusion request

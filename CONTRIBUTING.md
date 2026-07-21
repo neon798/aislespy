@@ -2,13 +2,13 @@
 
 Thanks for helping build a privacy-respecting product scanner.
 
-AisleSpy is a public beta: scan + dual OFF/OBF lookup, food and beauty scoring, on-device history, and signed APKs on GitHub Releases (`v0.1.0-beta.x`). F-Droid submission is planned. For architecture and agent handoff, start with [AGENTS.md](AGENTS.md) and the [docs/](docs/) tree.
+AisleSpy is a public beta: scan + dual OFF/OBF lookup, food and beauty scoring, on-device history, and signed APKs on GitHub Releases (`v0.1.0-beta.x`). Prefer [Obtainium](https://github.com/ImranR98/Obtainium) for auto-updates; a self-hosted F-Droid repo is planned (see [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)). For architecture and agent handoff, start with [AGENTS.md](AGENTS.md) and the [docs/](docs/) tree.
 
 ## Principles
 
 1. **Privacy first** — no trackers, no silent data collection.
 2. **Transparency** — scoring changes belong in `docs/SCORING.md` + knowledge packs, not only in code.
-3. **FOSS only** — dependencies must be acceptable for F-Droid (see [docs/FDROID.md](docs/FDROID.md)).
+3. **FOSS only** — dependencies must stay F-Droid-ready (see [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md)).
 4. **No medical claims** — plain language, cited concerns, clear disclaimers.
 5. **Be kind** — to users reading labels and to people maintaining open databases.
 

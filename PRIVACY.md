@@ -4,7 +4,7 @@
 
 AisleSpy is designed so that **your scans stay on your device** and **we do not run a user-tracking backend**.
 
-The app is currently distributed as a signed **beta** APK via [GitHub Releases](https://github.com/neon798/aislespy/releases) (`v0.1.0-beta.x`). F-Droid submission is planned; AisleSpy is not on F-Droid yet.
+The app is currently distributed as a signed **beta** APK via [GitHub Releases](https://github.com/neon798/aislespy/releases) (`v0.1.0-beta.x`); [Obtainium](https://github.com/ImranR98/Obtainium) is recommended for auto-updates. AisleSpy is not listed on F-Droid.org or any third-party app store.
 
 ---
 

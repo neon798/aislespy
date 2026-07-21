@@ -62,13 +62,22 @@ Full formulas, severity rules, and version history: [docs/SCORING.md](docs/SCORI
 
 **Requirements:** Android 8.0+ (API 26). No Google Play Services required.
 
+### Recommended: Obtainium (auto-updates from GitHub Releases)
+
+[Obtainium](https://github.com/ImranR98/Obtainium) is the easiest way to stay updated without an app store. It watches this repo’s releases and installs new APKs when they ship.
+
+1. Install [Obtainium](https://github.com/ImranR98/Obtainium).
+2. Open **Add App** and enter the source URL: `https://github.com/neon798/aislespy`
+3. Obtainium finds the latest release and the `aislespy-<version>.apk` asset.
+4. Install from Obtainium; it will notify you and update when a new release is published.
+
+### Manual: download APK + verify
+
 1. Open the **Releases** page of this repository (on GitHub: *Releases* in the repo sidebar / under the Code tab).
-2. Download the latest signed APK (currently in the **v0.1.0-beta.x** line).
-3. Install via your device’s package installer (sideload) or `adb install`.
+2. Download the latest signed APK (currently in the **v0.1.0-beta.x** line) and its **SHA-256** checksum.
+3. Verify the hash, then install via your device’s package installer (sideload) or `adb install`.
 
-Release notes include a **SHA-256** checksum for the APK. Prefer verifying that hash before installing.
-
-**F-Droid:** submission is planned; AisleSpy is not on F-Droid yet. See [docs/FDROID.md](docs/FDROID.md).
+**Distribution:** GitHub Releases (canonical) + Obtainium now; a self-hosted F-Droid repo is planned; F-Droid.org main is under consideration later. AisleSpy is **not** listed on F-Droid.org or any third-party app store. Maintainer notes: [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
 
 ---
 
@@ -111,4 +120,4 @@ More detail: [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md).
 
 Want to contribute code, docs, or knowledge packs? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
-For technical architecture, agent handoff, and the full docs tree, see **[AGENTS.md](AGENTS.md)** and the **[docs/](docs/)** folder (product, scoring, UI, verification, F-Droid).
+For technical architecture, agent handoff, and the full docs tree, see **[AGENTS.md](AGENTS.md)** and the **[docs/](docs/)** folder (product, scoring, UI, verification, distribution).

@@ -1,6 +1,6 @@
 # AGENTS.md — AisleSpy
 
-**STATUS:** `public beta — app fully implemented (v0.1.0-beta.x via GitHub Releases); F-Droid submission planned; phases 1–5 done, phase 6 in progress`
+**STATUS:** `public beta — app fully implemented (v0.1.0-beta.x via GitHub Releases + Obtainium); self-hosted F-Droid repo planned; phases 1–5 done, phase 6 in progress`
 
 This file is the primary entry point for any human or coding agent working on AisleSpy. You do **not** need prior chat context if you follow the read order and non-negotiables below.
 
@@ -30,9 +30,9 @@ Full product vision: [docs/PRODUCT.md](docs/PRODUCT.md)
 | 3 | Food scoring + concerns | **Done** |
 | 4 | Beauty scoring + concerns | **Done** |
 | 5 | History, polish, trust | **Done** |
-| 6 | Ship (GitHub Releases + F-Droid) | **In progress** |
+| 6 | Ship (GitHub Releases + Obtainium; self-hosted F-Droid later) | **In progress** |
 
-Phases 1–5 are shipped under `app/` (Kotlin / Compose), covered by JVM unit tests and green CI. The app is in **public beta** as signed APKs on GitHub Releases (`v0.1.0-beta.x`). Phase 6 continues with F-Droid metadata verification and inclusion request (GitHub Releases already in use).
+Phases 1–5 are shipped under `app/` (Kotlin / Compose), covered by JVM unit tests and green CI. The app is in **public beta** as signed APKs on GitHub Releases (`v0.1.0-beta.x`); Obtainium is the recommended auto-update path. Phase 6 continues with distribution polish (self-hosted F-Droid repo planned; F-Droid.org main under consideration later).
 
 **Do not invent product decisions.** If something is unspecified, check `docs/DECISIONS.md` and open a decision entry rather than guessing.
 
@@ -54,7 +54,7 @@ Also read when relevant:
 - [docs/COMPONENTS.md](docs/COMPONENTS.md) — shared Compose widgets
 - [docs/KNOWLEDGE_PACK.md](docs/KNOWLEDGE_PACK.md) — ingredient risk JSON
 - [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) — licensing & attribution
-- [docs/FDROID.md](docs/FDROID.md) — distribution constraints
+- [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md) — distribution channels & constraints
 - [PRIVACY.md](PRIVACY.md) — user-facing privacy promises
 
 ---
@@ -143,4 +143,4 @@ Never hard-code mystery multipliers only in code.
 
 ## Current state
 
-Application code lives under `app/` (Kotlin, Jetpack Compose). The app is in public beta (`v0.1.0-beta.x`) via GitHub Releases; F-Droid submission is planned. The Gradle wrapper is committed; build with `./gradlew assembleDebug` / `test`. Docs under `docs/` remain the product and architecture source of truth. End-user / product-facing entry is [README.md](README.md); this file is the technical and agent handoff. Scoring or knowledge-pack changes still require updates to [docs/SCORING.md](docs/SCORING.md) and [docs/DECISIONS.md](docs/DECISIONS.md) (and golden tests / `knowledge/` as appropriate)—never mystery multipliers only in code.
+Application code lives under `app/` (Kotlin, Jetpack Compose). The app is in public beta (`v0.1.0-beta.x`) via GitHub Releases; Obtainium is the recommended auto-update path (self-hosted F-Droid repo planned). The Gradle wrapper is committed; build with `./gradlew assembleDebug` / `test`. Docs under `docs/` remain the product and architecture source of truth. End-user / product-facing entry is [README.md](README.md); this file is the technical and agent handoff. Scoring or knowledge-pack changes still require updates to [docs/SCORING.md](docs/SCORING.md) and [docs/DECISIONS.md](docs/DECISIONS.md) (and golden tests / `knowledge/` as appropriate)—never mystery multipliers only in code.
