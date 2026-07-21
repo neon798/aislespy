@@ -15,7 +15,7 @@ Acceptance checkboxes below are marked `[x]` only where criteria are verifiable 
 ### T-000 Project documentation scaffold
 - **Phase:** 0
 - **Depends on:** —
-- **Files:** AGENTS.md, README.md, PRIVACY.md, LICENSE, CONTRIBUTING.md, docs/*, metadata/*, knowledge/*
+- **Files:** AGENTS.md, README.md, PRIVACY.md, LICENSE, CONTRIBUTING.md, docs/*, fastlane/metadata/*, knowledge/*
 - **Acceptance criteria:**
   - [x] Full docs tree exists
   - [x] AGENTS.md has status + read order + non-negotiables
@@ -220,7 +220,7 @@ Acceptance checkboxes below are marked `[x]` only where criteria are verifiable 
 ### T-610 F-Droid metadata + screenshots
 - **Phase:** 6
 - **Depends on:** T-520
-- **Files:** `metadata/en-US/*`, images
+- **Files:** `fastlane/metadata/android/en-US/*`, images
 - **Acceptance criteria:**
   - [ ] Descriptions match behavior
   - [ ] FDROID.md checklist complete
