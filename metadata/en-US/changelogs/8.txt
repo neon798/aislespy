@@ -1,0 +1,5 @@
+0.1.0-beta.8
+
+This build switches to AisleSpy’s permanent production signing key.
+If you installed an earlier beta, uninstall it first, then install this one — a normal update won’t work this time.
+After that, future updates install normally.
