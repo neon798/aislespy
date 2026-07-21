@@ -9,6 +9,8 @@ plugins {
 android {
     namespace = "app.aislespy"
     compileSdk = 35
+    // Same NDK as :zxingcpp so AGP can locate llvm-strip and strip jniLibs at package time.
+    ndkVersion = "27.2.12479018"
 
     defaultConfig {
         applicationId = "app.aislespy"
@@ -94,7 +96,7 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
-    implementation(libs.zxing.cpp.android)
+    implementation(project(":zxingcpp"))
 
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit)
